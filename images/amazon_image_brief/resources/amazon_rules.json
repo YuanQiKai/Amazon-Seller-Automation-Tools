@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "library_version": "2026.09.04",
+  "last_reviewed": "2026-09-04",
+  "sources": [
+    {
+      "title": "Amazon product photo requirements and practices",
+      "url": "https://sell.amazon.com/blog/product-photos"
+    },
+    {
+      "title": "Amazon product listing guide",
+      "url": "https://sell.amazon.com/blog/amazon-product-listings"
+    },
+    {
+      "title": "Amazon A+ Content design guide",
+      "url": "https://sell.amazon.com/blog/a-plus-content-design-guide"
+    }
+  ],
+  "global": {
+    "image_longest_side_min": 500,
+    "image_longest_side_zoom_recommended": 1000,
+    "image_longest_side_max": 10000,
+    "main_background_rgb": [255, 255, 255],
+    "main_product_fill_recommended_percent": 85,
+    "listing_image_max": 9,
+    "aplus_file_size_max_mb": 2,
+    "forbidden_claim_terms": [
+      "best", "#1", "number one", "guaranteed", "100% waterproof", "free gift",
+      "sale", "discount", "最佳", "第一名", "百分百防水", "绝不损坏", "免费赠品",
+      "rabatt", "kostenlos", "garantiert"
+    ]
+  },
+  "marketplaces": {
+    "US": {"languages": ["en"], "region": "North America"},
+    "CA": {"languages": ["en", "fr"], "region": "North America"},
+    "MX": {"languages": ["es"], "region": "North America"},
+    "BR": {"languages": ["pt"], "region": "South America"},
+    "UK": {"languages": ["en"], "region": "Europe"},
+    "DE": {"languages": ["de"], "region": "Europe"},
+    "FR": {"languages": ["fr"], "region": "Europe"},
+    "IT": {"languages": ["it"], "region": "Europe"},
+    "ES": {"languages": ["es"], "region": "Europe"},
+    "NL": {"languages": ["nl"], "region": "Europe"},
+    "SE": {"languages": ["sv"], "region": "Europe"},
+    "PL": {"languages": ["pl"], "region": "Europe"},
+    "BE": {"languages": ["nl", "fr"], "region": "Europe"},
+    "IE": {"languages": ["en"], "region": "Europe"},
+    "TR": {"languages": ["tr"], "region": "Europe"},
+    "JP": {"languages": ["ja"], "region": "Asia Pacific"},
+    "IN": {"languages": ["en", "hi"], "region": "Asia Pacific"},
+    "AU": {"languages": ["en"], "region": "Asia Pacific"},
+    "SG": {"languages": ["en"], "region": "Asia Pacific"},
+    "AE": {"languages": ["ar", "en"], "region": "Middle East"},
+    "SA": {"languages": ["ar", "en"], "region": "Middle East"},
+    "EG": {"languages": ["ar", "en"], "region": "Middle East"},
+    "ZA": {"languages": ["en"], "region": "Africa"}
+  },
+  "categories": {
+    "luggage": {
+      "aliases": ["luggage", "suitcase", "travel case", "行李箱", "旅行箱", "拉杆箱"],
+      "checks": ["variant_dimensions", "carry_on_evidence", "lock_evidence", "waterproof_wording"]
+    },
+    "apparel": {
+      "aliases": ["apparel", "clothing", "服装", "鞋", "shoe"],
+      "checks": ["variant_dimensions", "color_accuracy"]
+    },
+    "electronics": {
+      "aliases": ["electronics", "electronic", "电子", "电器"],
+      "checks": ["spec_evidence", "certification_evidence", "compatibility_evidence"]
+    },
+    "general": {
+      "aliases": [],
+      "checks": ["fact_evidence", "color_accuracy"]
+    }
+  }
+}

@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "description": "AI provider connection parameters. Restart the app after editing. Keep real API keys in the project .env file, never in this JSON.",
+  "text": {
+    "openai": {
+      "label": "OpenAI API",
+      "protocol": "responses",
+      "base_url": "https://api.openai.com/v1",
+      "endpoint": "/responses",
+      "model_endpoint": "/models",
+      "api_key_env": "OPENAI_API_KEY",
+      "models": ["gpt-5.6-terra", "gpt-5.6-sol", "gpt-5.6-luna", "gpt-6-astra"],
+      "note": "OpenAI Responses API；ChatGPT/Codex 登录不会作为本程序的 API 凭据。"
+    },
+    "cunai": {
+      "label": "CUN.AI",
+      "protocol": "chat_completions",
+      "base_url": "https://www.cun.ai/v1",
+      "endpoint": "/chat/completions",
+      "model_endpoint": "/models",
+      "api_key_env": "CUNAI_API_KEY",
+      "models": ["claude-fable-5"],
+      "note": "CUN.AI OpenAI-compatible 接口；模型列表从 GET /v1/models 获取。"
+    },
+    "aliyun": {
+      "label": "阿里云百炼 / 通义千问",
+      "protocol": "chat_completions",
+      "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+      "endpoint": "/chat/completions",
+      "model_endpoint": "/models",
+      "api_key_env": "DASHSCOPE_API_KEY",
+      "models": ["qwen-plus", "qwen-max", "qwen-turbo"],
+      "note": "中国大陆百炼 OpenAI 兼容入口；专属业务空间可在本文件修改 Base URL。"
+    },
+    "volcengine": {
+      "label": "火山方舟 / 豆包",
+      "protocol": "responses",
+      "base_url": "https://ark.cn-beijing.volces.com/api/v3",
+      "endpoint": "/responses",
+      "model_endpoint": "/models",
+      "api_key_env": "ARK_API_KEY",
+      "models": ["doubao-seed-2-0-lite-260215", "doubao-seed-2-0-pro-260215"],
+      "note": "模型 ID 会随版本更新；以方舟控制台显示的模型或推理接入点 ID 为准。"
+    },
+    "zhipu": {
+      "label": "智谱开放平台 / GLM",
+      "protocol": "chat_completions",
+      "base_url": "https://open.bigmodel.cn/api/paas/v4",
+      "endpoint": "/chat/completions",
+      "model_endpoint": "/models",
+      "api_key_env": "ZHIPU_API_KEY",
+      "models": ["glm-4.7", "glm-4.5", "glm-4.5-flash"],
+      "note": "使用智谱 OpenAI 兼容聊天接口。"
+    },
+    "siliconflow": {
+      "label": "SiliconFlow / 硅基流动",
+      "protocol": "chat_completions",
+      "base_url": "https://api.siliconflow.cn/v1",
+      "endpoint": "/chat/completions",
+      "model_endpoint": "/models",
+      "api_key_env": "SILICONFLOW_API_KEY",
+      "models": ["Qwen/Qwen3-8B", "deepseek-ai/DeepSeek-V3.2"],
+      "note": "兼容 OpenAI Chat Completions；模型以账户接口返回为准。"
+    },
+    "baidu": {
+      "label": "百度智能云千帆",
+      "protocol": "chat_completions",
+      "base_url": "https://qianfan.baidubce.com/v2",
+      "endpoint": "/chat/completions",
+      "model_endpoint": "/models",
+      "api_key_env": "QIANFAN_API_KEY",
+      "models": ["ernie-4.5-turbo-128k", "ernie-speed-pro-128k"],
+      "note": "千帆 V2 OpenAI 兼容接口。"
+    },
+    "custom": {
+      "label": "自定义兼容文本 API（编辑配置文件）",
+      "protocol": "chat_completions",
+      "base_url": "",
+      "endpoint": "/chat/completions",
+      "model_endpoint": "/models",
+      "api_key_env": "CUSTOM_TEXT_API_KEY",
+      "models": [],
+      "note": "请在 resources/ai_providers.json 修改连接参数，重启程序后生效。"
+    }
+  },
+  "image": {
+    "openai": {
+      "label": "OpenAI GPT Image API",
+      "protocol": "openai_images",
+      "base_url": "https://api.openai.com/v1",
+      "endpoint": "/images/generations",
+      "model_endpoint": "/models",
+      "api_key_env": "OPENAI_API_KEY",
+      "models": ["gpt-image-2", "gpt-image-2-2026-04-21"],
+      "note": "支持文生图和单张参考图编辑；输出保存为 JPG。"
+    },
+    "cunai": {
+      "label": "CUN.AI 图片生成",
+      "protocol": "openai_images_url",
+      "base_url": "https://www.cun.ai/v1",
+      "endpoint": "/images/generations",
+      "model_endpoint": "/models",
+      "api_key_env": "CUNAI_API_KEY",
+      "models": [],
+      "note": "按 OpenAI Compatible 图片接口接入；请先获取账户实际模型列表，并选择明确支持图片生成的模型。"
+    },
+    "aliyun": {
+      "label": "阿里云百炼 / 通义万相",
+      "protocol": "dashscope_wan",
+      "base_url": "https://dashscope.aliyuncs.com/api/v1",
+      "endpoint": "/services/aigc/multimodal-generation/generation",
+      "model_endpoint": "https://dashscope.aliyuncs.com/compatible-mode/v1/models",
+      "api_key_env": "DASHSCOPE_API_KEY",
+      "models": ["wan2.6-t2i", "wan2.5-t2i-preview"],
+      "note": "使用百炼多模态图像生成入口；能力与尺寸以控制台为准。"
+    },
+    "volcengine": {
+      "label": "火山方舟 / Seedream",
+      "protocol": "openai_images_url",
+      "base_url": "https://ark.cn-beijing.volces.com/api/v3",
+      "endpoint": "/images/generations",
+      "model_endpoint": "/models",
+      "api_key_env": "ARK_API_KEY",
+      "models": ["doubao-seedream-4-5-251128", "doubao-seedream-4-0-250828"],
+      "note": "支持文生图及参考图；模型 ID 以方舟控制台为准。"
+    },
+    "zhipu": {
+      "label": "智谱开放平台 / CogView",
+      "protocol": "openai_images_url",
+      "base_url": "https://open.bigmodel.cn/api/paas/v4",
+      "endpoint": "/images/generations",
+      "model_endpoint": "/models",
+      "api_key_env": "ZHIPU_API_KEY",
+      "models": ["cogview-4-250304"],
+      "note": "CogView 返回临时图片 URL，程序会立即下载并转为 JPG。"
+    },
+    "siliconflow": {
+      "label": "SiliconFlow / 国产及开源生图",
+      "protocol": "siliconflow_images",
+      "base_url": "https://api.siliconflow.cn/v1",
+      "endpoint": "/images/generations",
+      "model_endpoint": "/models",
+      "api_key_env": "SILICONFLOW_API_KEY",
+      "models": ["Qwen/Qwen-Image", "Qwen/Qwen-Image-Edit", "Kwai-Kolors/Kolors"],
+      "note": "部分模型可接收 base64 参考图，模型与尺寸按模型广场调整。"
+    },
+    "custom": {
+      "label": "自定义兼容图片 API（编辑配置文件）",
+      "protocol": "openai_images_url",
+      "base_url": "",
+      "endpoint": "/images/generations",
+      "model_endpoint": "/models",
+      "api_key_env": "CUSTOM_IMAGE_API_KEY",
+      "models": [],
+      "note": "请在 resources/ai_providers.json 修改连接参数，重启程序后生效。"
+    }
+  }
+}
