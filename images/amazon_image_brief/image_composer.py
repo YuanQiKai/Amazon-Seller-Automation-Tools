@@ -3,6 +3,7 @@ from __future__ import annotations
 import shutil
 import textwrap
 from pathlib import Path
+from typing import Any
 
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 
@@ -35,6 +36,7 @@ def create_german_composite(
     destination: Path,
     german_copy: str,
     skip_text: bool = False,
+    creative_plan: dict[str, Any] | None = None,
 ) -> Path:
     destination.parent.mkdir(parents=True, exist_ok=True)
     if skip_text or not german_copy.strip():
@@ -43,32 +45,61 @@ def create_german_composite(
 
     with Image.open(source_image) as source:
         image = ImageOps.exif_transpose(source).convert("RGB")
+        if (creative_plan or {}).get('pc', {}).get('elements'):
+            from .typography import typeset, poster_panel
+            if creative_plan.get('poster'):
+                composed = poster_panel(image, creative_plan, (1464, 600), text=german_copy)
+            else:
+                composed = typeset(image, german_copy, creative_plan)
+            composed.save(destination, 'JPEG', quality=94, optimize=True)
+            return destination
         width, height = image.size
         overlay = Image.new("RGBA", image.size, (0, 0, 0, 0))
         draw = ImageDraw.Draw(overlay)
-        panel_width = int(width * 0.46)
-        draw.rounded_rectangle(
-            (int(width * 0.04), int(height * 0.10), panel_width, int(height * 0.90)),
-            radius=max(18, width // 55),
-            fill=(20, 27, 32, 205),
-        )
+        box = (creative_plan or {}).get('pc', {}).get('text_box') or [0.05, 0.10, 0.38, 0.80]
+        bx, by, bw, bh = box
+        x0, y0, x1, y1 = int(bx*width), int(by*height), int((bx+bw)*width), int((by+bh)*height)
+        padding = max(6, int(min(x1-x0, y1-y0)*0.07))
+        text_width, text_height = x1-x0-padding*2, y1-y0-padding*2
         lines = [item.strip() for item in german_copy.splitlines() if item.strip()]
-        headline = lines[0] if lines else ""
-        body = " ".join(lines[1:])
-        headline_font = _font(max(28, width // 28), bold=True)
-        body_font = _font(max(20, width // 44))
-        x = int(width * 0.075)
-        y = int(height * 0.19)
-        max_chars = max(16, int(panel_width / max(14, width // 55)))
-        for line in textwrap.wrap(headline, width=max_chars):
-            draw.text((x, y), line, font=headline_font, fill=(255, 255, 255, 255))
-            y += int(headline_font.size * 1.22) if hasattr(headline_font, "size") else 40
-        y += int(height * 0.035)
-        draw.rectangle((x, y, x + int(width * 0.06), y + max(4, width // 260)), fill=(216, 138, 42, 255))
-        y += int(height * 0.06)
-        for line in textwrap.wrap(body, width=max_chars + 7):
-            draw.text((x, y), line, font=body_font, fill=(238, 238, 232, 255))
-            y += int(body_font.size * 1.35) if hasattr(body_font, "size") else 30
+
+        def wrap_pixels(text, font):
+            output, current = [], ''
+            # Character wrapping also handles long German words without clipping.
+            for char in text:
+                if current and draw.textlength(current + char, font=font) > text_width:
+                    if ' ' in current:
+                        prefix, tail = current.rsplit(' ', 1)
+                        output.append(prefix)
+                        current = tail + char
+                    else:
+                        output.append(current)
+                        current = char
+                else:
+                    current += char
+            if current:
+                output.append(current)
+            return output
+
+        rendered = []
+        for size in range(max(16, min(width//30, height//18)), 7, -1):
+            rendered = []
+            for index, line in enumerate(lines):
+                font = _font(int(size*1.35) if index == 0 else size, bold=index == 0)
+                wrapped = wrap_pixels(line, font)
+                line_height = max(10, int(getattr(font, 'size', size)*1.35))
+                rendered.append((wrapped, font, line_height, max(4, size//3)))
+            if sum(len(wrapped)*line_height+gap for wrapped, _, line_height, gap in rendered) <= text_height:
+                break
+        else:
+            raise ValueError('德语文案超出版式预留区域，请缩短文案或调整版式后重试。')
+        draw.rounded_rectangle((x0, y0, x1, y1), radius=max(6, width//70), fill=(20, 27, 32, 218))
+        y = y0 + padding
+        for index, (wrapped, font, line_height, gap) in enumerate(rendered):
+            for line in wrapped:
+                draw.text((x0+padding, y), line, font=font, fill=(255, 255, 255, 255) if index == 0 else (238, 238, 232, 255))
+                y += line_height
+            y += gap
         composed = Image.alpha_composite(image.convert("RGBA"), overlay).convert("RGB")
         composed.save(destination, "JPEG", quality=90, optimize=True)
     return destination

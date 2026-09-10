@@ -1,0 +1,97 @@
+{
+  "_template_help": {
+    "用途": "一份 JSON 对应一个 SKU。复制本文件，修改产品资料、变体、图片路径、模块和 AI 选项后，通过批量任务页多选加入队列。",
+    "必填字段": [
+      "project_name",
+      "brand",
+      "product_name_zh",
+      "category",
+      "marketplace",
+      "selling_points"
+    ],
+    "图片路径": "product_image_paths 必须改为执行批量任务电脑上的真实绝对路径。",
+    "密钥": "API Key 不写在 JSON 中，由项目 .env 或系统环境变量提供。",
+    "试跑建议": "示例关闭了 AI 文案和 AI 图片。完成路径与模型配置后，先用一个 SKU 试跑再开启批量生图。"
+  },
+  "project_name": "行李箱批量示例-CASE-DEMO-001",
+  "sku": "CASE-DEMO-001",
+  "asin": "",
+  "brand": "YourBrand",
+  "product_name_zh": "旅行行李箱",
+  "product_name_en": "Travel Suitcase",
+  "category": "Luggage / Suitcases",
+  "marketplace": "Amazon DE — 德国 (amazon.de)",
+  "target_audience": "商务旅行者与城市短途旅行者",
+  "positioning": "耐用、轻便、现代",
+  "material": "请填写真实材质",
+  "functions": "请填写可验证功能",
+  "selling_points": "请填写有证据支持的核心卖点",
+  "package_contents": "行李箱、说明书、保修卡",
+  "forbidden_claims": "绝对化、无法验证或暗示官方背书的表述",
+  "variants": [
+    {
+      "name": "20寸",
+      "sku": "CASE-DEMO-001-20",
+      "size": "请填写实测尺寸",
+      "color": "黑色",
+      "weight": "请填写实测重量",
+      "capacity": "请填写实测容量",
+      "price": "请填写目标站点价格"
+    }
+  ],
+  "product_image_paths": [
+    "E:\\产品素材\\CASE-DEMO-001\\白底图.jpg"
+  ],
+  "competitor_image_paths": [],
+  "competitors": [],
+  "keywords": [],
+  "selected_modules": {
+    "主图": ["MAIN_WHITE", "MAIN_DETAIL"],
+    "高级A+": ["APLUS_SINGLE_TEXT"],
+    "Brand Story": [],
+    "品牌旗舰店": []
+  },
+  "module_instances": [
+    {
+      "instance_id": "MAIN_WHITE__01",
+      "module_code": "MAIN_WHITE",
+      "channel": "主图",
+      "custom_prompt": ""
+    },
+    {
+      "instance_id": "MAIN_DETAIL__01",
+      "module_code": "MAIN_DETAIL",
+      "channel": "主图",
+      "custom_prompt": "展示轮组与拉杆细节，保持真实产品结构"
+    },
+    {
+      "instance_id": "APLUS_SINGLE_TEXT__01",
+      "module_code": "APLUS_SINGLE_TEXT",
+      "channel": "高级A+",
+      "custom_prompt": "清晰展示核心功能与用户收益"
+    }
+  ],
+  "module_order": [
+    "MAIN_WHITE__01",
+    "MAIN_DETAIL__01",
+    "APLUS_SINGLE_TEXT__01"
+  ],
+  "module_prompts": {
+    "MAIN_DETAIL__01": "展示轮组与拉杆细节，保持真实产品结构",
+    "APLUS_SINGLE_TEXT__01": "清晰展示核心功能与用户收益"
+  },
+  "image_reviews": {},
+  "options": {
+    "optimize_copy_with_ai": false,
+    "generate_ai_images": false,
+    "generate_german_composites": true,
+    "text_provider": "cunai",
+    "text_model": "claude-fable-5",
+    "image_provider": "cunai",
+    "image_model": "",
+    "cache_enabled": true,
+    "structure_lock": true,
+    "similarity_threshold": 35.0,
+    "output_root": "outputs"
+  }
+}

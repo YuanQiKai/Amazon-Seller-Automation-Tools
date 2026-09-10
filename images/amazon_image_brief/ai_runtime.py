@@ -29,8 +29,10 @@ class RequestRateLimiter:
                 cls._instances[key] = cls(key[1])
             return cls._instances[key]
 
-    def acquire(self) -> None:
+    def acquire(self, control=None) -> None:
         while True:
+            if control:
+                control()
             with self._lock:
                 now = time.monotonic()
                 while self._timestamps and now - self._timestamps[0] >= 60:

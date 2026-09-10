@@ -1,12 +1,19 @@
 from __future__ import annotations
 
 import json
+import re
+from copy import deepcopy
 from collections import defaultdict
-from typing import Any
+from typing import Any, Callable
 
 from .ai_client import OpenAIClient, OpenAIError
 from .catalogs import CATALOG_BY_CODE
+from .creative_planner import plan_modules, plan_description, layout_prompt, local_copy
 from .models import LANGUAGES, ModuleBrief, ProductProject
+from .product_context import ProductContext, context_text
+from .creative_ai import recipe_for, style_context
+from .creative_planning_ai import rebuild_plan
+from .navigation import instance_name
 
 
 LOCAL_COPY = {
@@ -46,20 +53,43 @@ LOCAL_COPY = {
 
 
 class BriefGenerator:
-    def __init__(self, ai_client: OpenAIClient | None = None) -> None:
+    def __init__(self, ai_client: OpenAIClient | None = None, on_progress: Callable[[dict[str, Any]], None] | None = None, control=None, on_context=None) -> None:
         self._explicit_client = ai_client is not None
         self.ai_client = ai_client or OpenAIClient()
+        self.on_progress = on_progress
+        self.control = control
+        self.on_context = on_context
+
+    def _checkpoint(self):
+        if self.control:
+            self.control()
+        self.ai_client.request_control = self.control
+
+    def _report(self, brief: ModuleBrief, index: int, total: int) -> None:
+        from .task_events import check_cancelled
+        check_cancelled(self.control)
+        if self.on_progress:
+            self.on_progress({'instance_id': brief.instance_id, 'module_name': brief.module_name,
+                              'focus': brief.creative_plan.get('focus', ''), 'status': brief.generation_status,
+                              'error': brief.generation_error, 'done': index, 'total': total,
+                              'finished': brief.generation_status not in {'正在生成', '文案校验修正中', '正在规划卖点与排版', '规划完成 / 正在生成文案'},
+                              'brief': deepcopy(brief)})
 
     def generate(self, project: ProductProject) -> list[ModuleBrief]:
+        project = deepcopy(project)
         if not self._explicit_client:
             self.ai_client = OpenAIClient.from_options(project.options)
         briefs = self._local_briefs(project)
-        if project.options.optimize_copy_with_ai and self.ai_client.available:
-            try:
-                self._enhance_with_ai(project, briefs)
-            except (OpenAIError, ValueError, KeyError, TypeError):
-                pass
         self._apply_review_state(project, briefs)
+        if project.options.optimize_copy_with_ai and self.ai_client.available:
+            self._enhance_with_ai(project, briefs)
+        else:
+            for index, brief in enumerate(briefs, 1):
+                self._checkpoint()
+                brief.generation_status = '首图无文案' if brief.module_code == 'MAIN_WHITE' else ('已载入已保存文案' if brief.instance_id in project.copy_overrides else '本地规划 / 待翻译')
+                if project.options.optimize_copy_with_ai and not self.ai_client.available:
+                    brief.generation_error = '未配置文案模型 Key，未调用 AI；请补充接入设置后重试。'
+                self._report(brief, index, len(briefs))
         return briefs
 
     def selected_codes(self, project: ProductProject) -> list[str]:
@@ -106,16 +136,16 @@ class BriefGenerator:
         channel_counts: dict[str, int] = defaultdict(int)
         result: list[ModuleBrief] = []
         variants = self.variant_summary(project)
+        plans = plan_modules(project)
         for index, instance in enumerate(selected_instances):
             code = instance.module_code
             spec = CATALOG_BY_CODE[code]
             channel_counts[spec.channel] += 1
             sequence = f"{spec.channel}-{channel_counts[spec.channel]:02d}"
-            product_name = project.product_name_en or project.product_name_zh or "Product"
-            channel_copy = LOCAL_COPY[spec.channel]
-            copy = {language: channel_copy[language].format(product=product_name) for language in LANGUAGES}
+            plan = plans[instance.instance_id]
+            copy = {language: local_copy(plan, language) for language in project.active_languages()}
             if code == "MAIN_WHITE":
-                copy = {language: "" for language in LANGUAGES}
+                copy = {language: "" for language in project.active_languages()}
             custom_prompt = (
                 instance.custom_prompt
                 or project.module_prompts.get(instance.instance_id, "")
@@ -146,18 +176,27 @@ class BriefGenerator:
                     sequence=sequence,
                     channel=spec.channel,
                     module_code=spec.code,
-                    module_name=spec.name,
+                    module_name=instance_name(instance, spec.name),
                     pc_size=spec.pc_size,
                     mobile_size=spec.mobile_size,
                     design_brief=design,
                     instance_id=instance.instance_id,
+                    parent_id=instance.parent_id,
+                    frame_index=instance.frame_index,
+                    frame_count=instance.frame_count,
+                    style_reference_paths=recipe_for(project, instance.instance_id)['style_reference_paths'],
                     copy=copy,
+                    requested_languages=list(project.active_languages()),
+                    image_language=project.render_language(),
                     keywords=keyword_map[index],
                     compliance_note=compliance,
                     image_prompt=self._image_prompt(project, spec, keyword_map[index], custom_prompt),
                     custom_prompt=custom_prompt,
+                    creative_plan=plan,
                 )
             )
+            result[-1].design_brief += '\n' + plan_description(plan)
+            result[-1].image_prompt += '\n' + layout_prompt(plan)
         return result
 
     def _image_prompt(self, project: ProductProject, spec, keywords: list[str], custom_prompt: str) -> str:
@@ -188,22 +227,34 @@ class BriefGenerator:
         for brief in briefs:
             key = brief.instance_id or brief.module_code
             override = project.copy_overrides.get(key, project.copy_overrides.get(brief.module_code, {}))
-            if all(language in override for language in LANGUAGES):
-                brief.copy = {language: str(override[language]) for language in LANGUAGES}
+            if override:
+                brief.copy.update({language: str(value) for language, value in override.items()})
             versions = project.copy_versions.get(key, project.copy_versions.get(brief.module_code, []))
             if versions:
                 brief.copy_version = max(int(item.get("version", 1)) for item in versions)
+                brief.chinese_translations = dict(versions[-1].get('chinese_translations', {}))
             brief.review_status = project.review_statuses.get(key, project.review_statuses.get(brief.module_code, "待审核"))
             brief.review_notes = project.review_notes.get(key, project.review_notes.get(brief.module_code, ""))
             brief.self_check_result = project.self_check_results.get(key, project.self_check_results.get(brief.module_code, ""))
+            image_review = project.image_reviews.get(key, project.image_reviews.get(brief.module_code, {}))
+            if isinstance(image_review, dict):
+                brief.image_version = max(1, int(image_review.get("version", 1) or 1))
+                brief.image_review_status = str(image_review.get("status", "待审核") or "待审核")
+                brief.image_revision_notes = str(image_review.get("notes", ""))
+                history = image_review.get("history", [])
+                brief.image_history = list(history) if isinstance(history, list) else []
             if brief.module_code == "MAIN_WHITE":
-                brief.copy = {language: "" for language in LANGUAGES}
+                brief.copy = {language: "" for language in project.active_languages()}
 
     def _project_context(self, project: ProductProject) -> str:
-        return json.dumps(
-            {"product": project.to_dict(), "variant_summary": self.variant_summary(project)},
-            ensure_ascii=False,
-        )
+        fields = ('brand', 'product_name_zh', 'product_name_en', 'category', 'marketplace', 'target_audience',
+                  'positioning', 'model', 'material', 'size', 'color', 'weight', 'capacity', 'functions',
+                  'selling_points', 'package_contents', 'maintenance', 'warranty', 'certifications',
+                  'brand_tone', 'visual_style', 'font_suggestion', 'brand_colors', 'forbidden_claims', 'custom_fields')
+        return json.dumps({'product': {key: getattr(project, key) for key in fields},
+                           'variants': self.variant_summary(project),
+                           'competitors': project.to_dict()['competitors'],
+                           'keywords': project.to_dict()['keywords']}, ensure_ascii=False)
 
     def _enhance_with_ai(
         self,
@@ -211,60 +262,152 @@ class BriefGenerator:
         briefs: list[ModuleBrief],
         revision_instruction: str = "",
     ) -> None:
-        payload = [
-            {
-                "instance_id": item.instance_id,
-                "module_code": item.module_code,
-                "channel": item.channel,
-                "module_name": item.module_name,
-                "pc_size": item.pc_size,
-                "mobile_size": item.mobile_size,
-                "keywords": item.keywords,
-                "custom_prompt": item.custom_prompt,
-                "current_design_brief": item.design_brief,
-            }
-            for item in briefs
-        ]
-        prompt = f"""
-You are an Amazon ecommerce creative strategist for international marketplaces.
-Return ONLY a valid JSON array, one object per requested module in the same order.
-Each object must contain: instance_id, module_code, design_brief_zh, compliance_note_zh, image_prompt_en,
-and copy with exactly these keys: en, zh, de, fr, it, es.
+        ProductContext(self.ai_client, self.on_context, self.control).prepare(project)
+        # One request per instance makes progress, retry and repeated module isolation observable.
+        accepted: list[ModuleBrief] = []
+        for index, brief in enumerate(briefs, 1):
+            self._checkpoint()
+            brief.requested_languages = list(project.active_languages())
+            if brief.module_code == 'MAIN_WHITE':
+                brief.copy = {language: '' for language in project.active_languages()}
+                brief.generation_status = '首图无文案'
+                self._report(brief, index, len(briefs))
+                continue
+            brief.generation_error = ''
+            brief.generation_status = '正在生成'
+            self._report(brief, index - 1, len(briefs))
+            prior = [{'instance_id': item.instance_id, 'focus': item.creative_plan.get('focus'),
+                      'headlines': {lang: item.copy_for(lang).splitlines()[0] for lang in project.active_languages() if item.copy_for(lang)}} for item in accepted]
+            context = getattr(self.ai_client, 'debug_context', None)
+            if context is not None:
+                context.update(instance_id=brief.instance_id, module_name=brief.module_name, focus=brief.creative_plan.get('focus', ''))
+            try:
+                style_context(project, brief.instance_id, self.ai_client, self.control)
+                self._plan_before_copy(project, brief, revision_instruction, prior, index-1, len(briefs))
+                issue = ''
+                for attempt in range(2):
+                    self._checkpoint()
+                    prompt = self._copy_prompt(project, brief, revision_instruction, prior, issue)
+                    brief.effective_copy_prompt = prompt
+                    brief.context_fingerprint = project.ai_context.get('fingerprint', '')
+                    result = self.ai_client.generate_json(prompt, project.options.text_model)
+                    try:
+                        self._validate_copy_result(brief, result, accepted)
+                        break
+                    except (OpenAIError, ValueError, TypeError) as exc:
+                        issue = str(exc)
+                        if attempt == 1:
+                            raise
+                        brief.generation_status = '文案校验修正中'
+                        self._report(brief, index - 1, len(briefs))
+                self._apply_ai_item(brief, result)
+                brief.generation_status = 'AI完成 / 待审核'
+                accepted.append(brief)
+            except (OpenAIError, ValueError, TypeError, KeyError) as exc:
+                brief.generation_status = '生成失败 / 保留原稿'
+                brief.generation_error = str(exc)
+            finally:
+                if context is not None:
+                    context.clear()
+            self._report(brief, index, len(briefs))
 
-Rules:
-- The six language versions must carry the same substantiated meaning. German is the primary image-copy language.
-- Use one concise headline and at most one supporting line per visual.
-- Integrate supplied keywords only when relevant and natural. Never hide text or stuff keywords.
-- MAIN_WHITE has empty copy in every language and remains a pure-white product-only image.
-- Never invent certification, test result, dimension, guarantee, award, ranking or competitor claim.
-- Design briefs state hierarchy, composition, product angle, scene, lighting, typography and PC/mobile safe areas.
-- Respect each custom_prompt unless it conflicts with marketplace compliance or verified product facts.
-- Image prompts request no rendered text because copy is typeset separately.
-- Global revision instruction: {revision_instruction or 'Improve clarity, specificity and natural marketplace language.'}
+    def _plan_before_copy(self, project, brief, instruction='', prior=None, done=0, total=1):
+        base = plan_modules(project).get(brief.instance_id, brief.creative_plan)
+        if not project.options.ai_plan_before_copy:
+            brief.creative_plan = deepcopy(base)
+            return
+        brief.generation_status = '正在规划卖点与排版'
+        self._report(brief, done, total)
+        plan = rebuild_plan(self.ai_client, project, brief.instance_id, base, instruction=instruction,
+                            prior=prior, control=self.control)
+        brief.creative_plan = plan
+        project.creative_plans[brief.instance_id] = deepcopy(plan)
+        brief.generation_status = '规划完成 / 正在生成文案'
+        self._report(brief, done, total)
 
+    def _copy_prompt(self, project, brief, instruction='', prior=None, issue='') -> str:
+        from .languages import LANGUAGE_NAMES
+        schema = json.dumps({language: '...' for language in project.active_languages()}, ensure_ascii=False)
+        translations = json.dumps({language: '逐行中文对照' for language in project.active_languages() if language != 'zh'}, ensure_ascii=False)
+        return f'''Rewrite the copy for one Amazon visual module. Return ONLY one JSON object:
+{{"instance_id":"{brief.instance_id}", "copy":{schema}, "chinese_translations":{translations},
+"design_brief_zh":"...", "compliance_note_zh":"...", "image_prompt_en":"..."}}.
+Requested languages only: {json.dumps({code: LANGUAGE_NAMES[code] for code in project.active_languages()}, ensure_ascii=False)}.
+Always generate zh for Chinese review. chinese_translations must translate EACH target language back into Chinese,
+one line per original line, preserving that language's exact meaning and line order. Do not merely copy a generic summary.
+First follow the supplied creative_plan: main selling point, source evidence, specific visual proof,
+product position, reserved copy region and PC/mobile reading order. The plan drives BOTH copy and imagery.
+Map each copy line to the matching elements[].slot: headline above, smaller supporting line,
+then specific product-feature callouts near their assigned part anchors. Respect each box's size and reading order.
+For a poster plan, follow the ENTIRE ordered chapter story and global direction: each chapter advances the story,
+uses the same voice and terminology, and transitions from the previous focus to the next without repeating a slogan.
+Use concise embedded labels; longer explanations belong in the design brief or native A+ text fields.
+Write exactly one nonempty line per copy_slots entry, in that order, in every requested language.
+Headline: 3–7 words; supporting explanation: 6–14 words; detail/callout: 3–8 words.
+For Chinese use equivalent concise lengths. All translations convey the same verified facts.
+Use specific product evidence, benefits and instructions, not generic slogans. Do not repeat other module headlines.
+If the same feature reappears, develop a distinct angle and visual proof. Q&A uses real questions and answers;
+specification modules use real variant data; four-image modules need four individual callouts.
+Do not invent absent specifications, guarantees, certifications, tests or brand history. If evidence is missing,
+state the gap in the Chinese design brief and use neutral descriptive copy, never placeholder claims in image copy.
+Keep copy consistent with the uploaded product's supplied facts and custom direction; no keyword stuffing.
+design_brief_zh must explain the main selling point, hierarchy, exact PC/mobile copy/product regions, product angle,
+lighting, typography and how each line maps to the composition. image_prompt_en follows the same layout and requests NO rendered text.
+Revision: {instruction or 'Build a specific, differentiated, evidence-based visual story.'}
+User's per-image COPY PROMPT (honor this direction unless it conflicts with verified facts or white-main-image rules): {recipe_for(project, brief.instance_id)['copy_prompt']}
+Product understanding and verified input facts (explicitly attached; do not assume server-side memory): {context_text(project)}
+Style reference analysis (layout only, never facts about our product): {json.dumps(recipe_for(project, brief.instance_id).get('style_analysis', {}), ensure_ascii=False)}
+Validation issue to correct: {issue or 'None'}
 Project: {self._project_context(project)}
-Modules: {json.dumps(payload, ensure_ascii=False)}
-""".strip()
-        enhanced = self.ai_client.generate_json(prompt, project.options.text_model)
-        if not isinstance(enhanced, list):
-            raise ValueError("AI brief response must be a list")
-        by_instance = {item.get("instance_id"): item for item in enhanced if isinstance(item, dict)}
-        by_code = {item.get("module_code"): item for item in enhanced if isinstance(item, dict)}
-        for brief in briefs:
-            self._apply_ai_item(brief, by_instance.get(brief.instance_id) or by_code.get(brief.module_code))
+Previously accepted headlines to avoid: {json.dumps(prior or [], ensure_ascii=False)}
+Module: {json.dumps(self._brief_payload(brief), ensure_ascii=False)}'''
+
+    @staticmethod
+    def _validate_copy_result(brief: ModuleBrief, result: Any, accepted: list[ModuleBrief]) -> None:
+        if not isinstance(result, dict) or result.get('instance_id', brief.instance_id) != brief.instance_id:
+            raise OpenAIError('返回的模块实例 ID 不匹配或不是 JSON 对象。')
+        copy = result.get('copy', {})
+        expected = len(brief.creative_plan.get('copy_slots', [])) or 4
+        for language in brief.languages():
+            value = copy.get(language) if isinstance(copy, dict) else None
+            if not isinstance(value, str):
+                raise OpenAIError(f'缺少 {language} 的完整文案。')
+            lines = [line.strip() for line in value.splitlines() if line.strip()]
+            if len(lines) != expected:
+                raise OpenAIError(f'{language} 应按版式返回 {expected} 行，实际 {len(lines)} 行；不能只返回一句话。')
+            normalized = lambda text: re.sub(r'\W+', '', text.casefold())
+            headline = normalized(lines[0])
+            if any(item.copy_for(language) and normalized(item.copy_for(language).splitlines()[0]) == headline for item in accepted):
+                raise OpenAIError(f'{language} 标题与其他模块重复，请按本模块卖点重写。')
+        if brief.requested_languages:
+            translations = result.get('chinese_translations', {})
+            for language in brief.languages():
+                if language == 'zh':
+                    continue
+                value = translations.get(language) if isinstance(translations, dict) else None
+                if not isinstance(value, str) or len([line for line in value.splitlines() if line.strip()]) != expected:
+                    raise OpenAIError(f'缺少 {language} 的逐行中文对照，请与原文行数对齐。')
+        for field in ('design_brief_zh', 'image_prompt_en'):
+            if not isinstance(result.get(field), str) or not result[field].strip():
+                raise OpenAIError(f'缺少 {field}；文案必须同时交付版式说明和图片 Prompt。')
 
     @staticmethod
     def _apply_ai_item(brief: ModuleBrief, item: Any) -> None:
         if not isinstance(item, dict):
             return
         copy = item.get("copy", {})
-        if isinstance(copy, dict) and all(language in copy for language in LANGUAGES):
-            brief.copy = {language: str(copy[language]).strip() for language in LANGUAGES}
+        if isinstance(copy, dict) and all(language in copy for language in brief.languages()):
+            brief.copy.update({language: str(copy[language]).strip() for language in brief.languages()})
+            brief.chinese_translations.update({code: str(value) for code, value in item.get('chinese_translations', {}).items()})
+            brief.review_status = '待审核'
         brief.design_brief = str(item.get("design_brief_zh") or brief.design_brief).strip()
         brief.compliance_note = str(item.get("compliance_note_zh") or brief.compliance_note).strip()
         brief.image_prompt = str(item.get("image_prompt_en") or brief.image_prompt).strip()
+        if brief.creative_plan:
+            brief.design_brief = brief.design_brief.split('\n【主卖点】', 1)[0] + '\n' + plan_description(brief.creative_plan)
+            brief.image_prompt = brief.image_prompt.split('\nAPPROVED VISUAL PLAN', 1)[0] + '\n' + layout_prompt(brief.creative_plan)
         if brief.module_code == "MAIN_WHITE":
-            brief.copy = {language: "" for language in LANGUAGES}
+            brief.copy = {language: "" for language in brief.languages()}
 
     def regenerate_copy(
         self,
@@ -274,27 +417,43 @@ Modules: {json.dumps(payload, ensure_ascii=False)}
     ) -> dict[str, Any]:
         if not self._explicit_client:
             self.ai_client = OpenAIClient.from_options(project.options)
+        self._checkpoint()
+        brief.requested_languages = list(project.active_languages())
         if not self.ai_client.available:
             raise OpenAIError(
                 f"局部文案重生成需要配置文案供应商 {project.options.text_provider} 的 API Key"
                 f"（环境变量 {project.options.text_api_key_env} 或 AI 接入页临时 Key）。"
             )
-        prompt = f"""
-Rewrite the copy for one Amazon visual module. Return ONLY a valid JSON object with:
-copy (exact keys en, zh, de, fr, it, es), design_brief_zh, compliance_note_zh, image_prompt_en.
-Keep all six languages semantically equivalent. German is primary. Use a short headline and at most one support line.
-Do not invent facts, numbers, certification, guarantees, rankings or competitor claims. Do not keyword-stuff.
-MAIN_WHITE must stay empty in all languages. Image prompt must request no rendered text.
-User revision instruction: {instruction or 'Improve clarity, specificity and natural marketplace language.'}
-Project: {self._project_context(project)}
-Module: {json.dumps(self._brief_payload(brief), ensure_ascii=False)}
-""".strip()
-        result = self.ai_client.generate_json(prompt, project.options.text_model)
-        if not isinstance(result, dict):
-            raise OpenAIError("局部文案接口未返回有效对象。")
-        copy = result.get("copy", {})
-        if not isinstance(copy, dict) or not all(language in copy for language in LANGUAGES):
-            raise OpenAIError("局部文案缺少六语字段。")
+        if brief.module_code == 'MAIN_WHITE':
+            return {'copy': {language: '' for language in project.active_languages()}}
+        ProductContext(self.ai_client, self.on_context, self.control).prepare(project)
+        style_context(project, brief.instance_id, self.ai_client, self.control)
+        if not brief.creative_plan:
+            brief.creative_plan = plan_modules(project).get(brief.instance_id, {})
+        brief.generation_status = '正在生成'
+        self._report(brief, 0, 1)
+        brief.context_fingerprint = project.ai_context.get('fingerprint', '')
+        context = getattr(self.ai_client, 'debug_context', None)
+        if context is not None:
+            context.update(instance_id=brief.instance_id, module_name=brief.module_name, focus=brief.creative_plan.get('focus', ''))
+        try:
+            self._plan_before_copy(project, brief, instruction)
+            prompt = self._copy_prompt(project, brief, instruction)
+            brief.effective_copy_prompt = prompt
+            result = self.ai_client.generate_json(prompt, project.options.text_model)
+            self._validate_copy_result(brief, result, [])
+        except (OpenAIError, ValueError, TypeError) as exc:
+            brief.generation_status = '生成失败 / 保留原稿'
+            brief.generation_error = str(exc)
+            self._report(brief, 1, 1)
+            raise
+        finally:
+            if context is not None:
+                context.clear()
+        brief.generation_status = 'AI完成 / 待审核'
+        brief.generation_error = ''
+        self._apply_ai_item(brief, result)
+        self._report(brief, 1, 1)
         return result
 
     def regenerate_all_copy(
@@ -364,5 +523,7 @@ Modules: {json.dumps([self._brief_payload(item) for item in briefs], ensure_asci
             "custom_prompt": brief.custom_prompt,
             "design_brief": brief.design_brief,
             "copy": brief.copy,
+            "requested_languages": list(brief.languages()),
             "compliance_note": brief.compliance_note,
+            "creative_plan": {key: value for key, value in brief.creative_plan.items() if key not in ('planning_prompt', 'planning_response')},
         }

@@ -1,20 +1,25 @@
 from __future__ import annotations
 
 import json
+import io
+import os
 import tempfile
 import time
 import unittest
+from contextlib import redirect_stdout
 from pathlib import Path
 
 from openpyxl import load_workbook
 from PIL import Image, ImageDraw
 
 from amazon_image_brief.ai_client import OpenAIClient, OpenAIError
+from amazon_image_brief.api_debug import APIDebugLogger
 from amazon_image_brief.ai_runtime import AICache
 from amazon_image_brief.batch_queue import PersistentBatchQueue
 from amazon_image_brief.brief_generator import BriefGenerator
 from amazon_image_brief.catalogs import default_module_selection
 from amazon_image_brief.data_io import MarketWorkbookManager
+from amazon_image_brief.env_store import read_env_values, upsert_env_value
 from amazon_image_brief.costing import estimate_project_cost
 from amazon_image_brief.excel_exporter import ExcelExporter
 from amazon_image_brief.image_composer import create_german_composite, create_placeholder
@@ -30,6 +35,7 @@ from amazon_image_brief.providers import (
 from amazon_image_brief.quality import image_similarity, text_overflow_report
 from amazon_image_brief.rules import RuleLibrary
 from amazon_image_brief.service import GenerationService
+from amazon_image_brief.template_io import export_batch_project_template, export_rule_library_template
 
 
 class FakeAIClient:
@@ -47,7 +53,8 @@ class FakeAIClient:
             ]
         if "Rewrite the copy for one" in prompt:
             return {
-                "copy": {language: f"新版-{language}" for language in ("en", "zh", "de", "fr", "it", "es")},
+                'chinese_translations': {language: '标题\n支持说明\n细节一\n细节二' for language in ('en', 'de', 'fr', 'it', 'es')},
+                "copy": {language: f"新版-{language}\n支持说明-{language}\n细节1-{language}\n细节2-{language}" for language in ("en", "zh", "de", "fr", "it", "es")},
                 "design_brief_zh": "新版局部设计说明",
                 "compliance_note_zh": "仅使用已验证信息",
                 "image_prompt_en": "A refreshed no-text close-up composition.",
@@ -63,6 +70,7 @@ def sample_project(output_root: str, image_path: str = "") -> ProductProject:
     order = [code for channel in ("主图", "高级A+", "Brand Story", "品牌旗舰店") for code in selected[channel]]
     project = ProductProject(
         project_name="行李箱测试项目",
+        copy_languages=['en', 'de', 'fr', 'it', 'es'],
         brand="TestBrand",
         product_name_zh="20英寸旅行箱",
         product_name_en="20-inch Carry-On Suitcase",
@@ -82,6 +90,8 @@ def sample_project(output_root: str, image_path: str = "") -> ProductProject:
         module_order=order,
         module_prompts={"MAIN_DETAIL": "Use a macro close-up of the double spinner wheel."},
         options=GenerationOptions(
+            ai_plan_before_copy=False,
+            context_before_generation=False,
             optimize_copy_with_ai=False,
             generate_ai_images=False,
             generate_german_composites=False,
@@ -108,11 +118,15 @@ class CatalogAndModelTests(unittest.TestCase):
     def test_project_round_trip_preserves_variants_and_review_state(self) -> None:
         project = sample_project("outputs")
         project.copy_versions = {"MAIN_DETAIL": [{"version": 1, "copy": {"de": "Details"}}]}
+        project.image_reviews = {
+            "MAIN_DETAIL": {"version": 2, "status": "不满意-待修改", "notes": "背景更明亮", "history": []}
+        }
         restored = ProductProject.from_dict(project.to_dict())
         self.assertEqual(2, len(restored.variants))
         self.assertEqual("24寸", restored.variants[1].name)
         self.assertEqual(project.module_order, restored.module_order)
         self.assertIn("MAIN_DETAIL", restored.copy_versions)
+        self.assertEqual("不满意-待修改", restored.image_reviews["MAIN_DETAIL"]["status"])
 
     def test_white_main_image_has_no_copy_and_order_is_enforced(self) -> None:
         project = sample_project("outputs")
@@ -171,6 +185,9 @@ class CatalogAndModelTests(unittest.TestCase):
         self.assertEqual("CUNAI_API_KEY", preset.api_key_env)
         self.assertEqual("claude-fable-5", preset.default_model)
         self.assertEqual("https://www.cun.ai/v1/models", model_catalog_url("cunai", "text", preset.base_url))
+        cun_headers = json.loads(preset.extra_headers)
+        self.assertEqual("CUN.AI-Python/1.0", cun_headers["User-Agent"])
+        self.assertEqual("application/json", cun_headers["Accept"])
         raw = PROVIDER_CONFIG_PATH.read_text(encoding="utf-8")
         self.assertNotIn('"api_key":', raw)
 
@@ -202,6 +219,36 @@ class CatalogAndModelTests(unittest.TestCase):
         stale = GenerationOptions(text_provider="cunai", text_base_url="https://stale.invalid", text_model="claude-fable-5")
         resolved = OpenAIClient.from_options(stale, text_api_key="test-key", build_fallbacks=False)
         self.assertEqual("https://www.cun.ai/v1", resolved.options.text_base_url)
+
+    def test_api_debug_json_redacts_credentials_and_encoded_images(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "ai_api_debug.jsonl"
+            output = io.StringIO()
+            with redirect_stdout(output):
+                APIDebugLogger(path, enabled=True).log(
+                    "request",
+                    request_id="req-1",
+                    request_headers={"Authorization": "Bearer real-secret", "User-Agent": "test-agent"},
+                    request_json={
+                        "api_key": "real-secret",
+                        "prompt": "keep this prompt",
+                        "image": "data:image/png;base64," + ("a" * 4096),
+                    },
+                )
+            console_event = json.loads(output.getvalue())
+            file_event = json.loads(path.read_text(encoding="utf-8"))
+            self.assertEqual(console_event, file_event)
+            self.assertEqual("[REDACTED]", file_event["request_headers"]["Authorization"])
+            self.assertEqual("[REDACTED]", file_event["request_json"]["api_key"])
+            self.assertEqual("keep this prompt", file_event["request_json"]["prompt"])
+            self.assertEqual("base64 data URL", file_event["request_json"]["image"]["_omitted"])
+            self.assertNotIn("real-secret", path.read_text(encoding="utf-8"))
+
+    def test_default_http_headers_identify_client_and_request_json(self) -> None:
+        client = OpenAIClient(options=GenerationOptions(api_debug_enabled=False), text_api_key="secret")
+        headers = client._headers("secret", "")
+        self.assertEqual("AmazonImageBrief/2.7", headers["User-Agent"])
+        self.assertEqual("application/json", headers["Accept"])
 
     def test_cunai_image_provider_uses_shared_key_and_dynamic_models(self) -> None:
         preset = IMAGE_PROVIDER_PRESETS["cunai"]
@@ -249,6 +296,46 @@ class CatalogAndModelTests(unittest.TestCase):
 
 
 class ImportAndPaletteTests(unittest.TestCase):
+    def test_env_store_upserts_key_without_losing_other_settings(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / ".env"
+            path.write_text("# local keys\nOPENAI_API_KEY=existing\nCUNAI_API_KEY=old\n", encoding="utf-8")
+            previous = os.environ.get("CUNAI_API_KEY")
+            try:
+                upsert_env_value(path, "CUNAI_API_KEY", "session-secret")
+                values = read_env_values(path)
+                self.assertEqual("session-secret", values["CUNAI_API_KEY"])
+                self.assertEqual("existing", values["OPENAI_API_KEY"])
+                self.assertEqual(1, sum(line.startswith("CUNAI_API_KEY=") for line in path.read_text(encoding="utf-8").splitlines()))
+                self.assertEqual("session-secret", os.environ["CUNAI_API_KEY"])
+            finally:
+                if previous is None:
+                    os.environ.pop("CUNAI_API_KEY", None)
+                else:
+                    os.environ["CUNAI_API_KEY"] = previous
+
+    def test_batch_project_and_rule_json_templates_are_valid(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            project = sample_project("outputs")
+            project.sku = "CASE-001"
+            project_path = export_batch_project_template(project, root / "batch-template.json")
+            raw = json.loads(project_path.read_text(encoding="utf-8"))
+            self.assertIn("_template_help", raw)
+            self.assertEqual("CASE-001", ProductProject.from_dict(raw).sku)
+            queue = PersistentBatchQueue(root / "queue.json")
+            self.assertEqual(1, len(queue.add_projects([str(project_path)])))
+
+            bundled_path = Path(__file__).resolve().parents[1] / "批量项目JSON模板.json"
+            bundled = ProductProject.from_dict(json.loads(bundled_path.read_text(encoding="utf-8")))
+            self.assertEqual("CASE-DEMO-001", bundled.sku)
+            self.assertEqual("MAIN_WHITE", bundled.normalized_module_instances()[0].module_code)
+            self.assertEqual([], bundled.validate())
+
+            rule_path = export_rule_library_template(root / "rule-template.json")
+            library = RuleLibrary.load(rule_path)
+            self.assertEqual(1, library.data["schema_version"])
+
     def test_market_template_export_and_import(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             path = Path(temporary) / "template.xlsx"
@@ -369,6 +456,9 @@ class ArtifactTests(unittest.TestCase):
             detail.review_status = "已通过"
             detail.review_notes = "母语复核完成"
             detail.self_check_result = "结论：通过"
+            detail.image_version = 2
+            detail.image_review_status = "不满意-待修改"
+            detail.image_revision_notes = "轮子需要更清晰，背景更简洁"
             project.copy_versions = {
                 "MAIN_DETAIL": [
                     {"version": 1, "time": "2026-09-04 10:00:00", "reason": "初稿", "copy": dict(detail.copy)}
@@ -378,15 +468,22 @@ class ArtifactTests(unittest.TestCase):
             ExcelExporter().export(project, briefs, destination)
             workbook = load_workbook(destination, read_only=False)
             self.assertEqual(
-                ["项目参数", "主图", "高级A+", "Brand Story", "品牌旗舰店", "文案版本记录"],
+                ["项目参数", "主图", "高级A+", "Brand Story", "品牌旗舰店", "文案版本记录", "V3提示词与上下文", "语言与中文对照"],
                 workbook.sheetnames,
             )
-            headers = [workbook["主图"].cell(3, column).value for column in range(1, 29)]
+            headers = [workbook["主图"].cell(3, column).value for column in range(1, 32)]
             for required in (
                 "模块实例ID", "用户指定Prompt", "文案版本", "审核状态", "ChatGPT自查结果/修改建议",
-                "产品结构相似度", "OCR识别文字", "六语回译检查", "文案溢出检查", "图片文字合规检查", "Amazon规则预检",
+                "产品结构相似度", "OCR识别文字", "多语言回译检查", "文案溢出检查", "图片文字合规检查", "Amazon规则预检",
+                "图片版本", "图片审核状态", "图片修改意见",
             ):
                 self.assertIn(required, headers)
+            detail_row = next(
+                row for row in workbook["主图"].iter_rows(min_row=4, values_only=True) if row[1] == detail.instance_id
+            )
+            self.assertEqual("V2", detail_row[28])
+            self.assertEqual("不满意-待修改", detail_row[29])
+            self.assertIn("轮子需要更清晰", detail_row[30])
             values = [workbook["项目参数"].cell(row, 1).value for row in range(1, workbook["项目参数"].max_row + 1)]
             self.assertIn("产品变体", values)
 
@@ -426,7 +523,7 @@ class ArtifactTests(unittest.TestCase):
             self.assertTrue(Path(result["excel"]).is_file())
             self.assertTrue((Path(result["output_dir"]) / "preflight_report.json").is_file())
             self.assertTrue((Path(result["output_dir"]) / "qa_report.json").is_file())
-            self.assertEqual(1, len(list((Path(result["output_dir"]) / "reference_images").glob("*.jpg"))))
+            self.assertFalse((Path(result["output_dir"]) / "reference_images").exists())
             workbook = load_workbook(result["excel"], read_only=False)
             self.assertEqual(1, len(workbook["主图"]._images))
             self.assertIn("Amazon规则预检", workbook.sheetnames)
@@ -438,7 +535,7 @@ class ArtifactTests(unittest.TestCase):
         briefs = generator.generate(project)
         detail = next(item for item in briefs if item.module_code == "MAIN_DETAIL")
         rewritten = generator.regenerate_copy(project, detail, "缩短标题")
-        self.assertEqual("新版-de", rewritten["copy"]["de"])
+        self.assertEqual("新版-de", rewritten["copy"]["de"].splitlines()[0])
         checks = generator.self_check(project, [detail])
         key = detail.instance_id or detail.module_code
         self.assertIn("建议修改", checks[key])
@@ -460,10 +557,46 @@ class ArtifactTests(unittest.TestCase):
             service = GenerationService(root, FakeAIClient())
             result = service.run(project, briefs=briefs)
             detail = next(item for item in briefs if item.module_code == "MAIN_DETAIL")
-            refreshed = service.regenerate_image(project, briefs, detail.instance_id, Path(result["output_dir"]))
+            refreshed = service.regenerate_image(
+                project,
+                briefs,
+                detail.instance_id,
+                Path(result["output_dir"]),
+                revision_instruction="背景更明亮，轮子保持不变",
+            )
             self.assertTrue(Path(detail.ai_effect_image).is_file())
             self.assertIn("regen", Path(detail.ai_effect_image).name)
+            self.assertEqual(2, detail.image_version)
+            self.assertEqual("待复核", detail.image_review_status)
+            self.assertIn("背景更明亮", detail.image_revision_notes)
+            self.assertIn(detail.instance_id, project.image_reviews)
+            service.regenerate_image(project, briefs, detail.instance_id, Path(result["output_dir"]), revision_instruction="改为机场背景")
+            self.assertEqual(3, detail.image_version)
+            self.assertEqual(1, len(detail.image_history))
             self.assertTrue(Path(refreshed["excel"]).is_file())
+
+    def test_batch_regenerates_only_requested_images_with_individual_notes(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source = root / "suitcase.png"
+            Image.new("RGB", (500, 500), "white").save(source)
+            project = sample_project(str(root / "out"), str(source))
+            project.module_instances = project.module_instances[:2]
+            project.module_order = [item.instance_id for item in project.module_instances]
+            project.selected_modules = {"主图": [item.module_code for item in project.module_instances], "高级A+": [], "Brand Story": [], "品牌旗舰店": []}
+            briefs = BriefGenerator().generate(project)
+            ids = [item.instance_id for item in briefs]
+            result = GenerationService(root, FakeAIClient()).regenerate_images(
+                project,
+                briefs,
+                ids,
+                root / "existing",
+                {ids[0]: "主体更大", ids[1]: "背景更简洁"},
+            )
+            self.assertEqual([2, 2], [item.image_version for item in briefs])
+            self.assertEqual(["待复核", "待复核"], [item.image_review_status for item in briefs])
+            self.assertEqual([], result["regeneration_failures"])
+            self.assertTrue(Path(result["excel"]).is_file())
 
     def test_mask_regeneration_passes_mask_and_structure_lock(self) -> None:
         class MaskAwareClient:

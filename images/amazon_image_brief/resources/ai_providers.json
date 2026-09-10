@@ -19,8 +19,22 @@
       "endpoint": "/chat/completions",
       "model_endpoint": "/models",
       "api_key_env": "CUNAI_API_KEY",
+      "extra_headers": {
+        "User-Agent": "CUN.AI-Python/1.0",
+        "Accept": "application/json"
+      },
       "models": ["claude-fable-5"],
-      "note": "CUN.AI OpenAI-compatible 接口；模型列表从 GET /v1/models 获取。"
+      "note": "CUN.AI OpenAI-compatible 接口；模型列表从 GET /v1/models 获取；显式 User-Agent 用于避免客户端特征被网关误拦截。"
+    },
+    "sudocode": {
+      "label": "SudoCode",
+      "protocol": "chat_completions",
+      "base_url": "https://api.sudocode.chat/v1",
+      "endpoint": "/chat/completions",
+      "model_endpoint": "/models",
+      "api_key_env": "SUDOCODE_API_KEY",
+      "models": [],
+      "note": "使用 OpenAI 兼容 /v1 入口；与图片共用 SUDOCODE_API_KEY。先获取全部模型，再选择支持聊天的模型。Anthropic 根地址不用于此适配器。"
     },
     "aliyun": {
       "label": "阿里云百炼 / 通义千问",
@@ -101,8 +115,22 @@
       "endpoint": "/images/generations",
       "model_endpoint": "/models",
       "api_key_env": "CUNAI_API_KEY",
+      "extra_headers": {
+        "User-Agent": "CUN.AI-Python/1.0",
+        "Accept": "application/json"
+      },
       "models": [],
       "note": "按 OpenAI Compatible 图片接口接入；请先获取账户实际模型列表，并选择明确支持图片生成的模型。"
+    },
+    "sudocode": {
+      "label": "SudoCode 图片生成",
+      "protocol": "openai_images_url",
+      "base_url": "https://api.sudocode.chat/v1",
+      "endpoint": "/images/generations",
+      "model_endpoint": "/models",
+      "api_key_env": "SUDOCODE_API_KEY",
+      "models": [],
+      "note": "OpenAI 兼容图片接口；与文案共用 Key。模型列表不代表所有模型都支持生图，须选择账户实际支持 images/generations 的模型；具体能力以供应商为准。"
     },
     "aliyun": {
       "label": "阿里云百炼 / 通义万相",

@@ -59,12 +59,27 @@ def _font(size: int = 38) -> ImageFont.FreeTypeFont | ImageFont.ImageFont:
 
 
 def text_overflow_report(brief: ModuleBrief) -> str:
+    if brief.creative_plan.get('pc', {}).get('elements'):
+        from .typography import typeset
+        risks = []
+        for device in ('pc', 'mobile'):
+            size = ((1464, 600) if device == 'pc' else (1200, 900)) if brief.creative_plan.get('poster') else _parse_size(brief.pc_size if device == 'pc' else brief.mobile_size)
+            for language in brief.languages():
+                try:
+                    typeset(size, brief.copy_for(language), brief.creative_plan, device, validate_only=True)
+                except ValueError as exc:
+                    risks.append(f'{language}: {exc}')
+        return '；'.join(risks) if risks else 'PC / 移动端逐文本框多语言排版检查通过（实际图片仍需人工核对部位与可读性）'
     width, height = _parse_size(brief.pc_size)
     safe_width = max(240, int(width * (0.45 if width / max(1, height) > 1.4 else 0.78)))
     safe_height = max(120, int(height * 0.42))
+    box = brief.creative_plan.get('pc', {}).get('text_box', [])
+    if len(box) == 4:
+        safe_width = max(1, int(width * box[2] * 0.86))
+        safe_height = max(1, int(height * box[3] * 0.86))
     font = _font(max(24, min(46, int(height * 0.07))))
     risks: list[str] = []
-    for language in LANGUAGES:
+    for language in brief.languages():
         text = brief.copy_for(language).strip()
         if not text:
             continue
@@ -109,15 +124,15 @@ class QualityAnalyzer:
             for item in briefs
         ]
         prompt = f"""
-Back-translate en/de/fr/it/es into Chinese and compare them with the supplied zh copy.
-Return ONLY a JSON array. Each item: instance_id, back_translations (keys en/de/fr/it/es),
+Back-translate each supplied non-zh language into Chinese and compare it with the supplied zh copy.
+Return ONLY a JSON array. Each item: instance_id, back_translations (keys matching the supplied non-zh language codes),
 semantic_score_0_100, issues_zh (array), recommendation_zh.
 Do not rewrite the copy. Product facts: {json.dumps(project.to_dict(), ensure_ascii=False)}
 Modules: {json.dumps(payload, ensure_ascii=False)}
 """.strip()
         result = self.ai_client.generate_json(prompt, project.options.text_model)
         if not isinstance(result, list):
-            raise OpenAIError("六语回译接口未返回列表。")
+            raise OpenAIError("多语言回译接口未返回列表。")
         by_id = {str(item.get("instance_id")): item for item in result if isinstance(item, dict)}
         for brief in briefs:
             item = by_id.get(brief.instance_id)
@@ -134,12 +149,12 @@ Modules: {json.dumps(payload, ensure_ascii=False)}
     def image_ocr_and_policy(self, project: ProductProject, brief: ModuleBrief, image_path: Path) -> None:
         if not self.ai_client.text_available or not image_path.is_file():
             return
-        expected = brief.copy_for("de") if image_path == Path(brief.german_composite_image or "") else ""
+        expected = brief.copy_for(brief.image_language) if image_path == Path(brief.german_composite_image or "") else ""
         prompt = f"""
 Inspect this Amazon creative. Return ONLY JSON with keys:
 detected_text (array), unexpected_text (array), spelling_issues (array),
 policy_risks_zh (array), verdict_zh.
-Expected German text: {expected!r}. MAIN_WHITE must contain no visible text, logo overlay,
+Expected text (language {brief.image_language}): {expected!r}. MAIN_WHITE must contain no visible text, logo overlay,
 watermark, badge or promotional graphic. Other images may contain only supplied copy and verified facts.
 Module: {brief.module_code}; marketplace: {project.marketplace}; category: {project.category}.
 """.strip()

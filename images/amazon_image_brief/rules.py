@@ -84,7 +84,7 @@ class RuleLibrary:
     def update_from_url(cls, url: str, destination: Path, timeout: int = 30) -> "RuleLibrary":
         if not url.lower().startswith("https://"):
             raise ValueError("在线规则库仅允许 HTTPS URL。")
-        request = urllib.request.Request(url, headers={"User-Agent": "AmazonImageBrief/2.4"})
+        request = urllib.request.Request(url, headers={"User-Agent": "AmazonImageBrief/2.7"})
         try:
             with urllib.request.urlopen(request, timeout=timeout) as response:
                 data = json.loads(response.read().decode("utf-8"))
@@ -112,7 +112,7 @@ class RuleLibrary:
                 return key
         return "general"
 
-    def preflight(self, project: ProductProject, briefs: list[ModuleBrief]) -> PreflightReport:
+    def preflight(self, project: ProductProject, briefs: list[ModuleBrief], check_outputs: bool = False) -> PreflightReport:
         global_rules = self.data["global"]
         sources = self.data.get("sources", [])
         primary_source = sources[0].get("url", "") if sources else ""
@@ -128,7 +128,7 @@ class RuleLibrary:
         if len(main) > max_images:
             findings.append(RuleFinding("警告", "IMG-COUNT-001", "全站点/主图", f"规划了{len(main)}张主图，超过规则库记录的{max_images}张。", "确认上传界面可用槽位并精简重复图片。", primary_source))
 
-        for image_name in project.product_image_paths:
+        for image_name in dict.fromkeys([*project.product_image_paths, *project.competitor_image_paths]):
             path = Path(image_name)
             if not path.is_file():
                 findings.append(RuleFinding("警告", "IMG-FILE-001", "全站点/素材", f"产品参考图不存在：{path.name}", "重新选择有效的本机图片。", primary_source))
@@ -143,9 +143,26 @@ class RuleLibrary:
             recommended = int(global_rules.get("image_longest_side_zoom_recommended", 1000))
             maximum = int(global_rules.get("image_longest_side_max", 10000))
             if longest < minimum or longest > maximum:
-                findings.append(RuleFinding("错误", "IMG-SIZE-001", "全站点/素材", f"{path.name} 最长边为{longest}px，不在{minimum}–{maximum}px范围。", "更换符合尺寸要求的原图。", primary_source))
+                findings.append(RuleFinding("警告", "REF-SIZE-001", "输入参考素材", f"{path.name} 最长边为{longest}px；仅作生成参考，不阻止生成。", "低清素材可能丢失结构细节，建议补充高清原图；最终输出另行检查尺寸。", primary_source))
             elif longest < recommended:
                 findings.append(RuleFinding("警告", "IMG-ZOOM-001", "全站点/素材", f"{path.name} 最长边为{longest}px，可能无法获得理想缩放效果。", f"建议使用最长边至少{recommended}px的图片。", primary_source))
+
+        if check_outputs:
+            for brief in briefs:
+                for output in dict.fromkeys([brief.ai_effect_image, brief.german_composite_image]):
+                    if not output:
+                        continue
+                    path = Path(output)
+                    try:
+                        with Image.open(path) as picture:
+                            longest = max(picture.size)
+                    except (OSError, ValueError):
+                        findings.append(RuleFinding('错误', 'OUT-FILE-001', brief.instance_id, f'输出图片无法读取：{path.name}', '重新生成此模块图片。', primary_source))
+                        continue
+                    minimum = int(global_rules.get('image_longest_side_min', 500))
+                    maximum = int(global_rules.get('image_longest_side_max', 10000))
+                    if brief.channel == '主图' and not minimum <= longest <= maximum:
+                        findings.append(RuleFinding('错误', 'IMG-SIZE-001', brief.instance_id, f'生成的主图 {path.name} 最长边为{longest}px，不在{minimum}–{maximum}px范围。', '重新生成符合尺寸要求的主图；参考素材不会被作为上架成品。', primary_source))
 
         all_copy = "\n".join(
             [project.selling_points, project.functions, *[value for brief in briefs for value in brief.copy.values()]]
@@ -157,10 +174,10 @@ class RuleLibrary:
         market_code = self.marketplace_code(project.marketplace)
         market = self.data["marketplaces"].get(market_code, {})
         languages = market.get("languages", [])
-        supported = {"en", "zh", "de", "fr", "it", "es"}
+        supported = set(project.active_languages())
         missing_languages = [item for item in languages if item not in supported]
         if missing_languages:
-            findings.append(RuleFinding("警告", "LOCALE-001", f"站点/{market_code}", f"目标站点主要语言包含 {', '.join(missing_languages)}，当前六语输出未覆盖。", "增加对应语言文案并由母语人员审核。", primary_source))
+            findings.append(RuleFinding("警告", "LOCALE-001", f"站点/{market_code}", f"目标站点主要语言包含 {', '.join(missing_languages)}，当前多语言输出未覆盖。", "增加对应语言文案并由母语人员审核。", primary_source))
 
         category_key = self.category_key(project.category)
         if category_key == "luggage":
@@ -176,6 +193,9 @@ class RuleLibrary:
         for brief in briefs:
             brief.rule_preflight_result = "通过"
         for finding in findings:
+            for brief in briefs:
+                if finding.scope == brief.instance_id:
+                    brief.rule_preflight_result = f'{finding.severity}：{finding.message}'
             if finding.rule_id.startswith("IMG-MAIN") and main:
                 main[0].rule_preflight_result = f"{finding.severity}：{finding.message}"
             elif finding.scope.startswith("全站点/文案") or finding.scope.startswith("品类"):

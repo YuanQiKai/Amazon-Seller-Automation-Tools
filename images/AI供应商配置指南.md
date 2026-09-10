@@ -1,4 +1,10 @@
-# AI 供应商配置指南（V2.4）
+# AI 供应商配置指南（V2.10）
+
+V2.10 在“生成与导出”提供与文案页一致的实时请求/响应 JSON 查看器。图片生成、蒙版重生、下载及 OCR 请求会附带模块上下文；命中图片缓存时明确显示“没有发送 HTTP 请求”。可以关闭“跟随最新接口记录”查看历史，清空本页仅清理 UI，不删除 `logs/ai_api_debug.jsonl`。供应商地址、模型和 Key 配置未因本次迭代更改。
+
+V2.9 新增 SudoCode 文案/图片供应商，两侧共用 `SUDOCODE_API_KEY`。在 UI 选择供应商、保存 Key、获取模型即可；程序使用 `https://api.sudocode.chat/v1`，不使用 Anthropic 根地址，也不修改其他客户端配置。图片接口按 OpenAI Compatible `/images/generations` 对接，是否支持具体模型须由账户能力确认，模型列表连通不等于生图验证。操作及配置保存说明见 [V2.9使用说明.md](V2.9使用说明.md)。
+
+V2.8 在“六语文案审核 → 接口请求与返回 JSON”显示实时脱敏请求、响应和缓存事件。文案按模块实例分别调用，以明确展示每个模块的主卖点和生成进度；全局生成时每个模块校验失败最多额外修正1次。完整操作见 [V2.8使用说明.md](V2.8使用说明.md)。
 
 ## 1. 先理解认证边界
 
@@ -16,6 +22,7 @@ ChatGPT/Codex 登录用于 OpenAI 自己的客户端体验；本地 Python 程�
 |---|---|---|---|---|
 | OpenAI | `responses` | `https://api.openai.com/v1` | `OPENAI_API_KEY` | `gpt-5.6-terra` |
 | CUN.AI | `chat_completions` | `https://www.cun.ai/v1` | `CUNAI_API_KEY` | `claude-fable-5` |
+| SudoCode | `chat_completions` | `https://api.sudocode.chat/v1` | `SUDOCODE_API_KEY` | 从账户 `/models` 动态选择 |
 | 阿里云百炼 | `chat_completions` | `https://dashscope.aliyuncs.com/compatible-mode/v1` | `DASHSCOPE_API_KEY` | `qwen-plus` |
 | 火山方舟 | `responses` | `https://ark.cn-beijing.volces.com/api/v3` | `ARK_API_KEY` | `doubao-seed-2-0-lite-260215` |
 | 智谱 GLM | `chat_completions` | `https://open.bigmodel.cn/api/paas/v4` | `ZHIPU_API_KEY` | `glm-4.7` |
@@ -31,6 +38,7 @@ ChatGPT/Codex 登录用于 OpenAI 自己的客户端体验；本地 Python 程�
 |---|---|---|---|---|
 | OpenAI GPT Image | `openai_images` | `/images/generations` | `OPENAI_API_KEY` | `gpt-image-2` |
 | CUN.AI 图片生成 | `openai_images_url` | `/images/generations` | `CUNAI_API_KEY` | 从账户 `/models` 动态选择 |
+| SudoCode 图片生成 | `openai_images_url` | `/images/generations` | `SUDOCODE_API_KEY` | 从账户 `/models` 动态选择支持生图的模型 |
 | 阿里云通义万相 | `dashscope_wan` | `/services/aigc/multimodal-generation/generation` | `DASHSCOPE_API_KEY` | `wan2.6-t2i` |
 | 火山 Seedream | `openai_images_url` | `/images/generations` | `ARK_API_KEY` | `doubao-seedream-4-5-251128` |
 | 智谱 CogView | `openai_images_url` | `/images/generations` | `ZHIPU_API_KEY` | `cogview-4-250304` |
@@ -63,6 +71,10 @@ AI 设置页只显示供应商与模型下拉框。所有连接参数集中在 `
   "endpoint": "/chat/completions",
   "model_endpoint": "/models",
   "api_key_env": "CUNAI_API_KEY",
+  "extra_headers": {
+    "User-Agent": "CUN.AI-Python/1.0",
+    "Accept": "application/json"
+  },
   "models": ["claude-fable-5"]
 }
 ```
@@ -70,6 +82,14 @@ AI 设置页只显示供应商与模型下拉框。所有连接参数集中在 `
 图片供应商也包含 `cunai` 预设，Base URL 和 Key 与文案共用，Endpoint 为 `/images/generations`。官方文档明确其网关为 OpenAI Compatible 并支持 `/models`，但未公开承诺固定图片模型清单，因此配置中的图片 `models` 默认留空；必须先从界面获取账户模型并选择明确支持图片生成的模型。
 
 ## 5. 安全配置
+
+V2.7 可在文案和图片供应商区域直接输入 API Key：
+
+- 输入框默认以密码字符遮挡，内容立即用于当前会话。
+- “保存到项目 .env”只更新当前供应商配置声明的环境变量，并同步进程环境。
+- “从 .env 重新载入”可在不重启程序的情况下重新读取文件。
+- 当文案与图片供应商共用同一个 Key 环境变量时，当前会话可自动共用一份 Key。
+- UI 中的 Key 不进入 `ProductProject`，因此保存项目或导出 Excel/JSON 时不会携带密钥。
 
 推荐在项目根目录创建不会提交到版本库的 `.env`：
 
@@ -87,9 +107,11 @@ CUSTOM_IMAGE_API_KEY=
 
 不要把真实 Key 写进供应商 JSON、Prompt、项目 JSON、Excel、截图或源码。用户给出的示例字符串 `apikey` 视为占位符；实际调用前必须在 `.env` 中填写控制台生成的真实 Key。
 
-## 6. V2.4 连接、模型、切换与费用
+## 6. V2.7 连接、模型、调试、切换与费用
 
 - “获取全部模型”向供应商模型目录发送鉴权 GET 请求，验证网络、Base URL、Key 和账户权限。
+- 开启“打印脱敏请求/响应JSON”后，每次 HTTP 事件会输出到控制台和项目 `logs/ai_api_debug.jsonl`。日志保留请求/响应结构但隐藏认证信息与大段图片数据，适合提交给供应商支持人员排错。
+- HTTP 403 `error code: 1010` 是 Cloudflare 按客户端/浏览器签名拦截的错误，通常发生在请求到达上游模型 API 之前。程序已为 CUN.AI 显式发送官方 SDK 示例风格的 User-Agent；若仍被拦截，应把日志中的时间、`cf-ray`、URL 和状态码交给 CUN.AI 支持排查或加入白名单，不要提供 API Key。
 - 文案“测试连接”先读取模型目录，再向所选模型发送一条极短对话，因此会产生少量 token；图片测试只读取模型目录，不生成图片。
 - “获取全部模型”用供应商返回的模型 ID 更新模型下拉框。部分供应商或自定义网关没有兼容 `/models` 接口时，应在 `ai_providers.json` 的 `models` 数组补充模型 ID 后重启程序。
 - 开启自动切换后，主供应商在重试后仍失败才会调用备用供应商。文案和图片分别配置一套备用供应商及模型；备用 Key 从其预设环境变量读取。

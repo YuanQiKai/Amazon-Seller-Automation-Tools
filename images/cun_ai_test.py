@@ -22,8 +22,14 @@ def main() -> None:
         text_extra_headers=preset.extra_headers,
         text_model=preset.default_model,
         cache_enabled=False,
+        api_debug_enabled=True,
     )
-    result = OpenAIClient.from_options(options, build_fallbacks=False).test_connection("text")
+    result = OpenAIClient.from_options(
+        options,
+        debug_log_path=app_root / "logs" / "ai_api_debug.jsonl",
+        debug_enabled=True,
+        build_fallbacks=False,
+    ).test_connection("text")
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
 

@@ -11,17 +11,32 @@ import urllib.request
 from dataclasses import replace
 from io import BytesIO
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 from PIL import Image
 
+from .api_debug import APIDebugLogger, parse_response_body
 from .ai_runtime import AICache, RequestRateLimiter
 from .models import GenerationOptions
 from .providers import fallback_preset, model_catalog_url
+from .retry_policy import TRANSIENT_HTTP, retry_delay
+from .image_requests import is_gpt_image, uses_image_edits, validate_image_prompt
 
 
 class OpenAIError(RuntimeError):
     """Raised when a configured AI provider request cannot be completed."""
+
+    def __init__(self, message, *, http_status=None, retry_after=0, retryable=False, retry_not_before=0):
+        super().__init__(message)
+        self.http_status = http_status
+        self.retry_after = retry_after
+        self.retryable = retryable
+        self.retry_not_before = retry_not_before or (time.time() + retry_after if retry_after else 0)
+
+    @classmethod
+    def aggregate(cls, message, last_error):
+        return cls(message, **{key: getattr(last_error, key, default) for key, default in
+                              [('http_status', None), ('retry_after', 0), ('retryable', False), ('retry_not_before', 0)]})
 
 
 class OpenAIClient:
@@ -35,13 +50,24 @@ class OpenAIClient:
         text_api_key: str = "",
         image_api_key: str = "",
         cache_dir: Path | None = None,
+        debug_log_path: Path | None = None,
+        debug_enabled: bool | None = None,
+        on_api_event: Callable[[dict], None] | None = None,
     ) -> None:
         self.options = options or GenerationOptions()
         self.timeout = timeout
         shared_key = api_key or ""
-        self.text_api_key = text_api_key or shared_key or os.getenv(self.options.text_api_key_env, "")
-        self.image_api_key = image_api_key or shared_key or os.getenv(self.options.image_api_key_env, "")
+        from .env_store import provider_key_name
+        self.text_api_key = text_api_key or shared_key or os.getenv(provider_key_name('text', self.options.text_provider), '') or os.getenv(self.options.text_api_key_env, "")
+        self.image_api_key = image_api_key or shared_key or os.getenv(provider_key_name('image', self.options.image_provider), '') or os.getenv(self.options.image_api_key_env, "")
         self.cache = AICache(cache_dir, self.options.cache_enabled)
+        self.api_debug = APIDebugLogger(
+            debug_log_path,
+            self.options.api_debug_enabled if debug_enabled is None else debug_enabled,
+            on_api_event,
+        )
+        self.api_debug.secrets = [self.text_api_key, self.image_api_key]
+        self.debug_context = self.api_debug.context
         rpm = max(1, int(self.options.requests_per_minute))
         self.text_limiter = RequestRateLimiter.shared(f"text:{self.options.text_provider}", rpm)
         self.image_limiter = RequestRateLimiter.shared(f"image:{self.options.image_provider}", rpm)
@@ -56,6 +82,9 @@ class OpenAIClient:
         image_api_key: str = "",
         timeout: int = 300,
         cache_dir: Path | None = None,
+        debug_log_path: Path | None = None,
+        debug_enabled: bool | None = None,
+        on_api_event: Callable[[dict], None] | None = None,
         build_fallbacks: bool = True,
     ) -> "OpenAIClient":
         options = cls._resolve_provider_configuration(options)
@@ -65,6 +94,9 @@ class OpenAIClient:
             text_api_key=text_api_key,
             image_api_key=image_api_key,
             cache_dir=cache_dir,
+            debug_log_path=debug_log_path,
+            debug_enabled=debug_enabled,
+            on_api_event=on_api_event,
         )
         if build_fallbacks and options.auto_failover:
             client._configure_fallbacks(cache_dir)
@@ -112,9 +144,13 @@ class OpenAIClient:
                 fallback_options,
                 timeout=self.timeout,
                 cache_dir=cache_dir,
+                debug_log_path=self.api_debug.path,
+                debug_enabled=self.api_debug.enabled,
+                on_api_event=self.api_debug.on_event,
                 build_fallbacks=False,
             )
             getattr(self, f"{kind}_fallbacks").append(fallback)
+            fallback.api_debug.context = self.debug_context
 
     @property
     def text_available(self) -> bool:
@@ -155,7 +191,31 @@ class OpenAIClient:
         headers = self._extra_headers(extra_headers)
         headers.setdefault("Authorization", f"Bearer {api_key}")
         headers.setdefault("Content-Type", content_type)
+        headers.setdefault("Accept", "application/json")
+        headers.setdefault("User-Agent", "AmazonImageBrief/2.7")
         return headers
+
+    def _checkpoint(self):
+        control = getattr(self, 'request_control', None)
+        if control:
+            control()
+
+    def _check_cancelled(self):
+        from .task_events import check_cancelled
+        check_cancelled(getattr(self, 'request_control', None))
+
+    def _retry_wait(self, seconds):
+        until = time.monotonic() + seconds
+        while time.monotonic() < until:
+            self._checkpoint()
+            time.sleep(min(0.2, max(0, until - time.monotonic())))
+
+    def wait_for_retry(self, seconds, **context):
+        if seconds <= 0:
+            return
+        self.api_debug.log('retry_wait', wait_seconds=round(seconds, 1),
+                           note='按供应商退避要求等待；支持暂停/继续，不会在后台立即重发。', **context)
+        self._retry_wait(seconds)
 
     def _post_json(
         self,
@@ -167,31 +227,89 @@ class OpenAIClient:
         provider_label: str,
         limiter: RequestRateLimiter | None = None,
     ) -> dict[str, Any]:
-        request = urllib.request.Request(
-            self._url(base_url, endpoint),
-            data=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
-            headers=self._headers(api_key, extra_headers),
-            method="POST",
-        )
+        url = self._url(base_url, endpoint)
+        data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+        headers = self._headers(api_key, extra_headers)
         result: Any = None
         attempts = max(1, int(self.options.max_retries) + 1)
         for attempt in range(attempts):
+            delay = min(2 ** attempt, 8)
+            self._checkpoint()
             if limiter:
-                limiter.acquire()
+                limiter.acquire(getattr(self, 'request_control', None))
+            self._checkpoint()
+            request_id = secrets.token_hex(8)
+            request = urllib.request.Request(url, data=data, headers=headers, method="POST")
+            self.api_debug.log(
+                "request",
+                request_id=request_id,
+                provider=provider_label,
+                attempt=attempt + 1,
+                method="POST",
+                url=url,
+                request_headers=headers,
+                request_json=payload,
+            )
+            started = time.perf_counter()
             try:
                 with urllib.request.urlopen(request, timeout=self.timeout) as response:
-                    result = json.loads(response.read().decode("utf-8"))
+                    raw = response.read()
+                    status = getattr(response, "status", response.getcode())
+                    response_headers = dict(response.headers.items())
+                self._check_cancelled()
+                parsed = parse_response_body(raw)
+                self.api_debug.log(
+                    "response",
+                    request_id=request_id,
+                    provider=provider_label,
+                    method="POST",
+                    url=url,
+                    http_status=status,
+                    response_headers=response_headers,
+                    response_json=parsed,
+                    elapsed_ms=round((time.perf_counter() - started) * 1000),
+                )
+                try:
+                    result = json.loads(raw.decode("utf-8"))
+                except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+                    raise OpenAIError(f"{provider_label} 返回了无法解析的 JSON；请查看 API 调试日志。") from exc
                 break
             except urllib.error.HTTPError as exc:
-                detail = exc.read().decode("utf-8", errors="replace")
-                if exc.code not in {408, 409, 425, 429, 500, 502, 503, 504} or attempt + 1 >= attempts:
-                    raise OpenAIError(f"{provider_label} 返回 HTTP {exc.code}: {detail[:1000]}") from exc
-            except urllib.error.URLError as exc:
+                raw = exc.read()
+                exc.close()
+                detail = raw.decode("utf-8", errors="replace")
+                delay = retry_delay(exc.code, exc.headers, parse_response_body(raw), attempt)
+                self.api_debug.log(
+                    "response",
+                    request_id=request_id,
+                    provider=provider_label,
+                    method="POST",
+                    url=url,
+                    http_status=exc.code,
+                    response_headers=dict(exc.headers.items()) if exc.headers else {},
+                    response_json=parse_response_body(raw),
+                    elapsed_ms=round((time.perf_counter() - started) * 1000),
+                    error="HTTPError",
+                )
+                if exc.code not in TRANSIENT_HTTP or attempt + 1 >= attempts or delay > 3600:
+                    raise OpenAIError(f"{provider_label} 返回 HTTP {exc.code}: {detail[:1000]}",
+                                      http_status=exc.code, retry_after=delay if exc.code in TRANSIENT_HTTP else 0,
+                                      retryable=exc.code in TRANSIENT_HTTP) from exc
+            except (urllib.error.URLError, TimeoutError, ConnectionError) as exc:
+                self.api_debug.log(
+                    "error",
+                    request_id=request_id,
+                    provider=provider_label,
+                    method="POST",
+                    url=url,
+                    elapsed_ms=round((time.perf_counter() - started) * 1000),
+                    error_type=type(exc).__name__,
+                    error=str(getattr(exc, 'reason', exc)),
+                )
                 if attempt + 1 >= attempts:
-                    raise OpenAIError(f"无法连接 {provider_label}: {exc.reason}") from exc
-            except json.JSONDecodeError as exc:
-                raise OpenAIError(f"{provider_label} 返回了无法解析的 JSON。") from exc
-            time.sleep(min(2 ** attempt, 8))
+                    raise OpenAIError(f"无法连接或等待 {provider_label} 超时: {getattr(exc, 'reason', exc)}", retryable=True, retry_after=delay) from exc
+            self.wait_for_retry(delay, request_id=request_id, provider=provider_label, url=url,
+                                next_attempt=attempt+2, max_attempts=attempts)
         if not isinstance(result, dict):
             raise OpenAIError(f"{provider_label} 返回结构不是 JSON 对象。")
         return result
@@ -204,22 +322,69 @@ class OpenAIClient:
         provider_label: str,
         limiter: RequestRateLimiter,
     ) -> dict[str, Any]:
-        request = urllib.request.Request(
-            url,
-            headers=self._headers(api_key, extra_headers, "application/json"),
-            method="GET",
-        )
+        headers = self._headers(api_key, extra_headers, "application/json")
+        request = urllib.request.Request(url, headers=headers, method="GET")
         limiter.acquire()
+        request_id = secrets.token_hex(8)
+        self.api_debug.log(
+            "request",
+            request_id=request_id,
+            provider=provider_label,
+            attempt=1,
+            method="GET",
+            url=url,
+            request_headers=headers,
+            request_json=None,
+        )
+        started = time.perf_counter()
         try:
             with urllib.request.urlopen(request, timeout=min(self.timeout, 30)) as response:
-                result = json.loads(response.read().decode("utf-8"))
+                raw = response.read()
+                status = getattr(response, "status", response.getcode())
+                response_headers = dict(response.headers.items())
+            parsed = parse_response_body(raw)
+            self.api_debug.log(
+                "response",
+                request_id=request_id,
+                provider=provider_label,
+                method="GET",
+                url=url,
+                http_status=status,
+                response_headers=response_headers,
+                response_json=parsed,
+                elapsed_ms=round((time.perf_counter() - started) * 1000),
+            )
+            result = json.loads(raw.decode("utf-8"))
         except urllib.error.HTTPError as exc:
-            detail = exc.read().decode("utf-8", errors="replace")
+            raw = exc.read()
+            detail = raw.decode("utf-8", errors="replace")
+            self.api_debug.log(
+                "response",
+                request_id=request_id,
+                provider=provider_label,
+                method="GET",
+                url=url,
+                http_status=exc.code,
+                response_headers=dict(exc.headers.items()) if exc.headers else {},
+                response_json=parse_response_body(raw),
+                elapsed_ms=round((time.perf_counter() - started) * 1000),
+                error="HTTPError",
+            )
             raise OpenAIError(f"{provider_label} 连通测试返回 HTTP {exc.code}: {detail[:600]}") from exc
         except urllib.error.URLError as exc:
+            self.api_debug.log(
+                "error",
+                request_id=request_id,
+                provider=provider_label,
+                method="GET",
+                url=url,
+                elapsed_ms=round((time.perf_counter() - started) * 1000),
+                error_type=type(exc).__name__,
+                error=str(exc.reason),
+            )
             raise OpenAIError(f"无法连接 {provider_label}: {exc.reason}") from exc
-        except json.JSONDecodeError as exc:
-            raise OpenAIError(f"{provider_label} 模型接口返回了无法解析的 JSON。") from exc
+        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+            raise OpenAIError(f"{provider_label} 模型接口返回了无法解析的 JSON；请查看 API 调试日志。") from exc
         if not isinstance(result, dict):
             raise OpenAIError(f"{provider_label} 模型接口返回结构不是 JSON 对象。")
         return result
@@ -369,6 +534,7 @@ class OpenAIClient:
         return self._parse_json_text(text)
 
     def generate_json(self, prompt: str, model: str) -> Any:
+        self._checkpoint()
         cache_key = self.cache.key(
             {
                 "type": "text",
@@ -381,26 +547,41 @@ class OpenAIClient:
         )
         cached = self.cache.get_json(cache_key)
         if cached is not None:
+            self.api_debug.log('cache_hit', provider=self.options.text_provider, model=model, result_json=cached,
+                               note='命中本地缓存，本次没有发送 HTTP 请求')
             return cached
         errors: list[str] = []
+        last_error = None
         candidates = [self, *self.text_fallbacks]
         for candidate in candidates:
+            self._checkpoint()
+            candidate.request_control = getattr(self, 'request_control', None)
+            candidate.debug_context.update(self.debug_context)
             candidate_model = model if candidate is self else candidate.options.text_model
             try:
                 result = candidate._generate_json_once(prompt, candidate_model)
                 self.cache.put_json(cache_key, result)
                 return result
             except OpenAIError as exc:
+                last_error = exc
                 errors.append(f"{candidate.options.text_provider}: {exc}")
-        raise OpenAIError("文案主供应商及备用供应商均失败：" + " | ".join(errors))
+        raise OpenAIError.aggregate("文案主供应商及备用供应商均失败：" + " | ".join(errors), last_error)
 
     def analyze_image_json(self, prompt: str, image_path: Path, model: str | None = None) -> Any:
-        """Run OCR/visual QA through a vision-capable text provider."""
-        if not image_path.is_file():
-            raise OpenAIError(f"待分析图片不存在：{image_path}")
-        data_url = self._data_url(image_path)
+        return self.analyze_images_json(prompt, [image_path], model)
+
+    def analyze_images_json(self, prompt: str, image_paths: list[Path], model: str | None = None, *, max_image_edge=2048) -> Any:
+        """All supplied images become actual content parts, not filename-only hints."""
+        self._checkpoint()
+        if not image_paths or any(not Path(path).is_file() for path in image_paths):
+            raise OpenAIError('待分析图片为空或不存在，请检查上传列表。')
+        data_urls = [self._vision_data_url(Path(path), max_image_edge) for path in image_paths]
         errors: list[str] = []
+        last_error = None
         for candidate in [self, *self.text_fallbacks]:
+            self._checkpoint()
+            candidate.request_control = getattr(self, 'request_control', None)
+            candidate.debug_context.update(self.debug_context)
             selected_model = model if candidate is self and model else candidate.options.text_model
             protocol = candidate.options.text_protocol
             if not (candidate.text_api_key.strip() and candidate.options.text_base_url.strip()):
@@ -410,7 +591,7 @@ class OpenAIClient:
                     "model": selected_model,
                     "input": [{"role": "user", "content": [
                         {"type": "input_text", "text": prompt},
-                        {"type": "input_image", "image_url": data_url},
+                        *[{"type": "input_image", "image_url": url} for url in data_urls],
                     ]}],
                     "store": False,
                 }
@@ -419,7 +600,7 @@ class OpenAIClient:
                     "model": selected_model,
                     "messages": [{"role": "user", "content": [
                         {"type": "text", "text": prompt},
-                        {"type": "image_url", "image_url": {"url": data_url}},
+                        *[{"type": "image_url", "image_url": {"url": url}} for url in data_urls],
                     ]}],
                 }
             else:
@@ -432,10 +613,13 @@ class OpenAIClient:
                 "base_url": candidate.options.text_base_url,
                 "model": selected_model,
                 "prompt": prompt,
-                "image": candidate.cache.file_digest(image_path),
+                "images": [candidate.cache.file_digest(Path(path)) for path in image_paths],
+                "max_image_edge": max_image_edge,
             })
             cached = candidate.cache.get_json(cache_key)
             if cached is not None:
+                candidate.api_debug.log('cache_hit', provider=candidate.options.text_provider, model=selected_model,
+                                        result_json=cached, note='图文理解命中缓存，未发出HTTP请求')
                 return cached
             try:
                 response = candidate._post_json(
@@ -452,8 +636,20 @@ class OpenAIClient:
                 candidate.cache.put_json(cache_key, result)
                 return result
             except OpenAIError as exc:
+                last_error = exc
                 errors.append(f"{candidate.options.text_provider}: {exc}")
-        raise OpenAIError("OCR/视觉检查失败：" + " | ".join(errors or ["没有可用的视觉文本供应商"]))
+        action = self.debug_context.get('work_type') or '图文理解 / 视觉检查'
+        raise OpenAIError.aggregate(action + "失败：" + " | ".join(errors or ["没有可用的视觉文本供应商"]), last_error)
+
+    @staticmethod
+    def _vision_data_url(image_path: Path, max_edge=2048) -> str:
+        from PIL import ImageOps
+        with Image.open(image_path) as source:
+            image = ImageOps.exif_transpose(source).convert('RGB')
+            image.thumbnail((max_edge, max_edge), Image.Resampling.LANCZOS)
+            buffer = BytesIO()
+            image.save(buffer, 'JPEG', quality=90)
+        return 'data:image/jpeg;base64,' + base64.b64encode(buffer.getvalue()).decode('ascii')
 
     @staticmethod
     def _data_url(image_path: Path) -> str:
@@ -494,13 +690,67 @@ class OpenAIClient:
         raise OpenAIError("图片接口未返回可识别的 url 或 b64_json。")
 
     def _download(self, url: str) -> bytes:
+        self._check_cancelled()
         if url.startswith("data:") and ";base64," in url:
             return base64.b64decode(url.split(";base64,", 1)[1])
-        request = urllib.request.Request(url, headers={"User-Agent": "AmazonImageBrief/2.4"})
+        headers = {"User-Agent": "AmazonImageBrief/2.7", "Accept": "image/*,application/octet-stream"}
+        request = urllib.request.Request(url, headers=headers)
+        request_id = secrets.token_hex(8)
+        self.api_debug.log(
+            "request",
+            request_id=request_id,
+            provider="图片结果下载",
+            attempt=1,
+            method="GET",
+            url=url,
+            request_headers=headers,
+            request_json=None,
+        )
+        started = time.perf_counter()
         try:
             with urllib.request.urlopen(request, timeout=self.timeout) as response:
-                return response.read()
+                raw = response.read()
+                status = getattr(response, "status", response.getcode())
+                response_headers = dict(response.headers.items())
+            self.api_debug.log(
+                "response",
+                request_id=request_id,
+                provider="图片结果下载",
+                method="GET",
+                url=url,
+                http_status=status,
+                response_headers=response_headers,
+                response_json=raw,
+                elapsed_ms=round((time.perf_counter() - started) * 1000),
+            )
+            self._check_cancelled()
+            return raw
+        except urllib.error.HTTPError as exc:
+            raw = exc.read()
+            self.api_debug.log(
+                "response",
+                request_id=request_id,
+                provider="图片结果下载",
+                method="GET",
+                url=url,
+                http_status=exc.code,
+                response_headers=dict(exc.headers.items()) if exc.headers else {},
+                response_json=parse_response_body(raw),
+                elapsed_ms=round((time.perf_counter() - started) * 1000),
+                error="HTTPError",
+            )
+            raise OpenAIError(f"无法下载图片结果：HTTP {exc.code}") from exc
         except urllib.error.URLError as exc:
+            self.api_debug.log(
+                "error",
+                request_id=request_id,
+                provider="图片结果下载",
+                method="GET",
+                url=url,
+                elapsed_ms=round((time.perf_counter() - started) * 1000),
+                error_type=type(exc).__name__,
+                error=str(exc.reason),
+            )
             raise OpenAIError(f"无法下载图片结果：{exc.reason}") from exc
 
     @staticmethod
@@ -509,7 +759,9 @@ class OpenAIClient:
         try:
             with Image.open(BytesIO(raw)) as image:
                 rgb = image.convert("RGB")
-                rgb.save(destination, "JPEG", quality=94, optimize=True)
+                temporary = destination.with_suffix('.tmp')
+                rgb.save(temporary, "JPEG", quality=94, optimize=True)
+                temporary.replace(destination)
         except Exception as exc:
             raise OpenAIError("供应商返回内容不是有效图片。") from exc
         return destination
@@ -525,10 +777,12 @@ class OpenAIClient:
         mask_path: str | None = None,
         use_cache: bool = True,
     ) -> Path:
+        self._checkpoint()
         refs = [Path(item) for item in (reference_images or []) if Path(item).is_file()]
         mask = Path(mask_path) if mask_path and Path(mask_path).is_file() else None
         cache_key = self.cache.key({
             "type": "image",
+            "request_schema": "3.0.2-final",
             "provider": self.options.image_provider,
             "protocol": self.options.image_protocol,
             "base_url": self.options.image_base_url,
@@ -540,9 +794,16 @@ class OpenAIClient:
             "mask": self.cache.file_digest(mask) if mask else "",
         })
         if use_cache and self.cache.copy_image_to(cache_key, destination):
+            self.api_debug.log('cache_hit', provider=self.options.image_provider, model=model,
+                               result_json={'cached_image': str(destination)},
+                               note='图片命中本地缓存，本次没有发送 HTTP 请求')
             return destination
         errors: list[str] = []
+        last_error = None
         for candidate in [self, *self.image_fallbacks]:
+            self._checkpoint()
+            candidate.request_control = getattr(self, 'request_control', None)
+            candidate.debug_context.update(self.debug_context)
             selected_model = model if candidate is self else candidate.options.image_model
             try:
                 result = candidate._generate_image_once(
@@ -554,12 +815,14 @@ class OpenAIClient:
                     refs,
                     mask,
                 )
+                self._check_cancelled()
                 if use_cache:
                     self.cache.put_image(cache_key, result)
                 return result
             except OpenAIError as exc:
+                last_error = exc
                 errors.append(f"{candidate.options.image_provider}: {exc}")
-        raise OpenAIError("图片主供应商及备用供应商均失败：" + " | ".join(errors))
+        raise OpenAIError.aggregate("图片主供应商及备用供应商均失败：" + " | ".join(errors), last_error)
 
     def _generate_image_once(
         self,
@@ -576,8 +839,14 @@ class OpenAIClient:
                 f"图片供应商 {self.options.image_provider} 未配置；请设置 {self.options.image_api_key_env} 或输入临时 Key。"
             )
         protocol = self.options.image_protocol
-        if protocol == "openai_images" and refs and self.options.image_provider == "openai":
-            response = self._post_image_edit(prompt, model, quality, ratio, refs[0], mask)
+        try:
+            validate_image_prompt(prompt, model)
+        except ValueError as exc:
+            raise OpenAIError(str(exc)) from exc
+        if uses_image_edits(self.options, model, refs):
+            if len(refs) > 16 and is_gpt_image(model):
+                raise OpenAIError('GPT 图片编辑接口最多接收16张输入图片；请使用产品参考拼图或减少参考图。尚未发送请求。')
+            response = self._post_image_edit(prompt, model, quality, ratio, refs[0], mask, refs[1:])
         else:
             payload = self._image_payload(protocol, prompt, model, quality, ratio, refs, mask)
             response = self._post_json(
@@ -591,6 +860,7 @@ class OpenAIClient:
             )
         kind, value = self._find_image_result(response)
         raw = base64.b64decode(value) if kind == "base64" else self._download(value)
+        self._check_cancelled()
         return self._save_as_jpeg(raw, destination)
 
     def _image_payload(
@@ -606,7 +876,11 @@ class OpenAIClient:
         standard_size = {"square": "1024x1024", "landscape": "1536x1024", "portrait": "1024x1536"}.get(ratio, "1024x1024")
         if protocol in {"openai_images", "openai_images_url"}:
             payload: dict[str, Any] = {"model": model, "prompt": prompt, "size": standard_size}
-            if protocol == "openai_images":
+            if is_gpt_image(model):
+                if refs or mask:
+                    raise OpenAIError('GPT 带图请求必须使用 /images/edits，不能发送 image / mask 到 generations。')
+                payload.update({"quality": quality, "output_format": "jpeg"})
+            elif protocol == "openai_images":
                 payload.update({"quality": quality, "output_format": "jpeg"})
             else:
                 payload["response_format"] = "url"
@@ -645,10 +919,12 @@ class OpenAIClient:
         ratio: str,
         image_path: Path,
         mask_path: Path | None = None,
+        extra_image_paths: list[Path] | None = None,
     ) -> dict[str, Any]:
         size = {"square": "1024x1024", "landscape": "1536x1024", "portrait": "1024x1536"}.get(ratio, "1024x1024")
         boundary = f"----AmazonBrief{secrets.token_hex(12)}"
         body = bytearray()
+        form_fields = {"model": model, "prompt": prompt, "quality": quality, "size": size, "output_format": "jpeg"}
 
         def add_field(name: str, value: str) -> None:
             body.extend(f"--{boundary}\r\n".encode())
@@ -656,7 +932,7 @@ class OpenAIClient:
             body.extend(value.encode("utf-8"))
             body.extend(b"\r\n")
 
-        for key, value in {"model": model, "prompt": prompt, "quality": quality, "size": size, "output_format": "jpeg"}.items():
+        for key, value in form_fields.items():
             add_field(key, value)
         def add_file(name: str, path: Path) -> None:
             mime = mimetypes.guess_type(path.name)[0] or "image/png"
@@ -670,36 +946,107 @@ class OpenAIClient:
             body.extend(path.read_bytes())
             body.extend(b"\r\n")
 
-        add_file("image", image_path)
+        all_images = [image_path, *(extra_image_paths or [])]
+        for path in all_images:
+            add_file('image[]' if len(all_images) > 1 else 'image', path)
         if mask_path:
             add_file("mask", mask_path)
         body.extend(f"--{boundary}--\r\n".encode())
-        endpoint = "/images/edits"
-        request = urllib.request.Request(
-            self._url(self.options.image_base_url, endpoint),
-            data=bytes(body),
-            headers=self._headers(
-                self.image_api_key,
-                self.options.image_extra_headers,
-                f"multipart/form-data; boundary={boundary}",
-            ),
-            method="POST",
+        endpoint = self.options.image_endpoint
+        endpoint = endpoint.rsplit('/', 1)[0] + '/edits' if endpoint.rstrip('/').endswith('/generations') else '/images/edits'
+        url = self._url(self.options.image_base_url, endpoint)
+        provider_label = f'图片供应商 {self.options.image_provider} / 图片编辑'
+        headers = self._headers(
+            self.image_api_key,
+            self.options.image_extra_headers,
+            f"multipart/form-data; boundary={boundary}",
         )
+        request_body = {
+            "content_type": "multipart/form-data",
+            "fields": form_fields,
+            "files": {
+                **({'image[]': [{'path': str(path), 'size_bytes': path.stat().st_size} for path in all_images]} if len(all_images) > 1 else {'image': {'path': str(image_path), 'size_bytes': image_path.stat().st_size}}),
+                **({"mask": {"path": str(mask_path), "size_bytes": mask_path.stat().st_size}} if mask_path else {}),
+            },
+        }
         attempts = max(1, int(self.options.max_retries) + 1)
         for attempt in range(attempts):
-            self.image_limiter.acquire()
+            delay = min(2 ** attempt, 8)
+            self._checkpoint()
+            self.image_limiter.acquire(getattr(self, 'request_control', None))
+            self._checkpoint()
+            request = urllib.request.Request(url, data=bytes(body), headers=headers, method="POST")
+            request_id = secrets.token_hex(8)
+            self.api_debug.log(
+                "request",
+                request_id=request_id,
+                provider=provider_label,
+                attempt=attempt + 1,
+                method="POST",
+                url=url,
+                request_headers=headers,
+                request_json=request_body,
+            )
+            started = time.perf_counter()
             try:
                 with urllib.request.urlopen(request, timeout=self.timeout) as response:
-                    result = json.loads(response.read().decode("utf-8"))
+                    raw = response.read()
+                    status = getattr(response, "status", response.getcode())
+                    response_headers = dict(response.headers.items())
+                self.api_debug.log(
+                    "response",
+                    request_id=request_id,
+                    provider=provider_label,
+                    method="POST",
+                    url=url,
+                    http_status=status,
+                    response_headers=response_headers,
+                    response_json=parse_response_body(raw),
+                    elapsed_ms=round((time.perf_counter() - started) * 1000),
+                )
+                try:
+                    result = json.loads(raw.decode("utf-8"))
+                except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+                    raise OpenAIError(f"{provider_label}返回了无法解析的 JSON；请查看 API 调试日志。") from exc
                 if not isinstance(result, dict):
-                    raise OpenAIError("OpenAI 图片编辑返回结构不是 JSON 对象。")
+                    raise OpenAIError(f"{provider_label}返回结构不是 JSON 对象。")
                 return result
             except urllib.error.HTTPError as exc:
-                detail = exc.read().decode("utf-8", errors="replace")
-                if exc.code not in {408, 409, 425, 429, 500, 502, 503, 504} or attempt + 1 >= attempts:
-                    raise OpenAIError(f"OpenAI 图片编辑返回 HTTP {exc.code}: {detail[:1000]}") from exc
-            except urllib.error.URLError as exc:
+                raw = exc.read()
+                exc.close()
+                detail = raw.decode("utf-8", errors="replace")
+                delay = retry_delay(exc.code, exc.headers, parse_response_body(raw), attempt)
+                self.api_debug.log(
+                    "response",
+                    request_id=request_id,
+                    provider=provider_label,
+                    method="POST",
+                    url=url,
+                    http_status=exc.code,
+                    response_headers=dict(exc.headers.items()) if exc.headers else {},
+                    response_json=parse_response_body(raw),
+                    elapsed_ms=round((time.perf_counter() - started) * 1000),
+                    error="HTTPError",
+                )
+                if exc.code not in TRANSIENT_HTTP or attempt + 1 >= attempts or delay > 3600:
+                    hint = ('；已使用带图 multipart 编辑格式，请确认供应商开放该模型的 /images/edits 能力。'
+                            '未自动去掉产品图重试。' if exc.code in {400, 404, 405, 422} else '')
+                    raise OpenAIError(f"{provider_label} 返回 HTTP {exc.code}: {detail[:1000]}{hint}",
+                                      http_status=exc.code, retry_after=delay if exc.code in TRANSIENT_HTTP else 0,
+                                      retryable=exc.code in TRANSIENT_HTTP) from exc
+            except (urllib.error.URLError, TimeoutError, ConnectionError) as exc:
+                self.api_debug.log(
+                    "error",
+                    request_id=request_id,
+                    provider=provider_label,
+                    method="POST",
+                    url=url,
+                    elapsed_ms=round((time.perf_counter() - started) * 1000),
+                    error_type=type(exc).__name__,
+                    error=str(getattr(exc, 'reason', exc)),
+                )
                 if attempt + 1 >= attempts:
-                    raise OpenAIError(f"无法连接 OpenAI 图片编辑接口: {exc.reason}") from exc
-            time.sleep(min(2 ** attempt, 8))
-        raise OpenAIError("OpenAI 图片编辑接口重试后仍失败。")
+                    raise OpenAIError(f"无法连接 {provider_label}: {getattr(exc, 'reason', exc)}", retryable=True, retry_after=delay) from exc
+            self.wait_for_retry(delay, request_id=request_id, provider=provider_label, url=url,
+                                next_attempt=attempt+2, max_attempts=attempts)
+        raise OpenAIError(f"{provider_label}接口重试后仍失败。")

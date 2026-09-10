@@ -45,6 +45,9 @@ class ModuleInstance:
     module_code: str = ""
     channel: str = ""
     custom_prompt: str = ""
+    parent_id: str = ""
+    frame_index: int = 0
+    frame_count: int = 1
 
 
 @dataclass(slots=True, frozen=True)
@@ -71,6 +74,9 @@ class ModuleBrief:
     design_brief: str
     instance_id: str = ""
     copy: dict[str, str] = field(default_factory=dict)
+    requested_languages: list[str] = field(default_factory=list)
+    chinese_translations: dict[str, str] = field(default_factory=dict)
+    image_language: str = 'de'
     keywords: list[str] = field(default_factory=list)
     compliance_note: str = ""
     reference_image: str = ""
@@ -88,17 +94,42 @@ class ModuleBrief:
     overflow_result: str = ""
     image_qa_result: str = ""
     rule_preflight_result: str = ""
+    image_version: int = 1
+    image_review_status: str = "待审核"
+    image_revision_notes: str = ""
+    image_history: list[dict[str, Any]] = field(default_factory=list)
+    creative_plan: dict[str, Any] = field(default_factory=dict)
+    generation_status: str = "待生成"
+    generation_error: str = ""
+    image_generation_status: str = "待生成"
+    image_generation_error: str = ""
+    effective_copy_prompt: str = ""
+    effective_image_prompt: str = ""
+    context_fingerprint: str = ""
+    style_reference_paths: list[str] = field(default_factory=list)
+    parent_id: str = ""
+    frame_index: int = 0
+    frame_count: int = 1
 
     def copy_for(self, language: str) -> str:
         return self.copy.get(language, "")
 
+    def languages(self) -> tuple[str, ...]:
+        return tuple(self.requested_languages or self.copy.keys() or LANGUAGES)
+
 
 @dataclass(slots=True)
 class GenerationOptions:
+    context_before_generation: bool = True
+    ai_plan_before_copy: bool = True
     optimize_copy_with_ai: bool = True
     generate_ai_images: bool = True
     generate_german_composites: bool = True
+    aplus_continuous: bool = False
+    aplus_direction: str = ""
+    aplus_theme: str = "品牌浅色"
     image_quality: str = "medium"
+    image_language: str = 'de'
     text_model: str = "gpt-5.6-terra"
     image_model: str = "gpt-image-2"
     text_provider: str = "openai"
@@ -127,6 +158,7 @@ class GenerationOptions:
     back_translation_check: bool = False
     overflow_check: bool = True
     image_compliance_check: bool = False
+    api_debug_enabled: bool = True
     rule_library_path: str = ""
     rule_update_url: str = ""
     output_root: str = "outputs"
@@ -138,6 +170,8 @@ class ProductProject:
     sku: str = ""
     asin: str = ""
     brand: str = ""
+    brand_slogan: str = ""
+    copy_languages: list[str] = field(default_factory=lambda: ['de'])
     product_name_zh: str = ""
     product_name_en: str = ""
     category: str = ""
@@ -176,20 +210,38 @@ class ProductProject:
     module_instances: list[ModuleInstance] = field(default_factory=list)
     module_order: list[str] = field(default_factory=list)
     module_prompts: dict[str, str] = field(default_factory=dict)
+    module_recipes: dict[str, dict[str, Any]] = field(default_factory=dict)
+    ai_context: dict[str, Any] = field(default_factory=dict)
+    context_prompt: str = ""
+    creative_plans: dict[str, dict[str, Any]] = field(default_factory=dict)
     copy_overrides: dict[str, dict[str, str]] = field(default_factory=dict)
     copy_versions: dict[str, list[dict[str, Any]]] = field(default_factory=dict)
     review_statuses: dict[str, str] = field(default_factory=dict)
     review_notes: dict[str, str] = field(default_factory=dict)
     self_check_results: dict[str, str] = field(default_factory=dict)
+    image_reviews: dict[str, dict[str, Any]] = field(default_factory=dict)
     preflight_results: dict[str, Any] = field(default_factory=dict)
     options: GenerationOptions = field(default_factory=GenerationOptions)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
+    def active_languages(self) -> tuple[str, ...]:
+        from .languages import active_languages
+        return active_languages(self.copy_languages)
+
+    def render_language(self) -> str:
+        selected = self.active_languages()
+        return self.options.image_language if self.options.image_language in selected else selected[0]
+
     @classmethod
     def from_dict(cls, raw: dict[str, Any]) -> "ProductProject":
         values = dict(raw)
+        if 'copy_languages' not in raw:
+            from .languages import TARGET_LANGUAGES
+            legacy_languages = {code for copy in raw.get('copy_overrides', {}).values() if isinstance(copy, dict) for code in copy}
+            if legacy_languages:
+                values['copy_languages'] = [code for code in TARGET_LANGUAGES if code in legacy_languages]
         values["competitors"] = [Competitor(**item) for item in raw.get("competitors", [])]
         values["keywords"] = [Keyword(**item) for item in raw.get("keywords", [])]
         values["variants"] = [ProductVariant(**item) for item in raw.get("variants", [])]
@@ -206,11 +258,12 @@ class ProductProject:
         return project
 
     def normalized_module_instances(self) -> list[ModuleInstance]:
+        from .navigation import expand_navigation
         if self.module_instances:
             by_id = {item.instance_id: item for item in self.module_instances if item.instance_id}
             ordered = [by_id[item_id] for item_id in self.module_order if item_id in by_id]
             ordered.extend(item for item in self.module_instances if item not in ordered)
-            return ordered
+            return expand_navigation(ordered)
 
         available = [
             (channel, code)
@@ -237,7 +290,7 @@ class ProductProject:
                     custom_prompt=self.module_prompts.get(instance_id, self.module_prompts.get(code, "")),
                 )
             )
-        return result
+        return expand_navigation(result)
 
     def validate(self) -> list[str]:
         errors: list[str] = []
