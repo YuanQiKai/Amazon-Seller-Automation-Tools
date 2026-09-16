@@ -1,0 +1,37 @@
+{
+  "detected_text": [
+    "Sliver-Finish, drei Größen",
+    "Vergleichen Sie Maße, Gewicht und Volumen für Ihre passende Reisegröße.",
+    "20 Zoll | 61×42×27 cm | 4 kg | 42 l",
+    "24 Zoll | 72,5×46,5×31 cm | 5,1 kg | 60 l",
+    "26 Zoll | 76×52×31,5 cm | 5,6 kg | 78 l",
+    "Use case: Amazon ecommerce creative reference.",
+    "Create a square composition for module",
+    "Product: Travel Suitcase; category: Luggage / Suitcases; model: 13A; material:",
+    "Polycarbonate / ABS / Acrylonitrile Butadiene Styrene / Aluminium Frame",
+    "Silver",
+    "GunmetalGray",
+    "89.99",
+    "99.99",
+    "AI IMAGE PENDING"
+  ],
+  "unexpected_text": [
+    "Use case: Amazon ecommerce creative reference.",
+    "Create a square composition for module",
+    "Product: Travel Suitcase; category: Luggage / Suitcases; model: 13A; material:",
+    "Polycarbonate / ABS / Acrylonitrile Butadiene Styrene / Aluminium Frame",
+    "Additional Silver and GunmetalGray variant specifications",
+    "89.99",
+    "99.99",
+    "AI IMAGE PENDING",
+    "Multiple garbled or missing-glyph text blocks in the background"
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "画面背景含有未提供且未经核实的产品信息、材质、型号、颜色和价格，违反仅使用 supplied copy 和 verified facts 的要求。",
+    "画面包含明显的“AI IMAGE PENDING”水印/状态文字，属于不应出现在商品创意中的额外叠加文字。",
+    "背景文字大量乱码或缺失字形，影响可读性并可能造成信息误导。",
+    "额外的价格信息可能构成未经证实的促销或商业声明。"
+  ],
+  "verdict_zh": "不通过：虽然前景德文尺寸文案基本符合预期，但背景存在大量未授权文字、未经核实的产品与价格信息、乱码以及明显水印。"
+}

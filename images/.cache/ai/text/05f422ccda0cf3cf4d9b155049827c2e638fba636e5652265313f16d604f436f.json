@@ -1,0 +1,14 @@
+{
+  "detected_text": [
+    "TSA"
+  ],
+  "unexpected_text": [
+    "TSA"
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "MAIN_WHITE背景不是纯白色，存在明显黑色背景。",
+    "产品锁具上可见“TSA”标识；MAIN_WHITE不应包含任何可见文字或标识。"
+  ],
+  "verdict_zh": "不通过：主图背景不符合纯白要求，且产品上存在可见文字/标识。"
+}

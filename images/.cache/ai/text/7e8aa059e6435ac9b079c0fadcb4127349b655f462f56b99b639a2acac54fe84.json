@@ -1,0 +1,35 @@
+{
+  "detected_text": [
+    "Polyesterfutter, klar unterteilt",
+    "Zwei Packbereiche und X-förmige Gurte helfen, Kleidung unterwegs geordnet zu halten.",
+    "Nass-Trocken-Fach trennt feuchte Kleidung",
+    "Drei Griffpositionen für unterschiedliche Körpergrößen",
+    "Use case: Amazon ecommerce creative reference.",
+    "Create a landscape composition for module ...",
+    "Product: Travel Suitcase; category: Luggage / Suitcases; model: 13A",
+    "material: Polycarbonate, ABS, Acrylonitrile Butadiene Styrene, Aluminium Frame",
+    "variants: 20...61×42×27...Silver...42...89.99...24...72.5×46.5×31...",
+    "custom product attributes",
+    "functions",
+    "selling points: 360°...",
+    "AI IMAGE PENDING"
+  ],
+  "unexpected_text": [
+    "右侧大面积出现英文内部制作说明和产品元数据",
+    "右侧出现大量乱码、方框字符和未渲染占位符",
+    "AI IMAGE PENDING",
+    "出现具体型号、材质、尺寸、颜色、价格及卖点等未在预期文案中提供的信息"
+  ],
+  "spelling_issues": [
+    "未发现预期德文文案中的拼写错误",
+    "右侧英文及元数据存在乱码和文本渲染异常，无法作为合规成稿使用"
+  ],
+  "policy_risks_zh": [
+    "严重：创意中包含明显的内部制作指令、参考说明和AI生成占位文本，不应展示给消费者",
+    "严重：存在大量乱码和未渲染字符，影响可读性与专业性",
+    "高风险：右侧包含未核验或未获批准的产品材质、尺寸、价格、型号及功能信息，可能构成虚假或未经证实的商品声明",
+    "不符合要求：除供应文案和已验证事实外，不应出现额外文本",
+    "需确认：若该区域属于MAIN_WHITE，则其包含大量可见文字、占位符和促销式元素，直接违反MAIN_WHITE不得含文字或图形叠加的要求"
+  ],
+  "verdict_zh": "不通过：左侧预期德文基本准确，但右侧包含大量内部说明、乱码、未渲染占位符及未经核验的产品信息，必须移除并重新审核后才能用于Amazon DE。"
+}

@@ -48,6 +48,7 @@ from .providers import (
     PROVIDER_CONFIG_PATH,
     TEXT_PROVIDER_PRESETS,
     preset_id_from_label,
+    provider_base_url,
 )
 from .rules import RuleLibrary
 from .service import GenerationService
@@ -57,7 +58,7 @@ from .v30_workspace import V30Workspace
 from .navigation import NAV_CODE, expand_navigation, instance_name
 
 
-APP_TITLE = "Amazon 图片需求生成器 V3.2.0"
+APP_TITLE = "Amazon 多语言创意生图 V4.1.0"
 
 
 SCALAR_FIELDS = [
@@ -604,6 +605,8 @@ class AmazonImageBriefApp(WorkspaceV32, WorkspaceV31, V30Workspace, LiveResults,
         ttk.Checkbutton(quality_checks, text="文案溢出检查", variable=self.overflow_check_var).pack(side=LEFT, padx=4)
         ttk.Checkbutton(quality_checks, text="图片合规AI检查", variable=self.image_compliance_check_var).pack(side=LEFT, padx=4)
         resilience.columnconfigure(3, weight=1)
+        for row, kind in enumerate(('text', 'image'), 4):
+            self._build_route_picker(resilience, kind, row, fallback=True, columns=6)
 
         actions = ttk.Frame(body)
         actions.pack(fill=X)
@@ -681,8 +684,61 @@ class AmazonImageBriefApp(WorkspaceV32, WorkspaceV31, V30Workspace, LiveResults,
         button_row.grid(row=4, column=0, columnspan=2, sticky="w")
         ttk.Button(button_row, text="获取全部模型", command=lambda value=kind: self.fetch_ai_models(value)).pack(side=LEFT)
         ttk.Button(button_row, text="测试连接", command=lambda value=kind: self.test_ai_connection(value)).pack(side=LEFT, padx=6)
+        self._build_route_picker(box, kind, 5)
         for column in range(2):
             box.columnconfigure(column, weight=1)
+
+    def _build_route_picker(self, parent, kind, row, fallback=False, columns=2):
+        if not hasattr(self, 'provider_routes'):
+            self.provider_routes = {}
+            self.provider_route_widgets = {}
+        frame = ttk.Frame(parent)
+        frame.grid(row=row, column=0, columnspan=columns, sticky='ew', pady=(6, 0))
+        title = ('文案' if kind == 'text' else '图片') + ('备用路线' if fallback else '接入路线')
+        ttk.Label(frame, text=title).pack(side=LEFT, padx=(0, 8))
+        variable, url = tk.StringVar(), tk.StringVar()
+        combo = ttk.Combobox(frame, textvariable=variable, state='readonly', width=12)
+        combo.pack(side=LEFT)
+        ttk.Label(frame, textvariable=url, style='Subtitle.TLabel').pack(side=LEFT, padx=8)
+        combo.bind('<<ComboboxSelected>>', lambda _e: self._change_provider_route(kind, fallback))
+        self.provider_route_widgets[(kind, fallback)] = (frame, variable, combo, url)
+        frame.grid_remove()
+
+    def _sync_route_picker(self, kind, fallback=False):
+        widgets = getattr(self, 'provider_route_widgets', {}).get((kind, fallback))
+        if not widgets:
+            return
+        frame, variable, combo, url = widgets
+        provider = getattr(self, f'{kind}_fallback_provider_var').get() if fallback else self._provider_id(kind)
+        preset = self._provider_presets(kind).get(provider)
+        if not preset or not preset.routes:
+            frame.grid_remove()
+            return
+        routes = dict(preset.routes)
+        selected = self.provider_routes.get(f'{kind}:{provider}', '')
+        if selected not in routes:
+            selected = next((name for name, value in preset.routes if value == preset.base_url), preset.routes[0][0])
+        variable.set(selected)
+        combo.configure(values=tuple(routes))
+        url.set(routes[selected] + '  · 同一 Key，切换后下次请求生效')
+        frame.grid()
+
+    def _change_provider_route(self, kind, fallback=False):
+        provider = getattr(self, f'{kind}_fallback_provider_var').get() if fallback else self._provider_id(kind)
+        preset = self._provider_presets(kind).get(provider)
+        selected = self.provider_route_widgets[(kind, fallback)][1].get()
+        if not preset or selected not in dict(preset.routes):
+            return
+        self.provider_routes[f'{kind}:{provider}'] = selected
+        # One route per supplier/use, shared by primary and fallback selectors.
+        if self._provider_id(kind) == provider:
+            self.ai_config_vars[kind]['base_url'].set(provider_base_url(preset, kind, self.provider_routes))
+        for is_fallback in (False, True):
+            self._sync_route_picker(kind, is_fallback)
+            active = getattr(self, f'{kind}_fallback_provider_var').get() if is_fallback else self._provider_id(kind)
+            if active == provider and hasattr(self, '_model_events'):
+                self._fetch_provider_models(kind, provider, fallback=is_fallback)
+        self.status_var.set(f'{preset.label} 已切换到{selected}；自动保存，在途任务沿用原路线。')
 
     @staticmethod
     def _provider_presets(kind: str):
@@ -704,7 +760,7 @@ class AmazonImageBriefApp(WorkspaceV32, WorkspaceV31, V30Workspace, LiveResults,
         preset = presets[provider_id]
         variables["provider"].set(preset.label)
         variables["protocol"].set(preset.protocol)
-        variables["base_url"].set(preset.base_url)
+        variables["base_url"].set(provider_base_url(preset, kind, self.provider_routes))
         variables["endpoint"].set(preset.endpoint)
         variables["key_env"].set(preset.api_key_env)
         variables["model"].set(preset.default_model)
@@ -713,6 +769,7 @@ class AmazonImageBriefApp(WorkspaceV32, WorkspaceV31, V30Workspace, LiveResults,
         variables["note"].set(self._provider_note(preset, kind))
         self.ai_model_combos[kind].configure(values=preset.models)
         self._refresh_selected_provider_labels()
+        self._sync_route_picker(kind)
         if hasattr(self, '_model_events'):
             self._fetch_provider_models(kind, provider_id)
 
@@ -763,6 +820,7 @@ class AmazonImageBriefApp(WorkspaceV32, WorkspaceV31, V30Workspace, LiveResults,
         model_var = self.text_fallback_model_var if kind == "text" else self.image_fallback_model_var
         combo = self.text_fallback_model_combo if kind == "text" else self.image_fallback_model_combo
         preset = presets.get(provider_var.get())
+        self._sync_route_picker(kind, fallback=True)
         combo.configure(values=preset.models if preset else ())
         if not preserve_model or not model_var.get():
             model_var.set(preset.default_model if preset else "")
@@ -780,13 +838,14 @@ class AmazonImageBriefApp(WorkspaceV32, WorkspaceV31, V30Workspace, LiveResults,
         self.selected_image_provider_var.set(f"{image['provider'].get()} / {image['model'].get()}")
 
     def _load_ai_options(self, options: GenerationOptions) -> None:
+        self.provider_routes = dict(options.provider_routes)
         for kind, presets in (("text", TEXT_PROVIDER_PRESETS), ("image", IMAGE_PROVIDER_PRESETS)):
             provider_id = getattr(options, f"{kind}_provider", "openai")
             preset = presets.get(provider_id, presets["custom"])
             variables = self.ai_config_vars[kind]
             variables["provider"].set(preset.label)
             variables["protocol"].set(preset.protocol)
-            variables["base_url"].set(preset.base_url)
+            variables["base_url"].set(provider_base_url(preset, kind, self.provider_routes))
             variables["endpoint"].set(preset.endpoint)
             variables["key_env"].set(preset.api_key_env)
             variables["model"].set(getattr(options, f"{kind}_model", preset.default_model))
@@ -795,6 +854,7 @@ class AmazonImageBriefApp(WorkspaceV32, WorkspaceV31, V30Workspace, LiveResults,
             variables["note"].set(self._provider_note(preset, kind))
             available_models = tuple(dict.fromkeys((*preset.models, variables["model"].get())))
             self.ai_model_combos[kind].configure(values=available_models)
+            self._sync_route_picker(kind)
         self.auto_failover_var.set(options.auto_failover)
         self.text_fallback_provider_var.set(options.text_fallback_provider)
         self.text_fallback_model_var.set(options.text_fallback_model)
@@ -848,7 +908,7 @@ class AmazonImageBriefApp(WorkspaceV32, WorkspaceV31, V30Workspace, LiveResults,
         label = "文案" if kind == "text" else "图片"
         self._start_async(
             f"connection:{kind}",
-            lambda: client.test_connection(kind),
+            lambda: self._tag_connection_result(client, kind, client.test_connection(kind)),
             f"正在真实测试{label}供应商连接...",
         )
 
@@ -862,9 +922,14 @@ class AmazonImageBriefApp(WorkspaceV32, WorkspaceV31, V30Workspace, LiveResults,
         label = "文案" if kind == "text" else "图片"
         self._start_async(
             f"models:{kind}",
-            lambda: client.list_models(kind),
+            lambda: self._tag_connection_result(client, kind, client.list_models(kind)),
             f"正在获取{label}供应商模型列表...",
         )
+
+    @staticmethod
+    def _tag_connection_result(client, kind, result):
+        return {'_connection_target': (getattr(client.options, f'{kind}_provider'),
+                                       getattr(client.options, f'{kind}_base_url')), 'data': result}
 
     def show_cost_estimate(self) -> None:
         try:
@@ -1870,6 +1935,7 @@ class AmazonImageBriefApp(WorkspaceV32, WorkspaceV31, V30Workspace, LiveResults,
                 }
             )
         options = GenerationOptions(
+            provider_routes=dict(self.provider_routes),
             context_before_generation=self.context_enabled_var.get(),
             ai_plan_before_copy=self.ai_plan_var.get(),
             optimize_copy_with_ai=self.optimize_var.get(),
@@ -2611,6 +2677,11 @@ class AmazonImageBriefApp(WorkspaceV32, WorkspaceV31, V30Workspace, LiveResults,
                 event, payload = item
             if event == 'api_event':
                 self._receive_api_event(payload)
+            elif event == 'direct_image_result':
+                if hasattr(self, '_receive_direct_image'):
+                    self._receive_direct_image(payload)
+                    self.root.update_idletasks()
+                    break
             elif event == 'product_context':
                 self._receive_context(payload)
             elif event == 'recipe_result':
@@ -2667,6 +2738,13 @@ class AmazonImageBriefApp(WorkspaceV32, WorkspaceV31, V30Workspace, LiveResults,
             self._event_after_id = self.root.after(10 if not self.events.empty() else 150, self._poll_events)
 
     def _handle_operation_done(self, operation: str, result: object) -> None:
+        if operation.startswith(('connection:', 'models:')) and isinstance(result, dict) and '_connection_target' in result:
+            kind = operation.split(':', 1)[1]
+            current_target = (self._provider_id(kind), self.ai_config_vars[kind]['base_url'].get())
+            if tuple(result['_connection_target']) != current_target:
+                self.status_var.set('旧供应商/路线的请求已返回，详情见接口日志；未覆盖当前路线的模型列表。')
+                return
+            result = result['data']
         if operation.startswith('v3:'):
             self.status_var.set('V3.0操作完成，已逐帧保存结果；可继续编辑和生成。')
             self._refresh_recipe_lists()
@@ -2791,6 +2869,7 @@ class AmazonImageBriefApp(WorkspaceV32, WorkspaceV31, V30Workspace, LiveResults,
 
 
 def launch_app(app_root: Path) -> None:
+    from .direct_workspace import DirectImageApp
     root = tk.Tk()
-    AmazonImageBriefApp(root, app_root)
+    DirectImageApp(root, app_root)
     root.mainloop()

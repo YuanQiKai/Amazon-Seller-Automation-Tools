@@ -1,0 +1,31 @@
+{
+  "detected_text": [
+    "Nach Zonen",
+    "packen, □ □ □ □",
+    "ordentlicher reisen",
+    "Zwei Fächer und X-Gurte",
+    "ordnen Kleidung und",
+    "halten sie an ihrem Platz.",
+    "Nass-Trocken-Tasche im",
+    "Lieferumfang enthalten",
+    "Feuchte und trockene",
+    "Kleidung getrennt",
+    "verstauen",
+    "Create a premium Amazon A+ split-layout travel photography banner for",
+    "AI IMAGE PENDING"
+  ],
+  "unexpected_text": [
+    "Mehrere sichtbare englische Prompt-/Anweisungstexte im Hintergrund, darunter „Create a premium Amazon A+ split-layout travel photography banner for …“",
+    "Sichtbarer Status-/Platzhaltertext „AI IMAGE PENDING“",
+    "Vier nicht spezifizierte quadratische Symbole nach „packen,“",
+    "Zusätzliche sichtbare Platzhalter-/Quadratsymbole am unteren Bildrand"
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "主白区包含大面积可见文字、英文提示词、占位符和符号，违反 MAIN_WHITE 必须无文字、Logo、水印、徽章或促销图形的要求。",
+    "画面含有未提供的英文生成提示词和“AI IMAGE PENDING”状态文字，不属于允许的产品文案或已验证事实。",
+    "德文标题后出现未定义的方框符号，造成渲染异常和内容污染。",
+    "当前素材不是可直接用于 Amazon A+ 的成品，存在明显的生成草稿/占位内容。"
+  ],
+  "verdict_zh": "不通过：存在大量背景提示词、占位文字和异常符号，且主白区未保持无文字状态；需移除所有非批准文本与图形后重新提交。"
+}

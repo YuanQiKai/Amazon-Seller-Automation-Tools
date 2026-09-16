@@ -1,0 +1,26 @@
+{
+  "detected_text": [
+    "Übersetzung ausstehend — Produktangaben bitte übersetzen und prüfen.",
+    "□□4□□□",
+    "Use case: Amazon ecommerce creative reference.",
+    "Create a landscape composition for module: APLUS_NAV_CAROUSEL.",
+    "Product: Travel Suitcase; category: Luggage / Suitcases.",
+    "AI IMAGE PENDING"
+  ],
+  "unexpected_text": [
+    "□□4□□□（疑似“侧面4个挂钩”的字体缺失/乱码）",
+    "Use case: Amazon ecommerce creative reference.",
+    "Create a landscape composition for module: APLUS_NAV_CAROUSEL.",
+    "Product: Travel Suitcase; category: Luggage / Suitcases.",
+    "中央卡片中的多行英文提示词及产品参数占位内容",
+    "AI IMAGE PENDING"
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "MAIN_WHITE区域含有大段可见文字，违反必须无文字、Logo叠加、水印、徽章或促销图形的要求。",
+    "画面包含未提供或未验证的英文提示词、产品参数和“AI IMAGE PENDING”占位文案，不符合其他图片仅可使用已提供且已核实事实的要求。",
+    "中文文案“侧面4个挂钩”显示为方框乱码，存在字体渲染/可读性问题。",
+    "当前素材明显是设计/生成占位稿，不是可直接用于Amazon德国站的最终A+导航轮播素材。"
+  ],
+  "verdict_zh": "不通过：MAIN_WHITE含文字，且素材包含英文提示词、占位参数和AI生成待处理标记；中文文案还存在乱码。"
+}

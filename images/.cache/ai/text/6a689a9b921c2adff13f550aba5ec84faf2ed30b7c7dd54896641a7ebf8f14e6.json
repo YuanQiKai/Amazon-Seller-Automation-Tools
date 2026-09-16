@@ -1,0 +1,13 @@
+{
+  "detected_text": [],
+  "unexpected_text": [
+    "Logo-like markings and symbols are visible on both combination locks."
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "主图背景不是纯白色，呈黑色，不符合 Amazon 主图白色背景要求。",
+    "两个密码锁上存在可见的标识/符号；MAIN_WHITE 不得包含任何可见文字、徽标或类似标识。",
+    "产品边缘带有明显黑色背景/抠图区域，可能影响主图合规性。"
+  ],
+  "verdict_zh": "不通过：主图背景非纯白，且产品锁具上存在可见标识/符号。"
+}

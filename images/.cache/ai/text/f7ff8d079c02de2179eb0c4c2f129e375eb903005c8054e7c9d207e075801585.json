@@ -1,0 +1,30 @@
+{
+  "detected_text": [
+    "Create a premium Amazon A+ carousel visual for the YWJ 13A travel suitcase, with no rendered text, letters, numbers, logos, badges, icons, or promotional graphics.",
+    "Use a 1464×600 desktop composition and a separate 1200×900 mobile composition.",
+    "Desktop: place a suitcase at a three-quarter side-front angle in the left region, approximately x=0.05, y=0.08, w=0.46, h=0.84.",
+    "Clearly show the polyester lining, wet-dry separation bag, two interior compartments, and X-shaped packing straps.",
+    "Keep the four side hooks visible and add a realistic close-up inset of the single metal hook on top.",
+    "Reserve a clean, uncluttered text-free area on the right at x=0.57, y=0..., w=0.38, h=0.80 for four copy lines in reading order.",
+    "AI IMAGE PENDING",
+    "Nass- und Trockenfach für Ordnung",
+    "Das separate Nassfach hält feuchte Kleidung von anderer Kleidung getrennt.",
+    "Polyesterfutter, zwei Bereiche, X-förmige Packgurte",
+    "Vier Seitenhaken plus ein Metallhaken oben"
+  ],
+  "unexpected_text": [
+    "The large English production prompt text visible in the main white area",
+    "AI IMAGE PENDING",
+    "Six square placeholder glyphs at the top of the white area",
+    "Six square placeholder glyphs after AI IMAGE PENDING",
+    "The partially visible coordinate and instruction text such as x=0.57, y=0..."
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "MAIN_WHITE 区域包含大量可见英文提示词、制作说明、坐标信息和占位符，违反不得出现任何可见文字的要求。",
+    "MAIN_WHITE 区域包含“AI IMAGE PENDING”和方框占位符，属于占位/促销式图形元素，不符合主图纯净要求。",
+    "画面展示的是设计说明和文字面板，未呈现实际行李箱产品、内衬、湿干分隔袋或挂钩等产品视觉证据。",
+    "右侧德语文案与提供的预期文案一致，但整体创意仍因主白区违规文字和占位元素而不合规。"
+  ],
+  "verdict_zh": "不通过：主白色区域存在大量可见英文说明文字、AI IMAGE PENDING及方框占位符，且缺少实际产品图。"
+}

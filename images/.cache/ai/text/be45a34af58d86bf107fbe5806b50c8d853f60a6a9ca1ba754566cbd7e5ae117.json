@@ -1,0 +1,31 @@
+{
+  "detected_text": [
+    "Klappbare Handyhalterung am Teleskopgriff",
+    "Die Halterung hält das Smartphone sichtbar; der Zwei-Zonen-Innenraum trennt Reiseutensilien.",
+    "TSA-Zahlenschloss erleichtert die Gepäckkontrolle",
+    "Nassfach, Netzfach mit Reißverschluss und X-förmige Packgurte",
+    "Use case: Amazon ecommerce creative reference.",
+    "Create a square composition for module",
+    "Product: Travel Suitcase; category: Luggage / Suitcases; model: 13A; material:",
+    "Polycarbonate / ABS / Acrylonitrile",
+    "Aluminium Frame",
+    "variants:",
+    "AI IMAGE PENDING"
+  ],
+  "unexpected_text": [
+    "Use case: Amazon ecommerce creative reference.",
+    "Create a square composition for module",
+    "Product: Travel Suitcase; category: Luggage / Suitcases; model: 13A; material:",
+    "Material- und Variantendaten mit teilweise beschädigten oder unleserlichen Zeichen",
+    "AI IMAGE PENDING",
+    "Mehrere sichtbare Platzhalter- bzw. technische Markierungen"
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "包含未提供的英文技术说明、产品型号、材质和变体信息，违反仅使用提供文案及已验证事实的要求。",
+    "画面含有“AI IMAGE PENDING”等占位文字，不适合作为亚马逊成品素材。",
+    "存在乱码、方框字符和被遮挡的技术文本，影响可读性和专业性。",
+    "包含明显的内部制作说明和参考标注，属于不应展示给消费者的内容。"
+  ],
+  "verdict_zh": "不通过：虽包含预期德语文案，但存在大量额外技术文字、占位符、乱码和内部制作信息，需清理后重新提交。"
+}

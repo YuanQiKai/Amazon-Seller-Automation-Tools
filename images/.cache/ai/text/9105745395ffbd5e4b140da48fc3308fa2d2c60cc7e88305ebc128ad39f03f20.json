@@ -1,0 +1,22 @@
+{
+  "detected_text": [
+    "Taschen griffbereit aufhängen",
+    "Vier seitliche Haken ermöglichen mehrere Taschen und erleichtern den Zugriff unterwegs.",
+    "Vier Haken an der Seite",
+    "Ein Metallhaken oben",
+    "Use case: Amazon ecommerce creative reference",
+    "AI IMAGE PENDING"
+  ],
+  "unexpected_text": [
+    "Use case: Amazon ecommerce creative reference",
+    "Additional tiny prompt/specification text inside the central card",
+    "AI IMAGE PENDING"
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "图片中央存在与商品卖点无关的提示词、生成说明和占位卡片文字，违反仅允许提供文案及已验证事实的要求。",
+    "存在“AI IMAGE PENDING”等明显的生成状态占位内容，属于不应出现在成品中的非商品图形元素。",
+    "中央卡片中的微小文字难以阅读，可能影响图片清晰度和专业性。"
+  ],
+  "verdict_zh": "不通过：德语主文案基本正确，但图片包含未提供的提示词、占位文字及“AI IMAGE PENDING”图形元素，需移除后重新提交。"
+}

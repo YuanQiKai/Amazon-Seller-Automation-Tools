@@ -1,0 +1,14 @@
+{
+  "instance_id": "APLUS_NAV_CAROUSEL__fe1147c189__frame_02",
+  "copy": {
+    "en": "Keep Wet Items Apart",
+    "zh": "干湿分离，收纳更清晰",
+    "de": "Nasses getrennt verstauen",
+    "fr": "Séparez le mouillé du sec",
+    "it": "Separa umido e asciutto",
+    "es": "Separa lo húmedo de lo seco"
+  },
+  "design_brief_zh": "本帧承接上一帧干湿分离袋主题，进一步展示实际使用收益：打开银色竖纹硬壳箱，清晰呈现双区内衬、X型固定带与湿物分隔区域；侧面以小场景补充挂钩使用。PC端按“标题→支持说明→湿物分隔细节→挂钩细节”从左至右、从上至下阅读，产品位于右侧0.43–0.96区域；移动端标题与说明置顶居中，产品居中展示，两个细节说明置于底部左右两栏。标题突出干湿分离，支持说明解释湿衣物与其他行李分开，细节1对应箱内湿物分隔区域，细节2对应侧面挂钩。主视觉采用低饱和银灰、米白背景与自然柔光，避免过度反光；用品牌蓝色细线连接说明与真实部件，文字使用Arial、Helvetica或Amazon Ember风格无衬线字体。根据用户指定方向，画面可表现安静顺滑的旅行场景氛围，但不得把静音或360°轮组作为本帧文字卖点，因当前图像证据未充分验证这些性能。",
+  "compliance_note_zh": "干湿分离、双区分隔、X型固定带及挂钩均有用户资料支持；如使用图片展示，应确保对应实物配置。不得宣称防水、静音、耐磨、承重或360°性能，除非提供可核验证据。当前SKU颜色“Sliver”与部分图片外观存在不一致，出图前需核对变体；不得加入竞品品牌、认证标识或绝对化表述。",
+  "image_prompt_en": "Create a premium Amazon A+ editorial lifestyle image for a modern YWJ 13A hard-shell travel suitcase. Follow a clean two-part composition: on the right, show an open silver or neutral metallic suitcase with vertical ribbed shell, visible frame, polyester-like interior, two-zone organization, X-shaped compression straps, and a clearly separated wet-item compartment containing a folded damp garment in a sealed-looking internal section; on the left, reserve generous warm off-white negative space for four lines of overlay copy, with a thin YWJ navy-blue connector line leading toward the interior wet-separation area and a second subtle connector toward a visible side hook holding a small travel bag. Use natural European travel photography, low-saturation neutrals, soft daylight, realistic materials, restrained shadows, premium but credible styling. Keep the suitcase fully visible and proportionally accurate; do not show unsupported logos or extra accessories. Do not render any text, letters, numbers, labels, badges, or watermarks in the image."
+}

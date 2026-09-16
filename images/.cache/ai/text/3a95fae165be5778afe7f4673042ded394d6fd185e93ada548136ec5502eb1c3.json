@@ -1,0 +1,35 @@
+{
+  "detected_text": [
+    "Drei Griffpositionen für unterschiedliche Körpergrößen",
+    "Polyesterfutter, klar unterteilt",
+    "Zwei Packbereiche und X-förmige Gurte helfen, Kleidung unterwegs geordnet zu halten.",
+    "Nass-Trocken-Fach trennt feuchte Kleidung",
+    "Nass",
+    "Trocken",
+    "3",
+    "2",
+    "1",
+    "150 cm",
+    "165 cm",
+    "180 cm",
+    "Bereit für neue Ziele"
+  ],
+  "unexpected_text": [
+    "Nass",
+    "Trocken",
+    "3",
+    "2",
+    "1",
+    "150 cm",
+    "165 cm",
+    "180 cm",
+    "Bereit für neue Ziele"
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "画面包含未在提供文案中明确给出的身高标注“150 cm、165 cm、180 cm”，可能构成未经验证的适配性或功能性事实声明。",
+    "画面包含未提供的宣传性文案“Bereit für neue Ziele”，属于额外营销文案。",
+    "若该素材被用作 MAIN_WHITE，则不符合要求：画面含有大量可见文字、数字、图标及宣传性图形。"
+  ],
+  "verdict_zh": "不通过：德文提供文案本身拼写正确，但素材包含多处未提供或未验证的文字、身高标注、数字和宣传性文案；若作为 MAIN_WHITE 使用，也违反不得出现可见文字、徽标、水印、徽章或促销图形的要求。"
+}

@@ -1,0 +1,21 @@
+{
+  "detected_text": [
+    "Gates A1-A16",
+    "Taschen griffbereit aufhängen",
+    "Vier seitliche Haken ermöglichen mehrere Taschen und erleichtern den Zugriff unterwegs.",
+    "Vier Haken an der Seite",
+    "Ein Metallhaken oben",
+    "Bereit für neue Reisen"
+  ],
+  "unexpected_text": [
+    "Gates A1-A16",
+    "Bereit für neue Reisen"
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "图片包含未提供且未经验证的宣传性文案“Bereit für neue Reisen”，并配有飞机图标和装饰性下划线，可能违反仅允许使用提供文案和已验证事实的要求。",
+    "背景机场指示牌中的“Gates A1-A16”属于额外可见文字，虽为环境文字，但不在批准文案中，存在文字合规风险。",
+    "行李箱表面疑似存在品牌或徽标样式元素；需确认其并非未经授权的品牌标识或叠加徽标。"
+  ],
+  "verdict_zh": "不通过：检测到未批准的宣传文案和额外环境文字；建议移除“Bereit für neue Reisen”及其飞机图标，并避免背景中出现可读的机场文字，同时确认产品表面不存在未经授权的徽标。"
+}

@@ -21,6 +21,7 @@ class ProviderPreset:
     models: tuple[str, ...]
     extra_headers: str
     note: str
+    routes: tuple[tuple[str, str], ...] = ()
 
     @property
     def default_model(self) -> str:
@@ -39,6 +40,21 @@ def _load_configuration(path: Path = PROVIDER_CONFIG_PATH) -> dict[str, Any]:
     for kind in ("text", "image"):
         if not isinstance(data.get(kind), dict) or not data[kind]:
             raise RuntimeError(f"AI 供应商配置缺少 {kind} 定义。")
+    # Ship new providers separately: upgrades must not overwrite locally edited
+    # endpoints, models, headers or keys in the original configuration.
+    additions = path.with_name("ai_provider_additions.json")
+    if additions.exists():
+        try:
+            extra = json.loads(additions.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise RuntimeError("AI 新增供应商配置无法读取，请检查 ai_provider_additions.json。") from exc
+        if not isinstance(extra, dict) or extra.get("schema_version") != 1:
+            raise RuntimeError("AI 新增供应商配置 schema_version 必须为 1。")
+        for kind in ("text", "image"):
+            if not isinstance(extra.get(kind, {}), dict):
+                raise RuntimeError(f"AI 新增供应商配置 {kind} 必须为对象。")
+            for provider_id, raw in extra.get(kind, {}).items():
+                data[kind].setdefault(provider_id, raw)
     return data
 
 
@@ -59,6 +75,7 @@ def _build_presets(kind: str, data: dict[str, Any]) -> dict[str, ProviderPreset]
             models=tuple(str(item) for item in raw.get("models", []) if str(item).strip()),
             extra_headers=json.dumps(raw.get("extra_headers", {}), ensure_ascii=False) if raw.get("extra_headers") else "",
             note=str(raw.get("note", "")),
+            routes=tuple((str(label), str(url).rstrip('/')) for label, url in raw.get("routes", {}).items()),
         )
     return result
 
@@ -70,6 +87,12 @@ IMAGE_PROVIDER_PRESETS = _build_presets("image", PROVIDER_CONFIGURATION)
 # Internal adapters. Connection details live in ai_providers.json and are no longer exposed in the UI.
 TEXT_PROTOCOLS = ("responses", "chat_completions")
 IMAGE_PROTOCOLS = ("openai_images", "openai_images_url", "siliconflow_images", "dashscope_wan")
+
+
+def provider_base_url(preset: ProviderPreset, kind: str, selections: dict | None = None) -> str:
+    """Only accept a configured route; profile data cannot inject a credential destination."""
+    route = (selections or {}).get(f"{kind}:{preset.provider_id}", "")
+    return dict(preset.routes).get(route, preset.base_url)
 
 
 def preset_id_from_label(presets: dict[str, ProviderPreset], label: str) -> str:

@@ -1,0 +1,23 @@
+{
+  "detected_text": [
+    "Drei Griffhöhen zur Auswahl",
+    "Aluminiumrahmen und Scharnieröffnung ermöglichen schnelleren Zugriff",
+    "als Koffer mit Reißverschluss.",
+    "Schnellerer Zugriff",
+    "Aluminiumrahmen mit Scharnieröffnung",
+    "Koffer mit Reißverschluss",
+    "Klappbare Handyhalterung direkt am Griff",
+    "Polyesterfutter im Inneren des Koffers"
+  ],
+  "unexpected_text": [
+    "Schnellerer Zugriff",
+    "Aluminiumrahmen mit Scharnieröffnung",
+    "Koffer mit Reißverschluss"
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "存在未经证实的比较性性能声明：“schnelleren Zugriff als Koffer mit Reißverschluss”（比带拉链的行李箱更快取用），可能需要客观证据支持。",
+    "右侧对比面板使用对勾和叉号，将产品与带拉链行李箱进行优劣对比，可能构成未经证实的竞争性贬低或比较宣传。"
+  ],
+  "verdict_zh": "不通过：MAIN_EXPLODED未出现MAIN_WHITE禁止的标识类元素，但图片包含预期文案之外的比较性文字和图示，且存在需证据支持的性能比较声明。"
+}

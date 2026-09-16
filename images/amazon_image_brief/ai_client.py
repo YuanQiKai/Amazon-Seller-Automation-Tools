@@ -18,7 +18,7 @@ from PIL import Image
 from .api_debug import APIDebugLogger, parse_response_body
 from .ai_runtime import AICache, RequestRateLimiter
 from .models import GenerationOptions
-from .providers import fallback_preset, model_catalog_url
+from .providers import fallback_preset, model_catalog_url, provider_base_url
 from .retry_policy import TRANSIENT_HTTP, retry_delay
 from .image_requests import is_gpt_image, uses_image_edits, validate_image_prompt
 
@@ -112,7 +112,7 @@ class OpenAIClient:
             if not preset:
                 continue
             setattr(resolved, f"{kind}_protocol", preset.protocol)
-            setattr(resolved, f"{kind}_base_url", preset.base_url)
+            setattr(resolved, f"{kind}_base_url", provider_base_url(preset, kind, resolved.provider_routes))
             setattr(resolved, f"{kind}_endpoint", preset.endpoint)
             setattr(resolved, f"{kind}_api_key_env", preset.api_key_env)
             setattr(resolved, f"{kind}_extra_headers", preset.extra_headers)
@@ -131,7 +131,7 @@ class OpenAIClient:
             fallback_options = replace(self.options, auto_failover=False)
             setattr(fallback_options, f"{kind}_provider", provider_id)
             setattr(fallback_options, f"{kind}_protocol", preset.protocol)
-            setattr(fallback_options, f"{kind}_base_url", preset.base_url)
+            setattr(fallback_options, f"{kind}_base_url", provider_base_url(preset, kind, fallback_options.provider_routes))
             setattr(fallback_options, f"{kind}_endpoint", preset.endpoint)
             setattr(fallback_options, f"{kind}_api_key_env", preset.api_key_env)
             setattr(fallback_options, f"{kind}_extra_headers", preset.extra_headers)

@@ -20,7 +20,7 @@ import uuid
 
 ASSET_FIELDS = {'product_image_paths', 'competitor_image_paths', 'logo_image_path', 'style_reference_paths',
                 'reference_image', 'ai_effect_image', 'german_composite_image',
-                'imported_market_data_path'}
+                'imported_market_data_path', 'asset_path', 'final_image'}
 PREFIX = 'asset://'
 
 

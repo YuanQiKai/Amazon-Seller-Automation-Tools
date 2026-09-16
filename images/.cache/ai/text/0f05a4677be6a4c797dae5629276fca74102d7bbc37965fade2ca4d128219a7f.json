@@ -1,0 +1,22 @@
+{
+  "detected_text": [
+    "Aluminiumgriff mit drei Positionen",
+    "Wählen Sie eine von drei Griffhöhen und klappen Sie oben die verborgene Smartphone-Halterung aus.",
+    "1",
+    "2",
+    "3",
+    "Teleskopgriff aus Aluminiumlegierung",
+    "Verdeckte, faltbare Smartphone-Halterung oben"
+  ],
+  "unexpected_text": [
+    "1",
+    "2",
+    "3"
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "“Aluminiumlegierung”（铝合金）属于材质事实声明，应确保产品确实采用铝合金材质并有依据。",
+    "图片中的机场和飞机背景为场景化元素，未构成明显违规，但不应被理解为产品性能或航空认证。"
+  ],
+  "verdict_zh": "通过；文案与预期德语基本一致，未发现拼写问题。数字1、2、3属于额外的功能示意标注，建议确认其是否为已提供的允许文案。"
+}

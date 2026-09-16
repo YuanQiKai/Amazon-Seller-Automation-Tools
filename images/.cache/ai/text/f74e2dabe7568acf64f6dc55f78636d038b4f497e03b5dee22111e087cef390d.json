@@ -1,0 +1,38 @@
+{
+  "detected_text": [
+    "Aluminiumgriff im Detail",
+    "Der Teleskopgriff aus Aluminium bietet drei Einstellungen",
+    "und eine integrierte, klappbare Smartphone-Halterung.",
+    "Drei Griffpositionen sichtbar einstellbar",
+    "Klappbare Smartphone-Halterung im Griff",
+    "Use case: Amazon ecommerce creative reference.",
+    "Create a square composition for module",
+    "Product: Travel Suitcase; category:",
+    "Luggage / Suitcases; model: 13A; material:",
+    "Polycarbonate / ABS / Acrylonitrile Butadiene Styrene / Aluminium Frame; variants:",
+    "AI IMAGE PENDING",
+    "multiple unreadable square placeholder glyphs and fragmented product-specification text"
+  ],
+  "unexpected_text": [
+    "Use case: Amazon ecommerce creative reference.",
+    "Create a square composition for module",
+    "Product: Travel Suitcase; category:",
+    "Luggage / Suitcases; model: 13A; material:",
+    "Polycarbonate / ABS / Acrylonitrile Butadiene Styrene / Aluminium Frame; variants:",
+    "Additional variant, color, dimension and price-like specification strings",
+    "AI IMAGE PENDING",
+    "Unreadable square placeholder glyphs",
+    "Fragmented and partially obscured internal product metadata"
+  ],
+  "spelling_issues": [
+    "No clear spelling error in the supplied German copy.",
+    "Several words and specification strings are visibly fragmented or corrupted by placeholder glyphs."
+  ],
+  "policy_risks_zh": [
+    "画面包含大量未提供且与消费者无关的英文内部制作说明、产品元数据和规格片段，不符合“仅可使用提供文案及已核实事实”的要求。",
+    "“AI IMAGE PENDING”属于内部流程占位文字，不应出现在亚马逊商品创意中。",
+    "存在大量方框乱码和被遮挡、截断的文字，影响可读性和专业性。",
+    "画面虽未见明显品牌标志、水印或促销徽章，但额外内部文字仍构成素材合规风险。"
+  ],
+  "verdict_zh": "不通过：核心德文文案基本匹配，但画面含有大量意外的内部说明、产品信息、占位文字和乱码，需清除后重新提交。"
+}

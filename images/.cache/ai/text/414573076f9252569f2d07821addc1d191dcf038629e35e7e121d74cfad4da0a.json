@@ -1,0 +1,26 @@
+{
+  "detected_text": [
+    "Aluminiumgriff im Detail",
+    "Der Teleskopgriff aus Aluminium bietet drei Einstellungen und eine integrierte, klappbare Smartphone-Halterung.",
+    "Drei Griffpositionen sichtbar einstellbar",
+    "Klappbare Smartphone-Halterung im Griff",
+    "Create a premium Amazon main-detail image for a ...",
+    "AI IMAGE PENDING"
+  ],
+  "unexpected_text": [
+    "Create a premium Amazon main-detail image for a low-saturation European travel setting with soft natural light, light and neutral silver, and deep-blue tones. Follow two independent layouts: PC 2000x2000 with copy reserved on the left and the product on the right; mobile 1200x1200 with the product in the upper area and copy reserved below. Show the ...",
+    "AI IMAGE PENDING",
+    "Visible placeholder/square glyphs after text"
+  ],
+  "spelling_issues": [
+    "Smartphone-Halterung is visibly broken across lines as \"Smartphone-Halterun\" and \"g\".",
+    "The expected copy is not cleanly rendered because words are split by line breaks and stray square glyphs appear."
+  ],
+  "policy_risks_zh": [
+    "画面含有未提供且与产品文案无关的英文生成提示词，属于不允许的额外文字。",
+    "画面含有“AI IMAGE PENDING”占位水印/状态标识，可能违反亚马逊图片不得含水印、占位符或促销性图形的要求。",
+    "存在明显的占位符方框和生成残留，影响专业性与可读性。",
+    "德文文案断行错误，导致产品功能描述显示不完整，可能影响消费者理解和合规性。"
+  ],
+  "verdict_zh": "不通过：虽包含预期德文文案，但存在明显的英文提示词、AI占位水印、方框残留及断词错误。需清除所有非预期文字和占位元素，并重新排版后提交。"
+}

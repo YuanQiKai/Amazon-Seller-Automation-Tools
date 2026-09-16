@@ -1,0 +1,34 @@
+{
+  "detected_text": [
+    "Trocken und Nass getrennt packen",
+    "Feuchte Kleidung bleibt unterwegs getrennt von trockener Wäsche",
+    "Vier seitliche Haken halten zusätzliche Taschen",
+    "Oberer Metallhaken hält Wichtiges griffbereit",
+    "Create a premium Amazon A+ full-image composition for the YVWJ 13A",
+    "No rendered text, letters, logos, labels, badges, or watermarks.",
+    "Use a European modern travel photography style, low-saturation neutral colors, natural daylight, crisp product edges, and tightly blended reflections.",
+    "1464x600.",
+    "Place the open suitcase on the right in [0.49,0.08,0.46,0.84], opened approximately two-thirds toward the viewer with a clearly visible dry-wet separation bag, with separate dry and damp clothing arranged as a realistic packing scene.",
+    "Show side-mounted four hooks holding several small bags, and a single top metal hook holding one essential item.",
+    "Add a close-up visual inset or naturally composed macro detail of the vertical surface stripes, plus a separate close-up of the aluminium",
+    "AI IMAGE PENDING / □□□□□□"
+  ],
+  "unexpected_text": [
+    "Create a premium Amazon A+ full-image composition for the YVWJ 13A",
+    "No rendered text, letters, logos, labels, badges, or watermarks.",
+    "Use a European modern travel photography style, low-saturation neutral colors, natural daylight, crisp product edges, and tightly blended reflections.",
+    "1464x600.",
+    "Place the open suitcase on the right in [0.49,0.08,0.46,0.84], opened approximately two-thirds toward the viewer with a clearly visible dry-wet separation bag, with separate dry and damp clothing arranged as a realistic packing scene.",
+    "Show side-mounted four hooks holding several small bags, and a single top metal hook holding one essential item.",
+    "Add a close-up visual inset or naturally composed macro detail of the vertical surface stripes, plus a separate close-up of the aluminium",
+    "AI IMAGE PENDING / □□□□□□"
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "MAIN_WHITE区域包含大段可见的英文生成提示词，违反不得出现可见文字的要求。",
+    "画面包含“AI IMAGE PENDING”状态文字及符号，属于不应出现在商品创意中的占位/水印式内容。",
+    "画面存在明显的生成提示词残留和叠加文本，影响专业性、可读性及商品展示质量。",
+    "非预期英文内容超出供应的文案范围，且可能被消费者误认为商品信息或页面内容。"
+  ],
+  "verdict_zh": "不通过：虽然指定的德文文案基本完整且未发现拼写错误，但MAIN_WHITE区域含有大量英文提示词、AI占位文字及疑似水印内容，严重违反文本和促销图形限制。"
+}

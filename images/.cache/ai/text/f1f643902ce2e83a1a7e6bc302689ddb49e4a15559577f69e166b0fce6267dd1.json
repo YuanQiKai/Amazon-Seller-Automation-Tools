@@ -1,0 +1,30 @@
+{
+  "detected_text": [
+    "Übersetzung ausstehend — Produktangaben bitte übersetzen und prüfen.",
+    "□□□□□□□□",
+    "□ □/4□",
+    "Use case: Amazon ecommerce creative reference.",
+    "Create a landscape composition for module ...",
+    "Product: Travel Suitcase; category: Luggage / Suitcases; model: 13A",
+    "Polycarbonate, ABS, Acrylonitrile Butadiene Styrene, Aluminium Frame",
+    "AI IMAGE PENDING"
+  ],
+  "unexpected_text": [
+    "英文说明文字与产品规格信息",
+    "AI IMAGE PENDING",
+    "无法渲染的方框占位符文字",
+    "价格、尺寸、材质及颜色等未验证产品信息"
+  ],
+  "spelling_issues": [
+    "多处文字显示为缺失字形方框，无法进行可靠拼写校验"
+  ],
+  "policy_risks_zh": [
+    "MAIN_WHITE 区域含有明显标题、方框占位符及内容卡片文字，违反不得出现可见文字、徽标、水印、徽章或促销图形的要求。",
+    "预期中文“上方一个金属挂钩”未正确显示，实际仅出现缺失字形方框；同时画面中未见金属挂钩。",
+    "图片包含英文产品规格、价格、尺寸和材质等信息，部分内容乱码且未提供可验证来源，存在误导风险。",
+    "德国站点素材主体内容未完成德语本地化，不符合预期语言要求。",
+    "“AI IMAGE PENDING”属于明显的内部制作占位提示，不应出现在面向消费者的A+内容中。",
+    "整体素材看起来像制作参考卡而非成品商品创意，存在未完成和不适合发布的风险。"
+  ],
+  "verdict_zh": "不通过：MAIN_WHITE含大量可见文字，预期中文未正确呈现，素材存在乱码、未翻译内容、未验证规格及内部占位提示，需重新制作并完成审核。"
+}

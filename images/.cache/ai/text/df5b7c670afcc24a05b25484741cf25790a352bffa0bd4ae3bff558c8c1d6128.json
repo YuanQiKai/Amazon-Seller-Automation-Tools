@@ -1,0 +1,240 @@
+[
+  {
+    "instance_id": "MAIN_WHITE__7898a0e30d",
+    "module_code": "MAIN_WHITE",
+    "verdict": "通过",
+    "issues": [],
+    "suggestions": []
+  },
+  {
+    "instance_id": "MAIN_FUNCTION__6d24611b9b",
+    "module_code": "MAIN_FUNCTION",
+    "verdict": "建议修改",
+    "issues": [
+      "“顺滑/流畅”缺少性能测试支持",
+      "德语“Acht doppelte 360°-Doppelrollen”重复且可能被理解为16个轮子",
+      "多语言对“双排八轮”的表述存在数量歧义"
+    ],
+    "suggestions": [
+      "标题改为中性的“360°转向，八轮设计”",
+      "德语改为“Acht Rollen in Doppelrollenanordnung, um 360° drehbar”",
+      "各语言统一明确为总计8个轮子"
+    ]
+  },
+  {
+    "instance_id": "MAIN_FUNCTION__3924707235",
+    "module_code": "MAIN_FUNCTION",
+    "verdict": "建议修改",
+    "issues": [
+      "“隐藏式”和“顶部安装”未在产品输入中明确",
+      "德语“Den Griff dreifach einstellen”表达不自然",
+      "各语言将支架位置具体化，超出已提供事实"
+    ],
+    "suggestions": [
+      "删除“隐藏式”和“顶部”描述，仅写拉杆配可折叠手机支架",
+      "德语改为“Der Griff lässt sich in drei Positionen einstellen”",
+      "仅在有实物结构证据时保留具体安装位置"
+    ]
+  },
+  {
+    "instance_id": "MAIN_DETAIL__acf3abf466",
+    "module_code": "MAIN_DETAIL",
+    "verdict": "建议修改",
+    "issues": [
+      "文案聚焦拉杆，与指定的四个挂钩和可折叠水杯架主题不一致",
+      "未覆盖本模块要求展示的挂钩与杯架卖点",
+      "与上一拉杆功能模块内容重复度较高"
+    ],
+    "suggestions": [
+      "改为介绍侧面四个挂钩、顶部金属挂钩和可折叠水杯架",
+      "将拉杆细节移至对应拉杆模块",
+      "避免补充挂钩或杯架承重能力"
+    ]
+  },
+  {
+    "instance_id": "MAIN_EXPLODED__10529401bf",
+    "module_code": "MAIN_EXPLODED",
+    "verdict": "建议修改",
+    "issues": [
+      "意大利语用同一“cerniera”表示铰链和拉链，句意错误",
+      "德语“Scharnieröffnung”较生硬",
+      "“更快速访问”在部分语言中弱化了“开合更快捷”的准确含义"
+    ],
+    "suggestions": [
+      "意大利语将拉链改为“chiusura lampo”",
+      "德语改为“Öffnung mit Scharnieren”",
+      "统一表述为铰链开合比拉链开合更快捷，避免延伸为取物效率保证"
+    ]
+  },
+  {
+    "instance_id": "MAIN_SELLING__e731a43271",
+    "module_code": "MAIN_SELLING",
+    "verdict": "高风险",
+    "issues": [
+      "“网格拉链袋”未出现在产品输入中",
+      "六种语言均加入了缺乏依据的网格袋功能",
+      "“让手机保持可见”属于未经验证的使用效果"
+    ],
+    "suggestions": [
+      "删除所有语言中的网格拉链袋",
+      "仅保留双区分隔、干湿分离袋和X型固定带",
+      "将手机支架收益改为中性表述“用于放置手机”"
+    ]
+  },
+  {
+    "instance_id": "MAIN_CARE__ee9f59d12d",
+    "module_code": "MAIN_CARE",
+    "verdict": "高风险",
+    "issues": [
+      "“三位密码锁”未在产品输入中提供",
+      "六种语言均添加了未经证实的密码位数",
+      "德语“klare Servicevorteile”与其他语言及维护主题语义不一致"
+    ],
+    "suggestions": [
+      "删除“三位/three-digit/dreistellige”等具体位数",
+      "统一改为“TSA密码锁便于行李查验”",
+      "德语标题改为“TSA-Schloss und Serviceinformationen”"
+    ]
+  },
+  {
+    "instance_id": "MAIN_COLOR_SIZE__813a03894b",
+    "module_code": "MAIN_COLOR_SIZE",
+    "verdict": "高风险",
+    "issues": [
+      "英语、法语、意大利语和西班牙语仍含待翻译提示及中文",
+      "六语言内容严重不一致且无法直接上线",
+      "“Sliver”拼写错误，应为“Silver”",
+      "中文包含“规格选择/展示事实/同类模块第1次”等内部标签",
+      "产品输入未明确尺寸、重量和容量单位，文案直接添加cm、kg和L"
+    ],
+    "suggestions": [
+      "完成全部六种语言的正式翻译并删除占位提示",
+      "删除中文内部流程标签",
+      "将颜色统一更正为Silver，德语使用Silber",
+      "确认cm、kg和L单位证据后再发布",
+      "补充三种颜色信息或明确本图仅展示银色版本"
+    ]
+  },
+  {
+    "instance_id": "MAIN_AUDIENCE__af511c841f",
+    "module_code": "MAIN_AUDIENCE",
+    "verdict": "建议修改",
+    "issues": [
+      "TSA锁信息在标题、说明和细节中重复",
+      "德语“Polyester-Material”表达冗余不自然",
+      "“更快捷/更快速”属于比较式表达，建议弱化"
+    ],
+    "suggestions": [
+      "删除重复的“TSA密码锁”细节行或替换为其他已证实结构",
+      "德语改为“Innenfutter aus Polyester”",
+      "标题改为“TSA-Schloss für erleichterte Kontrollen”"
+    ]
+  },
+  {
+    "instance_id": "APLUS_FULL_IMAGE__d65648b251",
+    "module_code": "APLUS_FULL_IMAGE",
+    "verdict": "建议修改",
+    "issues": [
+      "英文“Smoother”和德语“reibungslosere”暗示查验过程更顺畅，超出已提供事实",
+      "各语言对“快速、有效率、顺畅”的利益表述不完全一致",
+      "比较式查验效果可能被理解为通关效率承诺"
+    ],
+    "suggestions": [
+      "统一改为“TSA锁便于行李查验”",
+      "德语标题改为“TSA-Schloss für erleichterte Kontrollen”",
+      "避免“更顺畅、更高效”等无法验证的比较措辞"
+    ]
+  },
+  {
+    "instance_id": "APLUS_FULL_IMAGE__06d4e85856",
+    "module_code": "APLUS_FULL_IMAGE",
+    "verdict": "建议修改",
+    "issues": [
+      "“适配不同身高”未在产品输入中明确支持",
+      "三档调节不能直接证明适合所有或不同身高用户",
+      "德语“Nass-Trocken-Fach”与产品输入中的分离袋类型不够一致"
+    ],
+    "suggestions": [
+      "改为“三档拉杆，提供三种调节位置”",
+      "删除各语言中的“适配不同身高”",
+      "德语使用“Nass-Trocken-Tasche”或“separate Tasche für feuchte Kleidung”"
+    ]
+  },
+  {
+    "instance_id": "APLUS_FULL_IMAGE__eb9e26020a",
+    "module_code": "APLUS_FULL_IMAGE",
+    "verdict": "建议修改",
+    "issues": [
+      "英文“Secure Packing”、法语“rangement sécurisé”和意大利语“ordine protetto”带有安全或保护暗示",
+      "六语言标题强度不一致",
+      "“稳固行李”宜限定为固定衣物或物品位置"
+    ],
+    "suggestions": [
+      "统一使用“有序收纳”或“固定箱内物品”等中性表达",
+      "英文标题改为“Two Compartments, Organized Packing”",
+      "法语和意大利语删除“sécurisé/protetto”"
+    ]
+  },
+  {
+    "instance_id": "APLUS_NAV_CAROUSEL__fe1147c189",
+    "module_code": "APLUS_NAV_CAROUSEL",
+    "verdict": "建议修改",
+    "issues": [
+      "轮播文案仅覆盖干湿分离和挂钩，未覆盖四个指定主题",
+      "360°轮、手机支架和水杯架缺少对应帧文案",
+      "指定的“静音轮”缺乏产品证据，不能直接采用"
+    ],
+    "suggestions": [
+      "为挂钩、360°八轮、内部收纳、手机及杯架分别编写轮播帧文案",
+      "轮组仅描述360°转向和八轮结构",
+      "删除“静音”及其他未经测试的性能词"
+    ]
+  },
+  {
+    "instance_id": "APLUS_FULL_IMAGE__72d06885ba",
+    "module_code": "APLUS_FULL_IMAGE",
+    "verdict": "建议修改",
+    "issues": [
+      "文案主题为干湿分离，与指定的条纹、框架和铰链细节主题不一致",
+      "英文“during changing travel days”表达不自然",
+      "“顶部挂钩让必需品随手可取”属于未直接支持的使用效果"
+    ],
+    "suggestions": [
+      "按模块要求改写为竖条纹、铝合金框架和铰链结构",
+      "若保留现有主题，英文改为“Keep damp clothing separate from dry clothes while travelling”",
+      "顶部挂钩仅表述为“可用于悬挂袋子”"
+    ]
+  },
+  {
+    "instance_id": "APLUS_FULL_IMAGE__ea25775180",
+    "module_code": "APLUS_FULL_IMAGE",
+    "verdict": "建议修改",
+    "issues": [
+      "“在机场拉行李时保持多个袋子随手可取”暗示移动中的稳定效果",
+      "“Keep Moving/weitergehen”属于未经验证的场景收益",
+      "“hold/sostengono/sostienen”可能暗示未提供的承重能力"
+    ],
+    "suggestions": [
+      "改为“四个侧面挂钩，可用于悬挂多个袋子”",
+      "删除移动中稳定或持续行走的暗示",
+      "各语言使用“hang/aufhängen/accrocher”等中性动词"
+    ]
+  },
+  {
+    "instance_id": "APLUS_FULL_IMAGE__1e3c051f47",
+    "module_code": "APLUS_FULL_IMAGE",
+    "verdict": "高风险",
+    "issues": [
+      "“双手更自在/Keep Hands Free”暗示免手提效果，缺乏依据",
+      "德语“trägt”和其他语言的“支撑、承载”暗示未提供的承重能力",
+      "容量单位L未在产品输入中明确",
+      "挂钩卖点与尺寸参数混排，主信息焦点不清"
+    ],
+    "suggestions": [
+      "标题改为“挂袋收纳，三种尺寸可选”",
+      "将“承载多个袋子”改为“可用于悬挂多个袋子”",
+      "确认容量单位后再标注42/60/78 L",
+      "尺寸比较与挂钩功能建议拆分为独立信息区"
+    ]
+  }
+]

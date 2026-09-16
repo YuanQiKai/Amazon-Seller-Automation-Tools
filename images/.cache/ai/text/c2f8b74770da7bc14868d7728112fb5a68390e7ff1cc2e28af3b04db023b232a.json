@@ -1,0 +1,39 @@
+{
+  "detected_text": [
+    "Drei Griffhöhen zur Auswahl",
+    "Aluminiumrahmen und Scharnieröffnung ermöglichen schnelleren Zugriff als Koffer mit Reißverschluss.",
+    "Use case: Amazon ecommerce creative reference.",
+    "Create a square composition for module",
+    "Product: Travel Suitcase; category: Luggage / Suitcases; model: 13A; material:",
+    "Polycarbonate / ABS / Acrylonitrile Butadiene Styrene / Aluminium Frame",
+    "variants: 20...61×42×27...Silver...4...42...89.99...24...",
+    "72.5×46.5×31...Silver...5.1...60...99.99...26...",
+    "76×52×31.5...Silver...5.6...78...109.99...20...",
+    "61×42×27...GunmetalGray...4...42...89.99...24...",
+    "72.5×46.5×31...GunmetalGray...5.1...60...99.99...",
+    "76×52×31.5...GunmetalGray...5.6...78",
+    "Klappbare Handyhalterung direkt am Griff",
+    "Polyesterfutter im Inneren des Koffers",
+    "AI IMAGE... / ..."
+  ],
+  "unexpected_text": [
+    "Use case: Amazon ecommerce creative reference.",
+    "Create a square composition for module",
+    "Product: Travel Suitcase; category: Luggage / Suitcases; model: 13A; material:",
+    "Polycarbonate / ABS / Acrylonitrile Butadiene Styrene / Aluminium Frame",
+    "The variant and pricing/specification strings containing placeholder squares and numerical data",
+    "AI IMAGE... / ...",
+    "Visible placeholder/gibberish characters such as □"
+  ],
+  "spelling_issues": [
+    "Unexpected text contains corrupted placeholder characters and incomplete strings, making the copy unreadable."
+  ],
+  "policy_risks_zh": [
+    "画面泄露了内部制作说明、用途说明和产品数据，属于不应出现在消费者素材中的非供应商文案。",
+    "包含大量未验证的型号、材质、尺寸、重量、颜色和价格信息，且部分内容被占位符破坏，可能造成误导。",
+    "出现明显的占位符乱码和“AI IMAGE”类水印/标记，影响专业性并可能违反素材清洁度要求。",
+    "“比带拉链的行李箱更快取用”属于比较性性能宣称，需要有可验证依据；当前画面未提供依据。",
+    "素材几乎只有文字和内部说明，缺少清晰的产品爆炸图或功能视觉呈现，不符合高质量电商创意要求。"
+  ],
+  "verdict_zh": "不通过：虽然四条指定德语文案均出现，但画面包含大量内部提示词、乱码占位符、未验证规格/价格信息及水印标记，需重新制作并清理所有非供应商文案。"
+}

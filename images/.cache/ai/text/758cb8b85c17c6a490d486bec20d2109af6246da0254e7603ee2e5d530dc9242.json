@@ -1,0 +1,17 @@
+{
+  "detected_text": [
+    "Trocken und Nass getrennt packen",
+    "Feuchte Kleidung bleibt unterwegs getrennt von trockener Wäsche",
+    "Vier seitliche Haken halten zusätzliche Taschen",
+    "Oberer Metallhaken hält Wichtiges griffbereit"
+  ],
+  "unexpected_text": [],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "图片中的文字与提供的德语文案完全一致，未发现未授权文案。",
+    "主图区域包含可见文字、产品特写框、引导线和宣传式版式；若该图片被用作 MAIN_WHITE，则不符合 MAIN_WHITE 不得包含文字、徽标、水印、徽章或促销图形的要求。",
+    "图片中未发现明显徽标、水印或徽章。",
+    "“Vier seitliche Haken”和“Oberer Metallhaken”属于产品功能/结构事实，需确保与实际商品一致并有依据。"
+  ],
+  "verdict_zh": "不通过：文案本身无拼写问题且无额外文字，但该创意包含大量可见文字和宣传图形，不能作为 MAIN_WHITE 使用；作为非主图 A+ 模块时，需确认产品功能描述真实可验证。"
+}

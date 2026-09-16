@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "text": {
+    "9527code": {
+      "label": "9527Code",
+      "protocol": "chat_completions",
+      "base_url": "https://9527.codes/v1",
+      "endpoint": "/chat/completions",
+      "model_endpoint": "/models",
+      "api_key_env": "CODE9527_API_KEY",
+      "models": [],
+      "routes": {
+        "主路线": "https://9527.codes/v1",
+        "路线2": "https://api.9527.codes/v1",
+        "路线3": "https://cdn.9527.codes/v1"
+      },
+      "note": "9527Code OpenAI兼容接口。填写Key后获取模型；第三方获取模型列表时，令牌模型分组按供应商说明选择单个分组。切换路线不更换Key，在途任务沿用启动时路线。"
+    }
+  },
+  "image": {
+    "9527code": {
+      "label": "9527Code 图片生成",
+      "protocol": "openai_images_url",
+      "base_url": "https://9527.codes/v1",
+      "endpoint": "/images/generations",
+      "model_endpoint": "/models",
+      "api_key_env": "CODE9527_API_KEY",
+      "models": [],
+      "routes": {
+        "主路线": "https://9527.codes/v1",
+        "路线2": "https://api.9527.codes/v1",
+        "路线3": "https://cdn.9527.codes/v1"
+      },
+      "note": "9527Code 图片兼容接入。模型列表来自账号接口，不代表每个模型都能生图；需选择可用图片模型并确认图片接口权限。带本体/参考图的GPT Image走images/edits。切换路线不更换Key。"
+    }
+  }
+}

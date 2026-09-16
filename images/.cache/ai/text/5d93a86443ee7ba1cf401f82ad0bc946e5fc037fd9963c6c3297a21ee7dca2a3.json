@@ -1,0 +1,20 @@
+{
+  "detected_text": [
+    "Klappbare Handyhalterung am Teleskopgriff",
+    "Die Halterung hält das Smartphone sichtbar; der Zwei-Zonen-Innenraum trennt Reiseutensilien.",
+    "TSA-Zahlenschloss erleichtert die Gepäckkontrolle",
+    "Nassfach, Netzfach mit Reißverschluss und X-förmige Packgurte"
+  ],
+  "unexpected_text": [
+    "锁具特写中出现未提供的TSA红色菱形标志"
+  ],
+  "spelling_issues": [
+    "右侧文案将“Reißverschluss”不自然地拆分为“Reißverschlus s”，影响单词完整性",
+    "左侧文案将“Gepäckkontrolle”拆分为“Gepäckkontro lle”，断行过度，影响可读性"
+  ],
+  "policy_risks_zh": [
+    "图片包含未提供的TSA标志/商标元素，可能不符合仅使用指定文案和已核实事实的要求",
+    "文案断行导致德语单词被视觉分割，可能影响消费者理解和素材专业性"
+  ],
+  "verdict_zh": "不通过：主要文案内容与预期一致，但存在明显不自然断行，并在锁具特写中出现未提供的TSA标志；建议移除该标志或确认其使用授权，同时优化排版。"
+}

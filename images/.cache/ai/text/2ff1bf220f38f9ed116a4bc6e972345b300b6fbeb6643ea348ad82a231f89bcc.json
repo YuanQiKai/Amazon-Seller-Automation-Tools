@@ -1,0 +1,14 @@
+{
+  "detected_text": [
+    "Drei Griffhöhen zur Auswahl",
+    "Aluminiumrahmen und Scharnieröffnung ermöglichen schnelleren Zugriff als Koffer mit Reißverschluss.",
+    "Klappbare Handyhalterung direkt am Griff",
+    "Polyesterfutter im Inneren des Koffers"
+  ],
+  "unexpected_text": [],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "“ermöglichen schnelleren Zugriff als Koffer mit Reißverschluss”属于比较性性能声明，可能需要充分、可验证的证据支持，否则存在亚马逊广告合规风险。"
+  ],
+  "verdict_zh": "文字与预期文案一致，未发现拼写错误、额外文字、徽标或水印。图片作为MAIN_EXPLODED模块可接受；但比较性“更快”声明需有证据支持，建议确认或弱化该表述。"
+}

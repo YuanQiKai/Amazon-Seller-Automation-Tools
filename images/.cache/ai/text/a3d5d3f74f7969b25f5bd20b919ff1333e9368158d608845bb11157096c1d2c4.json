@@ -1,0 +1,31 @@
+{
+  "detected_text": [
+    "Acht Rollen, leichtes Wenden",
+    "Acht doppelte Lenkrollen drehen sich um 360° für leichteres Bewegen in Stadt und Flughafen.",
+    "Aluminiumgriff, drei Höhenstufen",
+    "PC+ABS-Schale, vertikale Struktur, vier Schutzkanten",
+    "European modern travel",
+    "with no rendered text, letters, logos, labels, or watermarks anywhere in the image.",
+    "Show the real YWJ 13A travel suitcase in a 45-degree front-side view on the right",
+    "preserving its realistic proportions, PC+ABS hard shell",
+    "four protective corners. Make all eight wheels",
+    "restrained airport or modern city travel",
+    "AI IMAGE PENDING /",
+    "多个方框占位符"
+  ],
+  "unexpected_text": [
+    "German headline附近出现多个方框/缺字占位符",
+    "背景中可见英文生成提示词，包括“European modern travel”“with no rendered text, letters, logos, labels, or watermarks anywhere in the image.”等",
+    "背景中可见产品生成说明，包括“Show the real YWJ 13A travel suitcase in a 45-degree front-side view on the right”等",
+    "底部出现“AI IMAGE PENDING /”及方框占位符"
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "该图属于MAIN_FUNCTION，虽允许使用所提供的德文文案，但画面还包含未提供、未验证的英文提示词和内部制作说明，不符合“其他图片仅可包含 supplied copy 和 verified facts”的要求。",
+    "存在明显的AI生成占位文字“AI IMAGE PENDING”和缺字方框，属于未完成素材及非消费者向内容。",
+    "英文提示词在背景中可见，可能被视为意外文字、水印式残留或制作信息泄露。",
+    "主视觉产品区域为空白，未展示行李箱或对应功能，创意明显未完成。",
+    "部分方框字符叠加在标题附近，造成排版错误和可读性问题。"
+  ],
+  "verdict_zh": "不通过：德文预期文案基本齐全且未发现明显拼写错误，但画面含有大量未授权的英文生成提示词、“AI IMAGE PENDING”占位信息及缺字方框，并且产品图缺失，必须清除所有残留文字和占位符、补齐最终产品视觉后再提交。"
+}

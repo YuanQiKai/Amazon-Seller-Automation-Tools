@@ -1,0 +1,18 @@
+{
+  "detected_text": [
+    "Aluminiumgriff im Detail",
+    "Der Teleskopgriff aus Aluminium bietet drei Einstellungen und eine integrierte, klappbare Smartphone-Halterung.",
+    "Drei Griffpositionen sichtbar einstellbar",
+    "Klappbare Smartphone-Halterung im Griff"
+  ],
+  "unexpected_text": [],
+  "spelling_issues": [
+    "„Griffpositionen“ ist unglücklich in „Griffposition“ und „en“ getrennt.",
+    "„Smartphone-Halterung“ ist durch den Zeilenumbruch als „Smartphone -Halterung“ dargestellt; kein Leerzeichen vor dem Bindestrich verwenden."
+  ],
+  "policy_risks_zh": [
+    "画面中右侧支架似乎放置了杯子，可能暗示该手机支架可承载杯子；该用途未被提供文案验证，存在轻微的产品功能误导风险。",
+    "未发现徽标、水印、徽章或促销图形。"
+  ],
+  "verdict_zh": "基本通过，但需修正两处德语断词/排版问题，并确认画面中杯子不会暗示未经验证的支架用途。"
+}

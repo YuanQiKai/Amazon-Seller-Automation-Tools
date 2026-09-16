@@ -1,0 +1,39 @@
+{
+  "detected_text": [
+    "□□□□□□□",
+    "Use case: Amazon ecommerce creative reference.",
+    "Create a square composition for module",
+    "'□□□□□□□'. Product: Travel Suitcase; category:",
+    "Luggage / Suitcases; model: 13A; material:",
+    "□□□□□Polycarbonate□□ABS□Acrylonitrile",
+    "Butadiene Styrene□□Aluminium Frame; variants:",
+    "20□□□□61×42×27□□□Silver□□□4□□□42□□□89.99□□24□□□",
+    "□72.5×46.5×31□□□Silver□□□5.1□□□60□□□99.99□26□□",
+    "□□□76×52×31.5□□□Silver□□□5.6□□□78□□□109.99□20□□",
+    "□□61×42×27□□GunmetalGray□□□4□□□42□□□89.99□□24□",
+    "□□□72.5×46.5×31□□□GunmetalGray□□□5.1□□□60□□□99",
+    ".99□26□□□76×52×31.5□□□GunmetalGray□□□5.6□□□78",
+    "TSA-Schloss, schnellere Kontrollen",
+    "Ein TSA-Zahlenschloss erleichtert dem Zoll die schnelle Gepäckkontrolle",
+    "TSA-Zahlenschloss für Kontrollen",
+    "Innenfutter aus Polyester-Material"
+  ],
+  "unexpected_text": [
+    "□□□□□□□",
+    "Use case: Amazon ecommerce creative reference.",
+    "Create a square composition for module",
+    "'□□□□□□□'. Product: Travel Suitcase; category:",
+    "Luggage / Suitcases; model: 13A; material:",
+    "□□□□□Polycarbonate□□ABS□Acrylonitrile",
+    "Butadiene Styrene□□Aluminium Frame; variants:",
+    "Visible product dimensions, colors, weights, prices and other variant data in the background"
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "MAIN_WHITE 区域存在大量可见文字、乱码及产品资料，违反必须完全无文字、Logo、水印、徽章或促销图形的要求。",
+    "背景包含未提供且未核验的英文说明、材质、尺寸、颜色、重量和价格信息，违反只能使用已提供且已核实文案的要求。",
+    "背景文字与前景德语文案重叠且部分被遮挡，影响可读性和素材专业度。",
+    "“便于海关快速检查行李”属于功能/效果表述，需有可验证依据；当前素材中未提供相关证明。"
+  ],
+  "verdict_zh": "不通过：存在大量意外背景文字和乱码，且MAIN_WHITE不符合无文字要求；应移除所有背景内容，仅保留符合要求的产品视觉和已提供文案。"
+}

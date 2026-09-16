@@ -1,0 +1,40 @@
+{
+  "detected_text": [
+    "□□□□□□□",
+    "Create a square Amazon product lifestyle image",
+    "for a YWJ 13A travel suitcase, with the visual",
+    "story focused on a family traveling together.",
+    "Use a modern European travel photography",
+    "style, low-saturation neutral colors, natural",
+    "daylight, and soft realistic shadows. Place",
+    "the Silver silver suitcase prominently in the",
+    "upper area within approximately 8% left, 5%",
+    "top, 84% width, and 53% height of the canvas.",
+    "Show its true proportions and visible vertical",
+    "shell texture, polycarbonate/ABS hard shell,",
+    "aluminum frame, four protective corners, wheel",
+    "TSA-Schloss, schnellere Kontrollen",
+    "Ein TSA-Zahlenschloss erleichtert dem Zoll die schnelle Gepäckkontrolle",
+    "TSA-Zahlenschloss für Kontrollen",
+    "Innenfutter aus Polyester-Material"
+  ],
+  "unexpected_text": [
+    "□□□□□□□",
+    "Create a square Amazon product lifestyle image",
+    "for a YWJ 13A travel suitcase, with the visual story focused on a family traveling together.",
+    "Use a modern European travel photography style, low-saturation neutral colors, natural daylight, and soft realistic shadows.",
+    "Place the Silver silver suitcase prominently in the upper area within approximately 8% left, 5% top, 84% width, and 53% height of the canvas.",
+    "Show its true proportions and visible vertical shell texture, polycarbonate/ABS hard shell, aluminum frame, four protective corners, wheel"
+  ],
+  "spelling_issues": [
+    "\"Silver silver\" is duplicated in the English text"
+  ],
+  "policy_risks_zh": [
+    "画面包含大量未提供且未验证的英文提示词/制作说明，违反其他图片只能包含指定文案和已验证事实的要求。",
+    "画面顶部存在无法识别的方框字符，属于异常可见文字。",
+    "底部大面积深色半透明文字面板属于明显的叠加图形，可能被视为不合规的界面或宣传元素。",
+    "若该素材按 MAIN_WHITE 使用，则明显违反 MAIN_WHITE 不得含任何可见文字、Logo、水印、徽章或宣传图形的要求。",
+    "素材不是清晰的行李箱产品创意图，而是包含提示词和文案覆盖层的编辑/生成界面截图，可能导致亚马逊主图审核不通过。"
+  ],
+  "verdict_zh": "不通过：虽然指定的德文文案基本完整且拼写正确，但画面同时暴露了大量英文制作提示词、异常方框字符和大面积叠加面板，不符合亚马逊商品创意图及 MAIN_WHITE 的无文字要求。"
+}

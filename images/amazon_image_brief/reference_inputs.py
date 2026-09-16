@@ -7,7 +7,7 @@ from PIL import Image, ImageDraw, ImageOps
 from .image_requests import uses_image_edits
 
 
-def reference_inputs(product_paths, style_paths, client, folder):
+def reference_inputs(product_paths, style_paths, client, folder, identifiers=None):
     products = list(dict.fromkeys(product_paths))
     styles = list(dict.fromkeys(style_paths))
     sources = [('PRODUCT IDENTITY', p) for p in products] + [('STYLE ONLY', p) for p in styles]
@@ -19,6 +19,11 @@ def reference_inputs(product_paths, style_paths, client, folder):
         if not source.is_file():
             raise ValueError(f'参考图不存在：{source}')
         manifest.append({'role': role, 'name': source.name, 'sha256': hashlib.sha256(source.read_bytes()).hexdigest()})
+    if identifiers is not None:
+        if len(identifiers) != len(manifest) or len(set(identifiers)) != len(identifiers):
+            raise ValueError('图片编号必须与实际输入数量一一对应且不可重复。')
+        for index, (item, identifier) in enumerate(zip(manifest, identifiers), 1):
+            item.update(reference_id=identifier, input_index=index)
     options = getattr(client, 'options', None)
     provider = getattr(options, 'image_provider', getattr(client, 'image_provider', ''))
     if options and uses_image_edits(options, options.image_model, sources) and len(sources) <= 16 and not getattr(client, 'image_fallbacks', []):
@@ -37,7 +42,7 @@ def reference_inputs(product_paths, style_paths, client, folder):
         draw = ImageDraw.Draw(canvas)
         for index, (role, source) in enumerate(sources):
             x, y = index % columns*cell, index//columns*cell
-            draw.text((x+12, y+8), f'{index+1}: {role}', fill='black')
+            draw.text((x+12, y+8), f'{manifest[index].get("reference_id", index+1)}: {role}', fill='black')
             with Image.open(source) as original:
                 tile = ImageOps.exif_transpose(original).convert('RGB')
                 tile.thumbnail((cell-20, cell-45), Image.Resampling.LANCZOS)

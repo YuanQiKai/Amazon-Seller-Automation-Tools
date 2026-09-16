@@ -1,0 +1,29 @@
+{
+  "detected_text": [
+    "PC+ABS-Schale, vertikale Struktur, vier Schutzkanten",
+    "Kratzfest für den Alltag",
+    "Robust und langlebig",
+    "Leichtes und modernes Desing",
+    "Aluminiumgriff, drei Höhenstufen",
+    "360°",
+    "Acht Rollen, leichtes Wenden",
+    "Acht doppelte Lenkrollen drehen sich um 360° für leichteres Bewegen in Stadt und Flughafen."
+  ],
+  "unexpected_text": [
+    "Kratzfest für den Alltag",
+    "Robust und langlebig",
+    "Leichtes und modernes Desing",
+    "360°"
+  ],
+  "spelling_issues": [
+    {
+      "text": "Desing",
+      "issue": "Typo; should be 'Design'"
+    }
+  ],
+  "policy_risks_zh": [
+    "图片包含预期文案之外的额外宣传性描述：‘Kratzfest für den Alltag’（日常防刮）、‘Robust und langlebig’（坚固耐用）、‘Leichtes und modernes Design’（轻盈现代设计）。这些性能或质量声明未在提供的预期文案中验证。",
+    "‘360°’属于额外的功能性视觉文案；虽然与预期的360°滚轮描述一致，但单独突出显示可能构成未经额外验证的宣传元素。"
+  ],
+  "verdict_zh": "不通过：图片存在预期文案之外的额外宣传性声明，并包含拼写错误‘Desing’。"
+}

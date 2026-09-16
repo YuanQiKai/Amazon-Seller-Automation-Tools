@@ -1,0 +1,46 @@
+{
+  "detected_text": [
+    "Aluminiumgriff mit drei Positionen",
+    "Wählen Sie eine von drei Griffhöhen und klappen Sie oben die verborgene Smartphone-Halterung aus.",
+    "Use case: Amazon ecommerce creative reference.",
+    "Create a square composition for module",
+    "'□□□□□'. Product: Travel Suitcase; category:",
+    "Luggage / Suitcases; model: 13A; material:",
+    "□□□□□Polycarbonate□□ABS□Acrylonitrile",
+    "Butadiene Styrene□□Aluminium Frame; variants:",
+    "20□□□□61×42×27□□Silver□□4□□42□□89.99□24□□",
+    "□72.5×46.5×31□□Silver□□5.1□□60□□99.99□26□□",
+    "□□76×52×31.5□□Silver□□5.6□□78□□109.99□20□□",
+    "□□61×42×27□□GunmetalGray□□4□□42□□89.99□24□",
+    "□□□72.5×46.5×31□□□GunmetalGray□□□5.1□□□60□□□99",
+    ".99□26□□□□76×52×31.5□□□GunmetalGray□□□5.6□□□78",
+    "Teleskopgriff aus Aluminiumlegierung",
+    "Verdeckte, faltbare Smartphone-Halterung oben",
+    "AI IMAGE PENDING / □□□□□"
+  ],
+  "unexpected_text": [
+    "Use case: Amazon ecommerce creative reference.",
+    "Create a square composition for module",
+    "'□□□□□'. Product: Travel Suitcase; category:",
+    "Luggage / Suitcases; model: 13A; material:",
+    "□□□□□Polycarbonate□□ABS□Acrylonitrile",
+    "Butadiene Styrene□□Aluminium Frame; variants:",
+    "20□□□□61×42×27□□Silver□□4□□42□□89.99□24□□",
+    "□72.5×46.5×31□□Silver□□5.1□□60□□99.99□26□□",
+    "□□76×52×31.5□□Silver□□5.6□□78□□109.99□20□□",
+    "□□61×42×27□□GunmetalGray□□4□□42□□89.99□24□",
+    "□□□72.5×46.5×31□□□GunmetalGray□□□5.1□□□60□□□99",
+    ".99□26□□□□76×52×31.5□□□GunmetalGray□□□5.6□□□78",
+    "AI IMAGE PENDING / □□□□□",
+    "大量方框替代字符及疑似残留括号符号"
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "画面包含明显的内部制作说明、产品元数据、变体价格及英文参考文本，不属于允许的商品卖点文案。",
+    "存在大量乱码方框字符，影响可读性并构成内容渲染缺陷。",
+    "包含“AI IMAGE PENDING”水印或占位标识，违反商品创意图应无水印、占位符和非商品信息的要求。",
+    "若该图被作为MAIN_WHITE使用，则其可见文字、占位符和水印均直接违反MAIN_WHITE不得出现任何文字或促销图形的要求。",
+    "产品参数、价格和材质信息未在预期文案中提供或验证，存在未经证实信息风险。"
+  ],
+  "verdict_zh": "不通过：虽包含预期德语文案，但混入大量内部指令、未经验证的产品与价格信息、乱码及水印，占位内容明显，需重新制作并仅保留已提供且核实的商品文案。"
+}

@@ -162,6 +162,7 @@ class GenerationOptions:
     rule_library_path: str = ""
     rule_update_url: str = ""
     output_root: str = "outputs"
+    provider_routes: dict[str, str] = field(default_factory=dict)
 
 
 @dataclass(slots=True)

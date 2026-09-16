@@ -1,0 +1,28 @@
+{
+  "detected_text": [
+    "Polyesterfutter, klar unterteilt",
+    "Zwei Packbereiche und X-förmige Gurte helfen, Kleidung unterwegs geordnet zu halten.",
+    "Nass-Trocken-Fach trennt feuchte Kleidung",
+    "Drei Griffpositionen für unterschiedliche Körpergrößen",
+    "Create a premium photorealistic Amazon A+ travel-luggage visual with a modern European editorial style, low-saturation neutral colors and soft natural side lighting.",
+    "For the 1464×600 desktop composition, reserve the exact product region at normalized [x=0.05, y=0.10, w=0.46, h=0.84].",
+    "Show the YYW suitcase open from a slight three-quarter angle, with its vertical-rib hard shell, aluminum frame, clearly visible polyester lining, two separate packing zones, and X-shaped securing straps.",
+    "Arrange folded dry clothing neatly beneath the straps and place a damp travel garment inside the dedicated dry pocket, showing separation without implying waterproofness or leakage protection.",
+    "Near the right edge of the product region, show three clean, subtle states of the same aluminum telescopic...",
+    "AI IMAGE PENDING /"
+  ],
+  "unexpected_text": [
+    "The English image-generation prompt and production instructions are visibly rendered in the creative.",
+    "AI IMAGE PENDING / is visibly rendered.",
+    "Multiple unrendered square placeholder glyphs are visible near the top and bottom left."
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "画面包含明显的英文提示词、版面参数和生成指令，属于不应展示给消费者的内部制作内容。",
+    "画面包含“AI IMAGE PENDING”占位提示及未渲染字符，呈现为未完成素材。",
+    "主体产品图缺失，左侧被大段内部说明文字占据，不符合A+全幅图片应以产品和合规卖点为主的要求。",
+    "若该素材作为MAIN_WHITE使用，则违反不得包含可见文字、徽标叠加、水印、徽章或促销图形的要求。",
+    "当前素材的可见文本超出所提供的德文文案范围，存在内容泄露和消费者误导风险。"
+  ],
+  "verdict_zh": "不通过：虽然右侧德文卖点与预期文案基本一致且未发现拼写错误，但素材明显为未完成的生成占位图，包含大量内部英文提示词、参数、占位符和缺失产品图，不能用于Amazon DE A+发布。"
+}

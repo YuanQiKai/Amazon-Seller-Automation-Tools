@@ -1,0 +1,21 @@
+{
+  "detected_text": [
+    "Nach Zonen packen, ordentlicher reisen",
+    "Zwei Fächer und X-Gurte ordnen Kleidung und halten sie an ihrem Platz.",
+    "Nass-Trocken-Tasche im Lieferumfang enthalten",
+    "Feuchte und trockene Kleidung getrennt verstauen",
+    "AI IMAGE PENDING"
+  ],
+  "unexpected_text": [
+    "Create a premium Amazon A+ split-layout travel photography banner ...",
+    "AI IMAGE PENDING",
+    "Additional tiny placeholder text and square symbols inside the central embedded panel"
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "中央嵌入式面板包含未提供的英文生成提示词、占位内容和“AI IMAGE PENDING”，不属于允许的商品文案或已验证事实。",
+    "若该素材被用作 MAIN_WHITE，则违反要求：主图白底区域存在可见文字、占位图形和促销/状态类元素。",
+    "中央面板中的小方框符号及占位标记属于不应出现在最终亚马逊 A+ 创意中的额外视觉元素。"
+  ],
+  "verdict_zh": "不通过：德语文案本身与预期一致且无明显拼写错误，但画面中央存在明显的英文提示词、AI 占位文字和额外符号，需移除后重新提交。"
+}

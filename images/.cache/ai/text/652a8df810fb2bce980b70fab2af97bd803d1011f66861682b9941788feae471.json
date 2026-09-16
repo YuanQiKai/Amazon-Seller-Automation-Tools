@@ -1,0 +1,29 @@
+{
+  "detected_text": [
+    "TSA-Schloss, Kontrollen einfacher gestalten",
+    "Das Zahlenschloss ermöglicht Zollbeamten eine effizientere Gepäckkontrolle unterwegs.",
+    "Polyesterfutter mit zwei getrennten Bereichen",
+    "X-förmige Gurte ordnen den Gepäckinhalt",
+    "Use case: Amazon ecommerce creative reference.",
+    "Create a landscape composition for module",
+    "Product: Travel Suitcase",
+    "category: Luggage / Suitcases",
+    "model: 13A",
+    "material: Polycarbonate / ABS / Acrylonitrile Butadiene Styrene / Aluminium Frame",
+    "AI IMAGE PENDING"
+  ],
+  "unexpected_text": [
+    "Use case: Amazon ecommerce creative reference. Create a landscape composition for module...",
+    "Product: Travel Suitcase; category: Luggage / Suitcases; model: 13A; material and variant specifications",
+    "大量乱码和未渲染字符",
+    "AI IMAGE PENDING"
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "画面中央出现明显的内部制作提示词、产品规格草稿和大量乱码，属于不应展示给消费者的非卖点内容。",
+    "出现“AI IMAGE PENDING”占位文本，说明素材未完成，影响专业性并可能误导消费者。",
+    "画面未展示清晰的真实行李箱产品图，核心视觉区域被占位卡片替代，不符合高质量A+素材要求。",
+    "“使海关人员更高效地进行行李检查”属于功能/效率类宣传表述，需有可靠产品事实或依据支持。"
+  ],
+  "verdict_zh": "不通过：存在内部提示词、乱码和AI占位文本，且缺少清晰真实的产品展示；需清理所有非预期文字并重新输出成品素材。"
+}

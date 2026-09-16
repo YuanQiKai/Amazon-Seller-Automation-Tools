@@ -1,0 +1,15 @@
+{
+  "detected_text": [
+    "Taschen aufhängen, Volumen vergleichen",
+    "Der obere Metallhaken hält mehrere Taschen; drei Größen eignen sich für verschiedene Reisen.",
+    "20 / 24 / 26 Zoll: 42 / 60 / 78 L",
+    "Faltbarer Becherhalter für unterwegs inklusive"
+  ],
+  "unexpected_text": [],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "该创意包含大量可见文字；若此图被用作 MAIN_WHITE，则违反 MAIN_WHITE 必须无文字、Logo 叠加、水印、徽章或促销图形的要求。",
+    "文案包含产品功能和容量声明（上部金属挂钩可悬挂多个包、三种尺寸及对应容量、可折叠杯架），应确保这些事实与实际商品及详情页一致。"
+  ],
+  "verdict_zh": "不通过：文案与预期德语文本一致且无拼写问题，但若作为 MAIN_WHITE 使用，因包含可见文字而不符合要求。"
+}

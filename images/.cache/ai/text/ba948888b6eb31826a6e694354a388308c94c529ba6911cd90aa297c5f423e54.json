@@ -1,0 +1,40 @@
+{
+  "detected_text": [
+    "□□□□□□",
+    "Create a premium European modern travel",
+    "photography infographic for a YWJ hard-shell",
+    "suitcase size comparison, square 2000×2000 PC",
+    "composition adaptable to 1200×1200 mobile.",
+    "Upper 53%: show three identical Sliver-finish",
+    "suitcases in 20-inch, 24-inch, and 26-inch",
+    "sizes, arranged side by side with clear",
+    "physical scale differences, front or slight",
+    "three-quarter views, visible vertical shell",
+    "texture, aluminum frame, corner guards, handle",
+    "and wheels. Place a business traveler, an",
+    "adult woman, and a child beside the respective",
+    "AI IMAGE PENDING /",
+    "Sliver-Finish, drei Größen",
+    "Vergleichen Sie Maße, Gewicht und Volumen für Ihre passende Reisegröße.",
+    "20 Zoll | 61×42×27 cm | 4 kg | 42 l",
+    "24 Zoll | 72,5×46,5×31 cm | 5,1 kg | 60 l",
+    "26 Zoll | 76×52×31,5 cm | 5,6 kg | 78 l"
+  ],
+  "unexpected_text": [
+    "□□□□□□",
+    "Create a premium European modern travel photography infographic for a YWJ hard-shell suitcase size comparison, square 2000×2000 PC composition adaptable to 1200×1200 mobile.",
+    "Upper 53%: show three identical Sliver-finish suitcases in 20-inch, 24-inch, and 26-inch sizes, arranged side by side with clear physical scale differences, front or slight three-quarter views, visible vertical shell texture, aluminum frame, corner guards, handle and wheels.",
+    "Place a business traveler, an adult woman, and a child beside the respective...",
+    "AI IMAGE PENDING /"
+  ],
+  "spelling_issues": [
+    "\"Sliver-Finish\" appears to be a misspelling of \"Silver-Finish\"; however, it matches the supplied expected text exactly."
+  ],
+  "policy_risks_zh": [
+    "画面中明显残留英文生成提示词和制作说明，不属于获准的商品文案或已验证事实。",
+    "画面中出现“AI IMAGE PENDING”等制作状态文字及方框占位符，属于未完成的生成界面/占位内容。",
+    "出现未提供且未验证的“YWJ”品牌或标识相关文字，可能造成品牌信息不准确或侵权风险。",
+    "创意未达到可直接用于亚马逊商品图片的成品标准，存在严重的文本污染和专业性风险。"
+  ],
+  "verdict_zh": "不通过。虽然德文尺寸文案与预期内容一致，但图片中叠加了大量英文提示词、AI状态文字和占位符，违反仅允许提供文案及已验证事实的要求，必须清除后重新提交。"
+}

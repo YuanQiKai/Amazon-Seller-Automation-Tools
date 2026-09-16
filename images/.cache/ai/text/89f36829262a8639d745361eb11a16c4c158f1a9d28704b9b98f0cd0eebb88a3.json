@@ -1,0 +1,14 @@
+{
+  "instance_id": "APLUS_FULL_IMAGE__ea25775180",
+  "copy": {
+    "en": "Carry More Within Easy Reach\nFour side hooks hold multiple bags within easy reach at the airport.\nFour hooks on the side\nOne metal hook on top",
+    "zh": "随手挂放，出行更轻松\n侧面四个挂钩可悬挂多个袋子，机场移动时取放更方便。\n侧面配备四个挂钩\n顶部设有一个金属挂钩",
+    "de": "Mehr Platz griffbereit unterwegs\nVier seitliche Haken halten mehrere Taschen am Flughafen bequem griffbereit.\nVier Haken an der Seite\nEin Metallhaken oben",
+    "fr": "Gardez vos affaires à portée de main\nQuatre crochets latéraux permettent de suspendre plusieurs sacs à l’aéroport.\nQuatre crochets sur le côté\nUn crochet métallique supérieur",
+    "it": "Più cose a portata di mano\nQuattro ganci laterali permettono di appendere più borse in aeroporto.\nQuattro ganci laterali\nUn gancio metallico superiore",
+    "es": "Lleva más al alcance de la mano\nCuatro ganchos laterales permiten colgar varias bolsas en el aeropuerto.\nCuatro ganchos laterales\nUn gancho metálico superior"
+  },
+  "design_brief_zh": "主卖点是侧面4个挂钩，核心购买理由是旅行箱在机场移动时可悬挂多个袋子，减少手部负担并方便取放；事实依据仅使用侧面4个挂钩、顶部1个金属挂钩、可挂多个袋子。PC画布1464×600，采用左产品右文：产品区域为画布[x=0.05,y=0.08,w=0.46,h=0.84]，展示与实物一致的YWJ 13A旅行箱，优先选择侧面结构清晰可见的三分之四角度；机场背景使用低饱和中性色、自然光和现代欧洲旅行摄影风格，可出现旅客经过、登机区或行李动线，但不得遮挡挂钩。文字区域为[x=0.57,y=0.10,w=0.38,h=0.80]，从上到下依次放置：第1行标题，强调随手挂放；第2行支持说明，说明四个侧面挂钩可悬挂多个袋子并适用于机场移动；第3行证据细节，标明侧面四个挂钩；第4行证据细节，标明顶部一个金属挂钩。标题最大、支持说明次之、两条细节采用较小但清晰的无衬线字体；使用Arial、Helvetica或Amazon Ember风格，数字“四个/1个”保持高可读性，德语排版预留约20%文字扩展空间。移动端1200×900需单独排版：上方场景与产品区域为[x=0.08,y=0.05,w=0.84,h=0.53]，下方文案区域为[x=0.05,y=0.64,w=0.90,h=0.31]；保持标题→支持说明→细节1→细节2的阅读顺序，确保侧面挂钩在场景中可辨识。产品角度应突出侧面挂钩和顶部金属挂钩，不重复此前手机支架角度；当前资料未提供挂钩承重、材质耐久性或适配袋型，因此不得在图片文案或视觉中暗示这些规格。",
+  "compliance_note_zh": "仅使用已提供的侧面4个挂钩、顶部1个金属挂钩及可悬挂多个袋子事实；不得声称承重、耐用性、免手提、适配航空规定或官方背书，不添加竞品商标、认证、评分、促销信息或绝对化表述。",
+  "image_prompt_en": "Create a premium Amazon A+ full-image lifestyle scene for the YWJ 13A travel suitcase in a modern European airport. Show the suitcase as the single visual focus from a three-quarter side angle, with the four side hooks clearly visible and one metal hook visible on the top. Show several ordinary travel bags hanging from the hooks in a natural, plausible way, without implying weight capacity. Use the supplied suitcase appearance faithfully: vertical-rib hard shell, aluminium frame, four protective corners, realistic proportions and hardware, with no invented features. Place the product on the left and leave a clean, uncluttered negative-space text area on the right for desktop. Use low-saturation neutral colors, natural daylight, refined modern airport architecture, realistic travel context, and premium European travel photography. For mobile cropping, keep the suitcase and hooks in the upper central area and reserve a clean lower area for copy. Use soft directional light, subtle shadows, realistic materials, and crisp product detail. Do not render any text, logos, labels, badges, icons, watermarks, or interface elements."
+}

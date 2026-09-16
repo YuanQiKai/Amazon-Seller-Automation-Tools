@@ -1,0 +1,18 @@
+{
+  "detected_text": [
+    "Übersetzung ausstehend — Produktangaben bitte übersetzen und prüfen.",
+    "上方一个金属挂钩",
+    "双区分隔+X型固定带",
+    "干湿分离袋"
+  ],
+  "unexpected_text": [
+    "双区分隔+X型固定带",
+    "干湿分离袋"
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "图片包含未在提供文案中列出的中文功能说明，可能属于未经核实或未获批准的产品宣称。",
+    "若该图片被用作MAIN_WHITE，则不合规，因为图片含有明显文字、标注框和促销式图形元素。"
+  ],
+  "verdict_zh": "不通过：除预期德文和“上方一个金属挂钩”外，还存在额外中文文案；若作为MAIN_WHITE使用，也违反无文字、无叠加标识和无促销图形要求。"
+}

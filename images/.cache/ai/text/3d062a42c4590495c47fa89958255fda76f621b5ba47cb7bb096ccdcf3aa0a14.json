@@ -1,0 +1,17 @@
+{
+  "detected_text": [
+    "TSA-Schloss, Service inklusive",
+    "Das dreistellige TSA-Schloss erleichtert Kontrollen, Anleitung und Garantiekarte inklusive.",
+    "Lieferumfang: Koffer, Anleitung, Garantiekarte",
+    "Drei Jahre Garantie inklusive",
+    "1",
+    "2"
+  ],
+  "unexpected_text": [
+    "1",
+    "2"
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [],
+  "verdict_zh": "不通过：主体文案与预期一致，但画面中额外出现了未提供的数字“1”和“2”。"
+}

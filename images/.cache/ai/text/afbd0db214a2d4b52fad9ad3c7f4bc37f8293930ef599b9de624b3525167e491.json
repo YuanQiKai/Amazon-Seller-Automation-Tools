@@ -1,0 +1,45 @@
+{
+  "detected_text": [
+    "YWJ",
+    "TRAVEL WITH YOU",
+    "A BETTER JOURNEY",
+    "Robust. Sicher. Bereit für neue Wege.",
+    "Zuverlässiger Begleiter auf jeder Reise.",
+    "01 / 10",
+    "MEHR ALS NUR EIN KOFFER",
+    "Verstärkte Ecken",
+    "Besserer Schutz, länger auf Reisen.",
+    "TSA-Schloss, Kontrollen einfacher gestalten",
+    "Das Zahlenschloss ermöglicht Zollbeamten eine effizientere Gepäckkontrolle unterwegs.",
+    "Stabile Konstruktion",
+    "Leichtes Design",
+    "Modernes Reise-Design",
+    "Langlebige Qualität",
+    "BEREIT FÜR DIE NÄCHSTE REISE"
+  ],
+  "unexpected_text": [
+    "YWJ",
+    "TRAVEL WITH YOU",
+    "A BETTER JOURNEY",
+    "Robust. Sicher. Bereit für neue Wege.",
+    "Zuverlässiger Begleiter auf jeder Reise.",
+    "01 / 10",
+    "MEHR ALS NUR EIN KOFFER",
+    "Verstärkte Ecken",
+    "Besserer Schutz, länger auf Reisen.",
+    "Stabile Konstruktion",
+    "Leichtes Design",
+    "Modernes Reise-Design",
+    "Langlebige Qualität",
+    "BEREIT FÜR DIE NÄCHSTE REISE"
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "存在未在预期文案中提供的品牌标识和大量宣传性文字；对于 APLUS_FULL_IMAGE，需确认这些文字均为已提供且经过核实的事实。",
+    "“Besserer Schutz, länger auf Reisen.”、“Stabile Konstruktion”和“Langlebige Qualität”属于性能、耐用性或保护效果宣称，当前图片未提供可核实依据。",
+    "“Das Zahlenschloss ermöglicht Zollbeamten eine effizientere Gepäckkontrolle unterwegs.”涉及 TSA 锁及海关检查效率的功能性宣称，应确认产品确为合规 TSA 锁且该表述有依据。",
+    "“MEHR ALS NUR EIN KOFFER”及“Robust. Sicher. Bereit für neue Wege.”属于泛化的营销性或质量暗示性表述，未包含在预期文案中。",
+    "图片包含“01 / 10”页码式元素和底部宣传口号，属于额外促销或导航图形文字，超出已提供文案范围。"
+  ],
+  "verdict_zh": "不通过：图片包含大量未在预期文案中提供的文字、品牌标识及营销性/性能宣称；需删除或逐项提供并核实这些额外内容后重新审核。"
+}

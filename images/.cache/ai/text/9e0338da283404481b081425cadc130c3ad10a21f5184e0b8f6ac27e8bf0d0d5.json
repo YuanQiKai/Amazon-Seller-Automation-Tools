@@ -1,0 +1,48 @@
+{
+  "detected_text": [
+    "TSA-Schloss,",
+    "Kontrollen □□",
+    "einfacher gestalten",
+    "Das Zahlenschloss",
+    "ermöglicht Zollbeamten",
+    "eine effizientere",
+    "Gepäckkontrolle unterwegs.",
+    "Polyesterfutter mit zwei",
+    "getrennten Bereichen",
+    "X-förmige Gurte ordnen den",
+    "Gepäckinhalt",
+    "Create a premium Amazon A+ split-layout travel photography banner for",
+    "suitcase, with no rendered text or typography in the image.",
+    "PC composition: left 38% clean reserved copy area with generous negative space",
+    "right 46% product area showing a closed suitcase",
+    "Clearly show the TSA combination lock",
+    "four protective corner guards",
+    "Add a tasteful inset of open-lid detail revealing polyester compartments",
+    "X-shaped packing straps",
+    "Keep the suitcase dominant and realistic",
+    "subtle YWJ logo placement",
+    "only if the supplied logo asset is available",
+    "Mobile composition",
+    "AI IMAGE PENDING / □□□□□□"
+  ],
+  "unexpected_text": [
+    "画面中泄露了英文生成提示词和版式制作指令，不属于消费者可见文案。",
+    "出现“AI IMAGE PENDING”占位标记。",
+    "出现多个方框乱码字符。",
+    "出现“YWJ logo placement”品牌标识相关文字，但未见已验证的品牌资产或实际产品展示。",
+    "右侧白色区域也包含提示词文字；若该区域作为 MAIN_WHITE 使用，将违反不得出现任何可见文字、标识、水印、徽章或促销图形的要求。"
+  ],
+  "spelling_issues": [
+    "“Kontrollen”后出现两个无法识别的方框字符，疑似字体或编码错误。",
+    "“AI IMAGE PENDING”后的多个方框字符为乱码或未渲染字符。"
+  ],
+  "policy_risks_zh": [
+    "严重：生成提示词、制作说明和“AI IMAGE PENDING”直接出现在成品中，属于非消费者内容和未完成占位信息。",
+    "严重：素材未展示行李箱产品，主要区域被文字和提示词占据，不符合A+商品展示要求。",
+    "若此图被指定为 MAIN_WHITE，则因存在大量德文、英文、乱码及可能的品牌文字而直接违规。",
+    "“四个防护角”等产品特征虽出现在提示词中，但当前画面未展示产品，无法验证相关事实。",
+    "“YWJ”相关品牌标识文字未能确认是已提供且获准使用的品牌资产，存在未经验证的品牌元素风险。",
+    "德文预期文案本身未发现明显拼写错误，但其排版被乱码字符和底层英文提示词干扰，影响可读性和合规性。"
+  ],
+  "verdict_zh": "不通过：存在明显的提示词泄露、AI占位标记、乱码字符、未验证品牌文字及产品缺失；如作为MAIN_WHITE使用，还违反无可见文字和图形的要求。"
+}

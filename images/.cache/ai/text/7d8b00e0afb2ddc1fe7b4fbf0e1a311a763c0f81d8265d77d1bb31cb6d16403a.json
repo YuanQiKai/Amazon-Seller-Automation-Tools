@@ -1,0 +1,25 @@
+{
+  "detected_text": [
+    "Übersetzung ausstehend — Produktangaben bitte übersetzen und prüfen.",
+    "侧面4个挂钩",
+    "Praktische Smartphone-Halterung",
+    "Ideal zum freihändigen Videoschauen auf Reisen.",
+    "Praktischer Getränkehalter",
+    "Einfach ausklappen und Ihre Getränke sicher abstellen."
+  ],
+  "unexpected_text": [
+    "Praktische Smartphone-Halterung",
+    "Ideal zum freihändigen Videoschauen auf Reisen.",
+    "Praktischer Getränkehalter",
+    "Einfach ausklappen und Ihre Getränke sicher abstellen."
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "MAIN_WHITE区域包含大段可见文字，违反必须无文字、Logo叠加、水印、徽章或促销图形的要求。",
+    "图片含有未在预期文本中提供的德语营销文案，违反其他图片只能包含已提供文案和已验证事实的要求。",
+    "“Ideal zum freihändigen Videoschauen auf Reisen.”属于功能和使用场景宣传性表述，但未提供验证依据。",
+    "“Ihre Getränke sicher abstellen.”包含“安全放置饮料”的效果性/安全性宣称，但未提供验证依据。",
+    "画面中的手机显示机场和飞机影像，可能被视为额外的视觉营销内容；需确认其不构成未经授权的品牌、版权或宣传元素。"
+  ],
+  "verdict_zh": "不通过：MAIN_WHITE含有可见文字，且图片包含未提供及未经验证的营销文案。"
+}

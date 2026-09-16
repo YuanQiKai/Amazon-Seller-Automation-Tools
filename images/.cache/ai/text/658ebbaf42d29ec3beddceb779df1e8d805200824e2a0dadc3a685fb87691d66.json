@@ -1,0 +1,14 @@
+{
+  "instance_id": "APLUS_NAV_CAROUSEL__fe1147c189__frame_02",
+  "copy": {
+    "en": "Separate Wet And Dry Packing\nKeep damp clothing apart from the main compartment\nWet-dry separation bag\nFour side hooks for extra carry space",
+    "zh": "干湿衣物分开收纳\n让湿衣物与主收纳区保持分离\n干湿分离袋\n侧面四个挂钩",
+    "de": "Nass und trocken getrennt packen\nFeuchte Kleidung bleibt vom Hauptfach getrennt\nNass-Trocken-Trennfach\nVier Seitenhaken für zusätzliche Taschen",
+    "fr": "Séparez le sec et l’humide\nGardez les vêtements humides séparés du compartiment principal\nPoche sèche-humide\nQuatre crochets latéraux pour sacs supplémentaires",
+    "it": "Separa umido e asciutto\nTieni gli indumenti umidi lontani dal vano principale\nScomparto separa-umido\nQuattro ganci laterali per borse extra",
+    "es": "Separa lo húmedo de lo seco\nMantén la ropa húmeda separada del compartimento principal\nBolsillo separador seco-húmedo\nCuatro ganchos laterales para bolsas extra"
+  },
+  "design_brief_zh": "本帧承接上一帧“干湿分离袋”，进一步展示实际收纳收益，并为下一帧侧面挂钩自然过渡。PC采用左文右产品：标题位于左上，支持说明位于其下，随后依次放置干湿分离袋与侧面四个挂钩两条细节说明；产品占右侧约53%画面，箱体以银灰、枪灰或黑色真实变体呈现，避免使用未确认的白色或其他品牌外观。移动端将标题和支持说明置于顶部居中，产品置于中部，两条细节分别置于底部左右，保持标题→收益→证据的阅读顺序。视觉采用欧洲现代旅行摄影、低饱和中性色、自然光和浅色纸张背景，使用品牌蓝色细线连接箱体收纳区域与挂钩区域；可展示打开的箱体、湿衣物袋与侧面挂袋使用场景。由于当前模块资料未提供可确认的具体轮组静音测试或完整360°轮组图像，360°静音轮仅作为次要视觉背景，不在文案中作性能承诺。四行文案分别对应标题、支持说明、干湿分离袋、侧面四个挂钩。",
+  "compliance_note_zh": "干湿分离袋、侧面四个挂钩依据用户提供的产品事实使用；不得将图片中的杯子、袋子或局部结构误写为随箱配件或承重证明。360°、静音、耐磨和顺滑性能缺少独立测试证据，本帧不作相关明示或绝对化宣称。需核对图片与YWJ 13A及当前颜色变体一致，不使用竞品品牌、未验证认证或性能标签。",
+  "image_prompt_en": "Create a premium Amazon A+ editorial lifestyle composition for a YWJ 13A travel suitcase, 1464x600 desktop and adaptable to 1200x900 mobile. Follow a left-text/right-product layout on desktop and top-text/center-product/bottom-callouts on mobile. Show a realistic silver, gunmetal gray, or black vertically ribbed hard-shell suitcase with aluminum-look frame, opened to reveal two packing zones, a wet-dry separation pouch, and four side hooks holding several small travel bags. Include a subtle secondary lower-angle view of the multi-wheel base to support the travel-mobility story, but do not imply tested silence or performance. Use low-saturation European modern travel photography, neutral paper background, soft natural daylight, restrained navy accent lines, refined premium styling, realistic materials, and clear visual hierarchy. Leave generous clean regions for four lines of copy in the specified positions. Do not render any text, logos, labels, icons, measurements, badges, or claims in the image."
+}

@@ -1,0 +1,9 @@
+{
+  "detected_text": [],
+  "unexpected_text": [],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "主图背景为黑色而非纯白背景，不符合亚马逊德国站MAIN_WHITE主图要求。"
+  ],
+  "verdict_zh": "不通过：图片未检测到文字、Logo、水印、徽章或促销图形，但黑色背景违反MAIN_WHITE主图纯白背景要求。"
+}

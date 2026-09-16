@@ -1,0 +1,12 @@
+{
+  "detected_text": [
+    "Nach Zonen packen, ordentlicher reisen",
+    "Zwei Fächer und X-Gurte ordnen Kleidung und halten sie an ihrem Platz.",
+    "Nass-Trocken-Tasche im Lieferumfang enthalten",
+    "Feuchte und trockene Kleidung getrennt verstauen"
+  ],
+  "unexpected_text": [],
+  "spelling_issues": [],
+  "policy_risks_zh": [],
+  "verdict_zh": "通过：检测到的文字与提供的德语文案完全一致，未发现拼写问题、额外文字或明显政策风险。"
+}

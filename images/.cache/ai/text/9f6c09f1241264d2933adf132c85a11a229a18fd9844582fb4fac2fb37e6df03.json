@@ -1,0 +1,25 @@
+{
+  "detected_text": [
+    "□□□□□□",
+    "Create a premium Amazon A+ full-image module for a travel suitcase in a modern European airport. Use a 1464x600 desktop composition with the suitcase and a naturally walking business traveller on the left of the frame, viewed from a three-quarter front-side angle. Clearly show the four side hooks and the single metal hook on top; hang a moderate number of differently sized bags from the hooks without covering the suitcase structure. Place a clean, uncluttered reserved copy area on the right 38% with generous negative space and no visual clutter behind it. For the 1200x900 mobile adaptation, place the airport scene and suitcase in the upper 53% and reserve the lower 31% for copy, keeping both hook areas visible after cropping. Preserve the supplied product appearance: polycarbonate/ABS hard shell, aluminium frame,",
+    "AI IMAGE PENDING / □□□□□□",
+    "Taschen griffbereit aufhängen",
+    "Vier seitliche Haken ermöglichen mehrere Taschen und erleichtern den Zugriff unterwegs.",
+    "Vier Haken an der Seite",
+    "Ein Metallhaken oben"
+  ],
+  "unexpected_text": [
+    "□□□□□□",
+    "Create a premium Amazon A+ full-image module for a travel suitcase in a modern European airport. Use a 1464x600 desktop composition with the suitcase and a naturally walking business traveller on the left of the frame, viewed from a three-quarter front-side angle. Clearly show the four side hooks and the single metal hook on top; hang a moderate number of differently sized bags from the hooks without covering the suitcase structure. Place a clean, uncluttered reserved copy area on the right 38% with generous negative space and no visual clutter behind it. For the 1200x900 mobile adaptation, place the airport scene and suitcase in the upper 53% and reserve the lower 31% for copy, keeping both hook areas visible after cropping. Preserve the supplied product appearance: polycarbonate/ABS hard shell, aluminium frame,",
+    "AI IMAGE PENDING / □□□□□□"
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "画面泄露了英文生成提示词和制作说明，属于未提供且不应面向消费者展示的内部文本。",
+    "出现“AI IMAGE PENDING”占位状态及无法正常显示的方框字符，表明素材未完成。",
+    "大量非授权英文文字超出所提供的德语文案范围，不符合“其他图片只能包含 supplied copy 和 verified facts”的要求。",
+    "背景说明文字与右侧德语文案严重重叠，显著影响可读性和专业度。",
+    "画面未呈现要求中的机场、旅行箱、侧钩及顶部金属钩等产品视觉内容，仅为制作占位稿，不适合作为 A+ 全图模块发布。"
+  ],
+  "verdict_zh": "不通过：虽然所要求的德语文案均已出现且未发现拼写错误，但素材包含大量提示词泄露、占位文字和乱码，且缺少实际产品场景，不能用于 Amazon DE A+ 发布。"
+}

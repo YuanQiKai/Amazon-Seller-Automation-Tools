@@ -1,0 +1,31 @@
+{
+  "detected_text": [
+    "TSA-Schloss, Service inklusive",
+    "Das dreistellige TSA-Schloss erleichtert Kontrollen, Anleitung und Garantiekarte inklusive.",
+    "Lieferumfang: Koffer, Anleitung, Garantiekarte",
+    "Drei Jahre Garantie inklusive",
+    "Use case: Amazon ecommerce creative reference.",
+    "module",
+    "category: Luggage / Suitcases; model: 13A;",
+    "material:",
+    "Polycarbonate, ABS, Acrylonitrile Butadiene Styrene, Aluminium Frame",
+    "variants:",
+    "AI IMAGE PENDING"
+  ],
+  "unexpected_text": [
+    "Use case: Amazon ecommerce creative reference.",
+    "module",
+    "category: Luggage / Suitcases; model: 13A;",
+    "material and variant specification text",
+    "AI IMAGE PENDING",
+    "Multiple visible square-box replacement characters and garbled fragments"
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "画面中出现未提供且不应展示的内部制作说明、模板元数据和占位文字。",
+    "存在明显乱码、方框字符和被遮挡的规格/价格片段，影响可读性并可能构成未经核实的商品信息。",
+    "文字与背景内容重叠，版式不适合作为亚马逊商品主视觉，可能降低清晰度和专业性。",
+    "若该素材被误用为 MAIN_WHITE，则不符合必须无文字、无徽标、无水印、无促销图形的要求。"
+  ],
+  "verdict_zh": "不通过：主要德语文案基本符合预期且无明显拼写错误，但画面包含大量意外的内部文本、占位符、乱码及疑似未核实规格信息，需清理并重新导出。"
+}

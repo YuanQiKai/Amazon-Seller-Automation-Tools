@@ -1,0 +1,33 @@
+{
+  "detected_text": [
+    "Nass- und Trockenfach für Ordnung",
+    "Das separate Nassfach hält feuchte Kleidung von anderer Kleidung getrennt.",
+    "Polyesterfutter, zwei Bereiche, X-förmige Packgurte",
+    "Vier Seitenhaken plus ein Metallhaken oben",
+    "Use case: Amazon ecommerce creative reference.",
+    "Create a landscape composition for module ...",
+    "Product: Travel Suitcase",
+    "category: Luggage / Suitcases",
+    "model: 13A",
+    "material: Polycarbonate, ABS, Acrylonitrile Butadiene Styrene, Aluminium Frame",
+    "variants: 20...61x42x27...Silver...42...89.99...72.5x4...",
+    "custom product attributes: {}",
+    "functions: ...",
+    "selling points: 360°...8...",
+    "AI IMAGE PENDING"
+  ],
+  "unexpected_text": [
+    "右侧白色卡片中的英文内部制作说明和Amazon creative reference文案",
+    "大量未提供或未核实的产品信息，包括型号、材质、尺寸、颜色、价格、功能和卖点",
+    "大量乱码方框字符和残缺文本",
+    "AI IMAGE PENDING",
+    "右侧出现与预期文案无关的Travel Suitcase规格描述"
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "含有未提供且未核实的材质、尺寸、颜色、价格、功能及销售卖点，可能构成虚假或误导性宣传。",
+    "出现内部制作说明、AI IMAGE PENDING及乱码，不适合作为面向消费者的Amazon创意素材。",
+    "右侧文本超出已批准的德语文案范围，存在信息不一致和商品详情错误风险。"
+  ],
+  "verdict_zh": "不通过：左侧德语文案基本符合预期，但右侧包含大量乱码、内部占位文本及未经核实的产品信息，需删除并重新审核。"
+}

@@ -1,0 +1,14 @@
+{
+  "instance_id": "APLUS_FULL_IMAGE__1e3c051f47",
+  "copy": {
+    "en": "Carry More, Keep Hands Free\nCompare three sizes while the top metal hook holds multiple bags.\n20 / 24 / 26 in: 42 / 60 / 78 L\nFoldable cup holder included",
+    "zh": "挂得更多，双手更自在\n对比三种尺寸，上方金属挂钩可悬挂多个袋子。\n20/24/26英寸：42/60/78升\n附可折叠水杯架",
+    "de": "Mehr tragen, Hände frei\nDrei Größen vergleichen; der obere Metallhaken trägt mehrere Taschen.\n20/24/26 Zoll: 42/60/78 l\nFaltbarer Becherhalter inklusive",
+    "fr": "Transportez plus, mains libres\nComparez trois tailles; le crochet métallique supérieur porte plusieurs sacs.\n20 / 24 / 26 po : 42 / 60 / 78 L\nPorte-gobelet pliable inclus",
+    "it": "Porta di più, mani libere\nConfronta tre dimensioni; il gancio metallico superiore sostiene più borse.\n20 / 24 / 26 pollici: 42 / 60 / 78 L\nPortabicchiere pieghevole incluso",
+    "es": "Lleva más, manos libres\nCompara tres tamaños; el gancho metálico superior sostiene varias bolsas.\n20 / 24 / 26 pulgadas: 42 / 60 / 78 L\nPortavasos plegable incluido"
+  },
+  "design_brief_zh": "主卖点是箱体上方金属挂钩，重点展示其可悬挂多个袋子的实际收益，并以三种尺寸和容量对比辅助购买选择；可折叠水杯架作为第二个功能证据。PC画布1464×600：左侧文案区严格使用[x,y,w,h]=[0.05,0.1,0.38,0.8]，按标题、支持说明、尺寸容量、杯架四行自上而下排列；右侧产品区使用[0.49,0.08,0.46,0.84]，展示20/24/26英寸三只箱体的比例差异，主箱上方金属挂钩清晰可见，并悬挂多个袋子，杯架展开且可辨识。移动端1200×900：上方场景与产品区使用[0.08,0.05,0.84,0.53]，下方文案区使用[0.05,0.64,0.9,0.31]，保持标题→说明→两项细节的阅读顺序，数字优先清晰。产品采用上传实物一致的聚碳酸酯/ABS硬壳、铝合金框架和竖条纹外观，可用银色、枪灰或黑色呈现，避免改变结构。采用欧洲现代旅行摄影、低饱和中性色与自然光；用轻微侧前方视角突出箱顶挂钩和杯架，三只箱体以由小到大递进排列，背景简洁留出左侧文字空间。字体使用Arial、Helvetica或Amazon Ember风格无衬线字体，标题醒目，尺寸容量数字最大且高对比；德语文案预留约20%横向扩展空间。",
+  "compliance_note_zh": "仅使用已提供的三种尺寸、容量、上方金属挂钩可挂多个袋子及可折叠水杯架事实；不宣称承重、适配航空公司或其他未提供性能。价格、颜色和重量未放入本模块，避免与画面比例或文字产生歧义；不得添加认证、竞品标识、绝对化表述、促销角标或虚构保证。",
+  "image_prompt_en": "Create a premium European-modern travel photography composition for a YWJ 13A travel suitcase, with NO rendered text, letters, numbers, labels, logos, badges, or typography anywhere in the image. PC layout 1464x600: place three accurately proportioned suitcases on the right in small-to-large order, matching the supplied product structure: polycarbonate/ABS hard shell, aluminium frame, vertical shell texture, and visible top metal hook. Show the hook clearly carrying several travel bags, and show the foldable cup holder opened on the main suitcase. Use a clean low-saturation neutral airport or modern city-travel setting, soft natural daylight, realistic materials, and a subtle three-quarter front angle. Keep the left 38% as uncluttered negative space for later copy overlay; do not place objects in that text area. Mobile adaptation 1200x900: position the suitcase scene in the upper 53% and preserve clear lower space for later copy, while keeping the hook, multiple hanging bags, cup holder, and three-size comparison visually legible. Use restrained navy, grey, silver, and warm neutral accents; no claims or decorative symbols."
+}

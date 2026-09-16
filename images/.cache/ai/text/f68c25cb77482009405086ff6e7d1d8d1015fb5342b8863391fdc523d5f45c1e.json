@@ -1,0 +1,12 @@
+{
+  "detected_text": [
+    "Taschen griffbereit aufhängen",
+    "Vier seitliche Haken ermöglichen mehrere Taschen und erleichtern den Zugriff unterwegs.",
+    "Vier Haken an der Seite",
+    "Ein Metallhaken oben"
+  ],
+  "unexpected_text": [],
+  "spelling_issues": [],
+  "policy_risks_zh": [],
+  "verdict_zh": "通过：检测到的德语文案与预期完全一致，未发现额外文字、拼写问题或明显的亚马逊合规风险；图片中未见明显Logo、水印、徽章或促销图形。"
+}

@@ -1,0 +1,22 @@
+{
+  "detected_text": [
+    "Nach Zonen packen, ordentlicher reisen",
+    "Zwei Fächer und X-Gurte ordnen Kleidung und halten sie an ihrem Platz.",
+    "Nass-Trocken-Tasche im Lieferumfang enthalten",
+    "Feuchte und trockene Kleidung getrennt verstauen",
+    "Use case: Amazon ecommerce creative reference. Create a landscape composition for module ...",
+    "Product: Travel Suitcase",
+    "Category: Luggage / Suitcases",
+    "AI IMAGE PENDING"
+  ],
+  "unexpected_text": [
+    "The central placeholder image contains visible English production instructions and metadata, including 'Use case: Amazon ecommerce creative reference', 'Product: Travel Suitcase', 'Category: Luggage / Suitcases', technical specifications, and 'AI IMAGE PENDING'."
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "主图区域包含明显的非商品文案、英文制作指令、技术参数占位内容及“AI IMAGE PENDING”，属于不应出现在消费者创意中的内部信息。",
+    "违反 MAIN_WHITE 要求：白色主区域存在可见文字和占位图形。",
+    "中央内容可能被视为未完成素材、内部提示词泄露或非授权宣传/元数据文本，影响亚马逊素材合规性与专业度。"
+  ],
+  "verdict_zh": "不通过：德国文案本身无明显拼写问题，但画面中央存在大量意外的英文内部指令、技术占位文本和“AI IMAGE PENDING”，且违反 MAIN_WHITE 不得含可见文字、徽标、水印、徽章或促销图形的要求。"
+}

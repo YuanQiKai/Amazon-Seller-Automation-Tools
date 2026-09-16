@@ -1,0 +1,28 @@
+{
+  "detected_text": [
+    "Use case: Amazon ecommerce creative reference.",
+    "Create a square composition for module",
+    "Product: Travel Suitcase; category: Luggage / Suitcases; model: 13A; material: Polycarbonate; ABS; Acrylonitrile Butadiene Styrene; Aluminium Frame; variants:",
+    "Silver",
+    "GunmetalGray",
+    "AI IMAGE PENDING"
+  ],
+  "unexpected_text": [
+    "Use case: Amazon ecommerce creative reference.",
+    "Create a square composition for module.",
+    "Product: Travel Suitcase; category: Luggage / Suitcases; model: 13A; material and variant details.",
+    "AI IMAGE PENDING",
+    "Multiple square placeholder characters and garbled text."
+  ],
+  "spelling_issues": [
+    "Visible garbled square characters indicate encoding or font-rendering errors.",
+    "GunmetalGray appears unspaced; standard English styling would be Gunmetal Gray."
+  ],
+  "policy_risks_zh": [
+    "MAIN_WHITE 主图包含大量可见文字，不符合主图不得含文字的要求。",
+    "主图包含“AI IMAGE PENDING”等占位/促销式图形元素。",
+    "主图不是行李箱产品展示图，而是创意说明占位页面。",
+    "存在乱码方框字符，影响内容可读性和专业性。"
+  ],
+  "verdict_zh": "不通过：MAIN_WHITE 含有明显文字、占位信息、乱码及非产品展示内容。"
+}

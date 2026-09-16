@@ -1,0 +1,40 @@
+{
+  "detected_text": [
+    "□□□□□□",
+    "Use case: Amazon ecommerce creative reference.",
+    "Create a square composition for module",
+    "'□□□□□□'. Product: Travel Suitcase; category:",
+    "Luggage / Suitcases; model: 13A; material:",
+    "□□□□□Polycarbonate□□ABS□Acrylonitrile",
+    "Butadiene Styrene□□Aluminium Frame; variants:",
+    "20□□□□61×42×27□□Silver□□□□4□□□42□□□89.99□24□□□",
+    "□72.5×46.5×31□□□Silver□□□5.1□□□60□□□99.99□26□□",
+    "□□76×52×31.5□□Silver□□□5.6□□□78□□□109.99□20□□",
+    "□61×42×27□□□GunmetalGray□□□4□□□42□□□89.99□24□",
+    "□□□72.5×46.5×31□□□GunmetalGray□□□5.1□□□60□□□99",
+    ".99□26□□□76×52×31.5□□□GunmetalGray□□□5.6□□□78",
+    "AI IMAGE PENDING / □□□□□□"
+  ],
+  "unexpected_text": [
+    "□□□□□□",
+    "Use case: Amazon ecommerce creative reference.",
+    "Create a square composition for module",
+    "'□□□□□□'. Product: Travel Suitcase; category: Luggage / Suitcases; model: 13A; material: Polycarbonate, ABS, Acrylonitrile Butadiene Styrene, Aluminium Frame; variants and prices",
+    "AI IMAGE PENDING / □□□□□□"
+  ],
+  "spelling_issues": [
+    "Visible replacement-glyph squares indicate corrupted or missing characters.",
+    "English copy appears despite the expected German text being empty.",
+    "GunmetalGray is inconsistently formatted and would normally be written as Gunmetal Gray.",
+    "The visible content appears to be an internal production prompt rather than polished customer-facing copy."
+  ],
+  "policy_risks_zh": [
+    "MAIN_WHITE 主图包含大量可见文字，违反主图不得包含文字的要求。",
+    "主图包含“AI IMAGE PENDING”等制作状态标记，属于非产品内容和促销/占位式图形元素风险。",
+    "主图包含内部创作指令、产品规格、变体和价格信息，不应出现在纯白主图中。",
+    "存在大量乱码方框，影响可读性并可能导致消费者误解。",
+    "图片中的材质、尺寸、重量和价格等事实未提供验证依据，存在未经证实的商品信息风险。",
+    "内容主要为英文，不符合德国站点的本地化要求，也不符合预期文本为空的限制。"
+  ],
+  "verdict_zh": "不通过：主图含有大量文字、内部制作说明、占位状态标记和乱码，严重违反 Amazon DE MAIN_WHITE 纯白主图要求。"
+}

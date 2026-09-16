@@ -1,0 +1,31 @@
+{
+  "detected_text": [
+    "Acht Rollen, leichtes Wenden",
+    "Acht doppelte Lenkrollen drehen sich um 360° für leichteres Bewegen in Stadt und Flughafen.",
+    "Aluminiumgriff, drei Höhenstufen",
+    "PC+ABS-Schale, vertikale Struktur, vier Schutzkanten",
+    "Use case: Amazon ecommerce creative reference",
+    "Create a square composition for module",
+    "Product: Travel Suitcase; category: suitcases; model: 13A; material: Polycarbonate + ABS (Acrylonitrile Butadiene Styrene); Aluminium Frame; variants:",
+    "AI IMAGE PENDING"
+  ],
+  "unexpected_text": [
+    "Use case: Amazon ecommerce creative reference",
+    "Create a square composition for module",
+    "Product: Travel Suitcase; category: suitcases; model: 13A; material: Polycarbonate + ABS (Acrylonitrile Butadiene Styrene); Aluminium Frame; variants:",
+    "Multiple garbled or placeholder square characters",
+    "AI IMAGE PENDING"
+  ],
+  "spelling_issues": [
+    "No clear spelling errors in the supplied German copy",
+    "The image contains truncated, garbled, or placeholder text in several areas"
+  ],
+  "policy_risks_zh": [
+    "画面包含未提供的内部制作说明和提示词文本，不属于消费者应看到的商品文案。",
+    "画面包含型号、材质、尺寸、颜色和价格等额外信息，其中部分内容无法核实，存在事实准确性风险。",
+    "存在“AI IMAGE PENDING”等制作占位文字，影响专业性并不适合作为亚马逊成品素材。",
+    "大量乱码和被截断的文字降低可读性与图片质量。",
+    "图片更像设计草稿或参考稿，未呈现清晰的成品商品视觉。"
+  ],
+  "verdict_zh": "不通过：需移除所有内部说明、占位文字、乱码及未验证信息，仅保留已提供且核实的德语文案，并输出完整、清晰的成品创意图。"
+}

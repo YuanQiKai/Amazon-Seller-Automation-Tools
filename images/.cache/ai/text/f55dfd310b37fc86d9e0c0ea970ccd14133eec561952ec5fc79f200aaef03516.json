@@ -1,0 +1,15 @@
+{
+  "detected_text": [
+    "TSA-Schloss, Kontrollen einfacher gestalten",
+    "Das Zahlenschloss ermöglicht Zollbeamten eine effizientere Gepäckkontrolle unterwegs.",
+    "Polyesterfutter mit zwei getrennten Bereichen",
+    "X-förmige Gurte ordnen den Gepäckinhalt"
+  ],
+  "unexpected_text": [],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "MAIN_WHITE区域包含多处可见文字，违反该区域不得出现文字、徽标、水印、徽章或促销图形的要求。",
+    "画面中的海关检查场景及制服标识可能被理解为官方或权威背书，建议确保相关视觉素材不会造成官方合作或认可的误导。"
+  ],
+  "verdict_zh": "不通过：文案内容与预期文本一致且未发现拼写问题，但MAIN_WHITE区域含有可见文字，违反版式要求。"
+}

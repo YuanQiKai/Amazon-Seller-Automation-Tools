@@ -1,0 +1,22 @@
+{
+  "detected_text": [
+    "TSA-Schloss, schnellere Kontrollen",
+    "Ein TSA-Zahlenschloss erleichtert dem Zoll die schnelle Gepäckkontrolle",
+    "TSA-Zahlenschloss für Kontrollen",
+    "Innenfutter aus Polyester-Material",
+    "Departures"
+  ],
+  "unexpected_text": [
+    "Departures"
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "机场背景中出现未提供的英文文字“Departures”，不符合其他图片仅可包含所提供文案及已核实事实的要求；航班信息屏还有模糊文字，无法可靠辨认，建议一并清除。",
+    "“schnellere Kontrollen”和“die schnelle Gepäckkontrolle”暗示使用该锁可加快检查，需有事实依据；TSA锁并不保证更快通关或安检。",
+    "将TSA锁描述为方便“Zoll”（海关）检查可能混淆海关与航空安全检查；尤其面向德国市场，应核实适用机构及使用范围。",
+    "图片本身无法验证TSA锁资质或内衬确为聚酯材料，需以产品规格或证明材料核实。",
+    "画面同时展示三个不同尺寸或颜色的箱子；若商品并非对应套装，可能使消费者误解销售数量与所含规格。",
+    "当前模块为MAIN_AUDIENCE，不直接适用MAIN_WHITE的禁字要求；若用作MAIN_WHITE，该图的人物场景、文字及装饰图形均不符合要求。"
+  ],
+  "verdict_zh": "需修改并核实后使用：四条德文文案与所提供内容一致，未发现拼写错误；但存在额外背景文字，且检查提速、TSA适用性、内衬材质与套装展示需核实。"
+}

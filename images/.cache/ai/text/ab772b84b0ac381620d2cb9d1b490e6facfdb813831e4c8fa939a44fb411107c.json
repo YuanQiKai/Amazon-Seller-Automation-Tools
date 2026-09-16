@@ -1,0 +1,28 @@
+{
+  "detected_text": [
+    "Taschen aufhängen,",
+    "Volumen [□][□][□] vergleichen",
+    "Der obere Metallhaken hält mehrere Taschen; drei Größen eignen sich für verschiedene Reisen.",
+    "20 / 24 / 26 Zoll: 42 / 60 / 78 L",
+    "Faltbarer Becherhalter für unterwegs inklusive",
+    "Create a premium Amazon A+ full-image layout for the YWJ 13A travel suitcase, with no visible text, labels, letters, numbers, logos, or graphic elements in the image. PC composition: reserve the left 38% as a clean, neutral text-safe area and place the product scene on the right 46%; mobile composition: place the product scene in the upper 63% and keep the lower 31% visually calm for copy. Show three suitcases in 20, 24, and 26 inch proportions, arranged from smallest to largest, using a silver, gunmetal gray, or black finish with vertical ribbing, polycarbonate/ABS shells, and aluminum frames. Use a slight front-side angle that clearly reveals the single metal hook on top of the main suitcase. Hang multiple everyday travel bags from that hook to",
+    "AI IMAGE PENDING / [□][□][□][□][□][□]"
+  ],
+  "unexpected_text": [
+    "[□][□][□] visible between “Volumen” and “vergleichen”",
+    "Create a premium Amazon A+ full-image layout for the YWJ 13A travel suitcase...",
+    "PC composition: reserve the left 38% as a clean, neutral text-safe area...",
+    "Show three suitcases in 20, 24, and 26 inch proportions...",
+    "AI IMAGE PENDING",
+    "[□][□][□][□][□][□] placeholder symbols"
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "图片中出现大量未提供的英文提示词和设计说明，违反仅允许使用所提供文案及已核实事实的要求。",
+    "出现“AI IMAGE PENDING”及占位方框，属于明显的占位/制作状态文字，不应出现在亚马逊 A+ 成品中。",
+    "“Volumen”与“vergleichen”之间有可见方框乱码，影响文字清晰度和专业性。",
+    "画面包含明显的额外文字和图形元素；若作为 MAIN_WHITE 使用，则违反不得出现可见文字、徽标叠加、水印、徽章或促销图形的要求。",
+    "图片未呈现合格的最终产品创意，背景中仍可见生成提示内容，存在内容泄漏和素材未完成风险。"
+  ],
+  "verdict_zh": "不通过：包含未授权英文提示词、AI IMAGE PENDING、水印/占位符及乱码，且不符合 MAIN_WHITE 的无文字要求；需移除所有额外文字和占位元素后重新提交。"
+}

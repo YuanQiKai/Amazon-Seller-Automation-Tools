@@ -1,0 +1,28 @@
+{
+  "detected_text": [
+    "Trocken und Nass getrennt packen",
+    "Feuchte Kleidung bleibt unterwegs getrennt von trockener Wäsche",
+    "Vier seitliche Haken halten zusätzliche Taschen",
+    "Oberer Metallhaken hält Wichtiges griffbereit",
+    "Use case: Amazon ecommerce creative reference. Create a landscape composition for module ...",
+    "Product: Travel Suitcase; category: Luggage / Suitcases; model: 13A",
+    "material: ... Polycarbonate ... ABS ... Acrylonitrile Butadiene Styrene ... Aluminium Frame",
+    "variants: 20...61×42×27... Silver ... 42 ... 89.99 ... 24 ... 72.5×46.5×31 ...",
+    "custom product attributes: {}; functions: ...; selling points: 360° ...",
+    "AI IMAGE PENDING"
+  ],
+  "unexpected_text": [
+    "右侧卡片中的英文内部创作提示和产品规格信息",
+    "乱码和方框字符",
+    "AI IMAGE PENDING",
+    "未提供或未经验证的型号、材质、尺寸、颜色、价格及卖点信息"
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "画面包含大量非 supplied copy 的内部提示词、工作流文字和 AI 占位文本，不符合仅使用指定文案的要求。",
+    "右侧出现未验证的产品属性、规格、价格和功能宣称，存在事实准确性和误导风险。",
+    "存在明显乱码/方框字符，影响专业性和可读性。",
+    "如果该素材作为 MAIN_WHITE 使用，则包含可见文字，违反 MAIN_WHITE 不得出现文字、标识、徽章、水印或促销图形的要求。"
+  ],
+  "verdict_zh": "不通过：左侧四条德语文案与预期基本一致，但右侧包含大量意外的内部提示、乱码、AI 占位文本及未经验证的产品信息；若作为 MAIN_WHITE 使用还违反纯白主图无文字要求。"
+}

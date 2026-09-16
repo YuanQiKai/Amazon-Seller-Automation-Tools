@@ -3,5 +3,8 @@
 __pycache__/
 *.py[cod]
 outputs/
+logs/
+user_data/
+_backups/
 .idea/
 .vscode/

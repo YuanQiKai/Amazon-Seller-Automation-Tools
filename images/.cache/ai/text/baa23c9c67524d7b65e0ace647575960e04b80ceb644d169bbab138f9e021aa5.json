@@ -1,0 +1,27 @@
+{
+  "detected_text": [
+    "Taschen aufhängen, Volumen vergleichen",
+    "Der obere Metallhaken hält mehrere Taschen; drei Größen eignen sich für verschiedene Reisen.",
+    "20 / 24 / 26 Zoll: 42 / 60 / 78 L",
+    "Faltbarer Becherhalter für unterwegs inklusive",
+    "Use case: Amazon ecommerce creative reference. Create a landscape composition for module ...",
+    "Product: Travel Suitcase; category: Luggage / Suitcases; model: 13A; material: ...",
+    "AI IMAGE PENDING / ..."
+  ],
+  "unexpected_text": [
+    "Use case: Amazon ecommerce creative reference. Create a landscape composition for module ...",
+    "Product: Travel Suitcase; category: Luggage / Suitcases; model: 13A; material: ...",
+    "大量乱码和方框字符",
+    "AI IMAGE PENDING / ..."
+  ],
+  "spelling_issues": [
+    "中心占位文本包含乱码和不可读字符，无法作为合规文案使用"
+  ],
+  "policy_risks_zh": [
+    "MAIN_WHITE 区域存在大量可见文字，违反必须完全无文字、Logo、水印、徽章和促销图形的要求",
+    "图片中出现未提供且未经验证的英文内部制作说明和占位文案",
+    "图片中出现“AI IMAGE PENDING”等制作状态信息，不应出现在亚马逊成品素材中",
+    "中心区域存在大量乱码，影响可读性和专业性"
+  ],
+  "verdict_zh": "不通过"
+}

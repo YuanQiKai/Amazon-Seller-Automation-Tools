@@ -1,0 +1,24 @@
+{
+  "detected_text": [
+    "□□/□□/□□/□□□",
+    "Create a clean Amazon main visual module for the YWJ 13A travel suitcase in a European modern travel photography style, using low-saturation neutral colors and natural side lighting. Use a 2000x2000 square composition with the suitcase in a three-quarter view on the left, occupying approximately x=5%, y=8%, width=46%, height=84%; show an accurate silver, gunmetal gray, or black hard-shell case with vertical texture, aluminum frame, and four protective corners. Add a realistic close-up view of the TSA combination lock near",
+    "AI IMAGE PENDING / □□□□□□",
+    "TSA-Schloss, Service inklusive",
+    "Das dreistellige TSA-Schloss erleichtert Kontrollen, Anleitung und Garantiekarte inklusive.",
+    "Lieferumfang: Koffer, Anleitung, Garantiekarte",
+    "Drei Jahre Garantie inklusive"
+  ],
+  "unexpected_text": [
+    "□□/□□/□□/□□□",
+    "Create a clean Amazon main visual module for the YWJ 13A travel suitcase in a European modern travel photography style, using low-saturation neutral colors and natural side lighting. Use a 2000x2000 square composition with the suitcase in a three-quarter view on the left, occupying approximately x=5%, y=8%, width=46%, height=84%; show an accurate silver, gunmetal gray, or black hard-shell case with vertical texture, aluminum frame, and four protective corners. Add a realistic close-up view of the TSA combination lock near",
+    "AI IMAGE PENDING / □□□□□□"
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "画面是设计提示词/占位稿而非成品，包含大量与消费者无关的英文制作说明。",
+    "出现“AI IMAGE PENDING”和方框乱码，占用版面并显著降低专业性。",
+    "未展示实际行李箱产品，无法作为合格的Amazon产品模块使用。",
+    "除指定德文文案外还包含未提供的英文文本，违反其他图片仅可包含指定文案和已核实事实的要求。"
+  ],
+  "verdict_zh": "不通过：这是包含制作提示词和占位符的未完成稿，未呈现实际产品；需移除所有非指定文本与乱码，并替换为最终产品创意。"
+}

@@ -101,6 +101,8 @@ class ProfileWorkspace:
             'tab': app.tabs.index(app.tabs.select()),
             'page_key': next((key for key, value in app.pages.items() if value == app.tabs.select()), 'api'),
             'ui_version': 32,
+            'direct_module_id': getattr(app, 'direct_current_id', ''),
+            'direct_language': getattr(app, 'direct_current_language', 'de'),
             'copy_page_key': next((key for key, value in app.copy_pages.items() if str(value) == app.copy_workspace_tabs.select()), 'context'),
             'copy_tab': app.copy_workspace_tabs.index(app.copy_workspace_tabs.select()),
             'export_tab': app.export_workspace_tabs.index(app.export_workspace_tabs.select()),
@@ -215,6 +217,8 @@ class ProfileWorkspace:
             app._apply_theme()
             app._planning_selected(app.creative_workspace.current_id)
             app._languages_changed()
+            if hasattr(app, '_restore_direct_ui'):
+                app._restore_direct_ui(ui)
             if hasattr(app, 'input_undo'):
                 app.input_undo.reset()
         finally:

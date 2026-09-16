@@ -1,0 +1,32 @@
+{
+  "detected_text": [
+    "Aluminiumgriff im Detail",
+    "Der Teleskopgriff aus Aluminium bietet drei Einstellungen",
+    "und eine integrierte, klappbare Smartphone-Halterung.",
+    "Vier praktische Aufhängehaken",
+    "Je zwei Haken auf jeder Seite, ideal zum",
+    "Aufhängen von Taschen,",
+    "Einkaufstüten oder",
+    "Reisezubehör.",
+    "Klappbarer",
+    "Getränkehalter",
+    "Praktischer, klappbarer",
+    "Becherhalter für unterwegs.",
+    "Bei Nichtgebrauch einfach",
+    "einklappen."
+  ],
+  "unexpected_text": [
+    "Vier praktische Aufhängehaken",
+    "Je zwei Haken auf jeder Seite, ideal zum Aufhängen von Taschen, Einkaufstüten oder Reisezubehör.",
+    "Klappbarer Getränkehalter",
+    "Praktischer, klappbarer Becherhalter für unterwegs. Bei Nichtgebrauch einfach einklappen."
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "图片包含预期文案之外的额外卖点与说明，违反仅允许使用提供文案和已验证事实的要求。",
+    "图中实际展示的是可折叠杯架/饮料架，而预期文案声明的是可折叠智能手机支架，存在产品功能与视觉内容不一致的误导风险。",
+    "“Vier praktische Aufhängehaken”及其关于每侧两个挂钩和适用场景的描述未包含在预期文案中，且无法仅凭该创意确认其真实性。",
+    "预期要求的“Drei Griffpositionen sichtbar einstellbar”和“Klappbare Smartphone-Halterung im Griff”未作为对应文字出现，信息呈现不完整。"
+  ],
+  "verdict_zh": "不通过：包含未提供的额外文案，并且智能手机支架与饮料杯架的视觉展示不一致，存在误导风险。"
+}

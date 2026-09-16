@@ -1,0 +1,17 @@
+{
+  "detected_text": [
+    "Nass- und Trockenfach für Ordnung",
+    "Das separate Nassfach hält feuchte Kleidung von anderer Kleidung getrennt.",
+    "Polyesterfutter, zwei Bereiche, X-förmige Packgurte",
+    "Vier Seitenhaken plus ein Metallhaken oben"
+  ],
+  "unexpected_text": [],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "“Polyesterfutter”（聚酯纤维内衬）属于材质声明，无法仅凭图片核实，需提供产品规格依据。",
+    "“Vier Seitenhaken plus ein Metallhaken oben”（四个侧挂钩加一个顶部金属挂钩）的数量、功能及金属材质需核实；图片不能充分验证全部细节。",
+    "独立湿衣隔层的隔离功能需与实际产品一致；图片可展示隔层结构，但无法单独证明其实际隔湿效果。",
+    "箱锁上存在无法清晰辨读的微小标记，未计入可识别文字；如需严格排除非提供文案，需用高清原图复核。"
+  ],
+  "verdict_zh": "文案与提供的德语内容一致，未发现拼写错误或可清晰识别的额外文案。当前为 APLUS_NAV_CAROUSEL 模块，不适用 MAIN_WHITE 的无文字要求。建议核实材质、挂钩数量及湿衣隔离功能，并复核锁具微小标记后通过。"
+}

@@ -1,0 +1,12 @@
+{
+  "detected_text": [
+    "Aluminiumgriff mit drei Positionen",
+    "Wählen Sie eine von drei Griffhöhen und klappen Sie oben die verborgene Smartphone-Halterung aus.",
+    "Teleskopgriff aus Aluminiumlegierung",
+    "Verdeckte, faltbare Smartphone-Halterung oben"
+  ],
+  "unexpected_text": [],
+  "spelling_issues": [],
+  "policy_risks_zh": [],
+  "verdict_zh": "通过：检测到的文字与预期德语文案一致，无拼写问题或明显政策风险。"
+}

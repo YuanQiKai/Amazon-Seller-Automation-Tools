@@ -1,0 +1,26 @@
+{
+  "detected_text": [
+    "Drei Griffhöhen zur Auswahl",
+    "Aluminiumrahmen und Scharnieröffnung ermöglichen schnelleren Zugriff als Koffer mit Reißverschluss.",
+    "Klappbare Handyhalterung direkt am Griff",
+    "Polyesterfutter im Inneren des Koffers",
+    "Create an evidence-led exploded product visual for a premium modern travel suitcase, with absolutely NO rendered text, letters, numbers, logos, labels, watermarks, or typography. Use one consistent gunmetal-gray suitcase in accurate real-world proportions, shown from a three-quarter angle and slightly open. For the 2000×2000 desktop composition, place the product and exploded structure within normalized box [0.05, 0.08, 0.46, 0.84], leaving clean negative space for later copy within [0.57, 0.10, 0.38, 0.80]. Carefully",
+    "AI IMAGE PENDING",
+    "□□□□□□□",
+    "□□□□□□"
+  ],
+  "unexpected_text": [
+    "Create an evidence-led exploded product visual for a premium modern travel suitcase, with absolutely NO rendered text, letters, numbers, logos, labels, watermarks, or typography. Use one consistent gunmetal-gray suitcase in accurate real-world proportions, shown from a three-quarter angle and slightly open. For the 2000×2000 desktop composition, place the product and exploded structure within normalized box [0.05, 0.08, 0.46, 0.84], leaving clean negative space for later copy within [0.57, 0.10, 0.38, 0.80]. Carefully",
+    "AI IMAGE PENDING",
+    "Placeholder square glyphs: □□□□□□□",
+    "Placeholder square glyphs: □□□□□□"
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "画面未展示实际行李箱或爆炸结构，左侧主要是生成提示词文本，不符合该模块应呈现产品视觉的要求。",
+    "出现大量未提供的英文提示词、AI IMAGE PENDING 和方框占位符，违反仅使用供给文案和已核实事实的要求。",
+    "出现“AI IMAGE PENDING”等制作流程标记，属于未完成素材，不适合作为亚马逊商品创意直接发布。",
+    "若该图被视为主图或白底主图，则可见文字、占位符和促销式标记会违反主图无文字、无徽标、无水印、无宣传图形的要求。"
+  ],
+  "verdict_zh": "不通过：虽然德文供给文案拼写正确且内容完整，但画面缺少实际产品视觉，并包含明显的英文提示词、AI IMAGE PENDING 和方框占位符，需重新制作。"
+}

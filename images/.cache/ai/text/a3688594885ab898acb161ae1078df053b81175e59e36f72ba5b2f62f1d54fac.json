@@ -1,0 +1,23 @@
+{
+  "detected_text": [
+    "Aluminiumgriff mit drei Positionen",
+    "Wählen Sie eine von drei Griffhöhen und klappen Sie oben die verborgene Smartphone-Halterung aus.",
+    "Teleskopgriff aus Aluminiumlegierung",
+    "Verdeckte, faltbare Smartphone-Halterung oben",
+    "Create a premium European modern travel photography module for a YWJ hard-shell travel suitcase, square composition, using one consistent suitcase variant and color. PC layout: place the complete suitcase on the left in region x=5%, y=8%, w=46%, h=84%, shown from a slightly low three-quarter side angle with the vertical shell texture, metal frame, aluminum telescopic handle, and top structure clearly visible. Reserve a clean low-saturation light-gray and warm-white text area on the right at x=57%, y=10%, w=38%, h=80%.",
+    "AI IMAGE PENDING / □□□□□□"
+  ],
+  "unexpected_text": [
+    "Create a premium European modern travel photography module...",
+    "AI IMAGE PENDING / □□□□□□",
+    "Five square placeholder characters near the upper left"
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "MAIN_WHITE 区域含有大量可见文字，违反必须无文字的要求。",
+    "画面包含未提供的英文设计说明文字和“AI IMAGE PENDING”占位文本，违反仅可使用指定文案和已核实事实的要求。",
+    "左上角存在疑似占位符/标识图形，可能构成徽标或装饰性图形叠加。",
+    "当前素材是设计说明稿而非完成的商品创意图，无法验证行李箱产品图像及相关事实。"
+  ],
+  "verdict_zh": "不通过：需移除 MAIN_WHITE 中的所有文字、占位符和图形，并生成实际行李箱创意图；其他区域仅保留指定德文文案及已核实事实。"
+}

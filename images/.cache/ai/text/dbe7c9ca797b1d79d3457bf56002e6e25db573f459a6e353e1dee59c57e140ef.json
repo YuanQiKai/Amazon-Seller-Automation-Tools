@@ -1,0 +1,19 @@
+{
+  "detected_text": [
+    "Acht Rollen, leichtes Wenden",
+    "Acht doppelte Lenkrollen drehen sich um 360° für leichteres Bewegen in Stadt und Flughafen.",
+    "Aluminiumgriff, drei Höhenstufen",
+    "PC+ABS-Schale, vertikale Struktur, vier Schutzkanten"
+  ],
+  "unexpected_text": [],
+  "spelling_issues": [
+    "Aluminiumgriff被错误断词显示为“Aluminiumg riff”",
+    "Höhenstufen被错误断词显示为“Höhenstufe n”",
+    "PC+ABS-Schale被错误断词显示为“PC+ABS-Sch ale”",
+    "Schutzkanten被错误断词显示为“Schutzkante n”"
+  ],
+  "policy_risks_zh": [
+    "侧边文案存在不自然的单词断行和视觉截断，影响可读性与专业性，建议调整文本框宽度或字号"
+  ],
+  "verdict_zh": "不通过：文案内容与预期一致且未发现额外文字，但侧边两处德语文案被错误断词，需修正排版后再提交。"
+}

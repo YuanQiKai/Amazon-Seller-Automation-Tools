@@ -1,0 +1,40 @@
+{
+  "detected_text": [
+    "Sliver-Finish, drei Größen",
+    "Vergleichen Sie Maße, Gewicht und Volumen für Ihre passende Reisegröße.",
+    "120 cm",
+    "165 cm",
+    "180 cm",
+    "61 cm",
+    "72,5 cm",
+    "76 cm",
+    "20 Zoll",
+    "61×42×27 cm",
+    "4 kg",
+    "42 l",
+    "24 Zoll",
+    "72,5×46,5×31 cm",
+    "5,1 kg",
+    "60 l",
+    "26 Zoll",
+    "76×52×31,5 cm",
+    "5,6 kg",
+    "78 l",
+    "Good Trips Ahead"
+  ],
+  "unexpected_text": [
+    "120 cm",
+    "165 cm",
+    "180 cm",
+    "61 cm",
+    "72,5 cm",
+    "76 cm",
+    "Good Trips Ahead"
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "画面右侧出现“Good Trips Ahead”及飞机图标，属于未提供的宣传性文案/促销图形，存在亚马逊图片文案合规风险。",
+    "画面加入了预期文案之外的人物身高与行李箱高度标注（120 cm、165 cm、180 cm、61 cm、72,5 cm、76 cm）；这些尺寸虽可能是视觉示意，但未在提供的核验文案中，存在未经验证事实或误导性尺寸对比风险。"
+  ],
+  "verdict_zh": "不通过：存在未提供的宣传徽章/促销图形“Good Trips Ahead”，并包含多项预期文案之外的尺寸标注。"
+}

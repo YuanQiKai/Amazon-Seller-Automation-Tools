@@ -1,0 +1,7 @@
+{
+  "detected_text": [],
+  "unexpected_text": [],
+  "spelling_issues": [],
+  "policy_risks_zh": [],
+  "verdict_zh": "通过：图片为白色背景上的行李箱产品图，未检测到可见文字、Logo、水印、徽章或促销图形，符合 MAIN_WHITE 要求。"
+}

@@ -1,0 +1,23 @@
+{
+  "detected_text": [
+    "Klappbare Handyhalterung am Teleskopgriff",
+    "Die Halterung hält das Smartphone sichtbar; der Zwei-Zonen-Innenraum trennt Reiseutensilien.",
+    "TSA-Zahlenschloss erleichtert die Gepäckkontrolle",
+    "Nassfach, Netzfach mit Reißverschluss und X-förmige Packgurte",
+    "Create a premium modern travel photography image of a 13A hard-shell suitcase, shown at a clean 45-degree angle and opened, with the telescopic handle extended and its foldable phone holder clearly unfolded",
+    "Show the complete two-zone interior with a wet-dry pocket and a zippered mesh pocket",
+    "AI IMAGE PENDING"
+  ],
+  "unexpected_text": [
+    "Faint English image-generation prompt text is visible in the main white area.",
+    "AI IMAGE PENDING watermark/status text is visible near the bottom.",
+    "Small placeholder/square glyphs are visible next to the watermark."
+  ],
+  "spelling_issues": [],
+  "policy_risks_zh": [
+    "MAIN_WHITE区域含有可见的英文提示词文字，不符合必须无任何可见文字的要求。",
+    "MAIN_WHITE区域含有“AI IMAGE PENDING”水印/状态文字及占位符图形。",
+    "画面中的英文提示词属于未提供的额外文案，且与指定德国文案不一致。"
+  ],
+  "verdict_zh": "不通过：MAIN_WHITE中存在明显的额外文字、水印和占位符图形，需移除后重新提交。"
+}

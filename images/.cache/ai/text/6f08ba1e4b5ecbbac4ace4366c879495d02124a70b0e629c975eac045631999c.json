@@ -1,0 +1,43 @@
+{
+  "detected_text": [
+    "Übersetzung ausstehend — Produktangaben bitte übersetzen und prüfen.",
+    "□□□□□□□□□□",
+    "□□□□□□ · □2/4□",
+    "Use case: Amazon ecommerce creative reference.",
+    "Create a landscape composition for module '□□□□□□'.",
+    "Product: Travel Suitcase; category: Luggage / Suitcases; model: 13A; material:",
+    "Polycarbonate□□ABS□Acrylonitrile Butadiene Styrene□□Aluminium Frame;",
+    "variants: 20□□□□61×42×27□□Sliver□□4□□42□□89.99□24□□72.5×4",
+    "6.5×31□□Sliver□□5.1□□60□□99.99□26□□76×52×31.5□□Sliver□□5.6□□",
+    "8□□109.99□20□□61×42×27□□GunmetalGray□□4□□42□□89.99□24□□72.5×4",
+    "6.5×31□□GunmetalGray□□5.1□□60□□99.99□26□□76×52×31.5□□GunmetalGr",
+    "ay□□5.6□□78□□109.99□20□□61×42×27□□Black□□4□□42□□89.99□24□□7",
+    "2.5×46.5×31□□Black□□5.1□□60□□99.99□26□□76×52×31.5□□Black□□5.6□",
+    "□□78□□109.99; custom product attributes: {}; functions:",
+    "selling points: 360°□□□□8□",
+    "AI IMAGE PENDING / □□□□□□"
+  ],
+  "unexpected_text": [
+    "□□□□□□□□□□",
+    "□□□□□□ · □2/4□",
+    "Use case: Amazon ecommerce creative reference.",
+    "Create a landscape composition for module '□□□□□□'.",
+    "Product: Travel Suitcase; category: Luggage / Suitcases; model: 13A; material:",
+    "Polycarbonate□□ABS□Acrylonitrile Butadiene Styrene□□Aluminium Frame;",
+    "All variant, dimension, color, price, material and selling-point text",
+    "AI IMAGE PENDING",
+    "□□□□□□"
+  ],
+  "spelling_issues": [
+    "Sliver appears to be a misspelling of Silver.",
+    "The text contains extensive untranslated or corrupted square-box characters.",
+    "The German copy is a placeholder instruction rather than finalized product copy."
+  ],
+  "policy_risks_zh": [
+    "画面包含明显的占位符、内部制作说明、规格草稿和“AI IMAGE PENDING”，不适合作为面向消费者的亚马逊A+成品素材。",
+    "存在大量乱码和未翻译文本，违反德国站点清晰、可读、语言一致的展示要求。",
+    "展示了未经核实的材质、尺寸、颜色、价格及“360°”等产品信息，发布前需与实际商品和商品详情页核对。",
+    "若该素材被用作MAIN_WHITE，则不符合主图不得含文字、Logo、水印、徽章或促销图形的要求。"
+  ],
+  "verdict_zh": "不通过：素材包含大量乱码、英文内部说明、未翻译内容和占位符，且存在未经核实的规格及卖点信息。需重新制作并完成德语本地化、事实核验及版式清理后再提交。"
+}
